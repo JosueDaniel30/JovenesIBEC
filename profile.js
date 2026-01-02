@@ -154,12 +154,12 @@ function applySettings() {
     if (settings.autoDark) {
         const hour = new Date().getHours();
         const shouldBeDark = hour < 6 || hour > 18;
-        if (shouldBeDark && !document.body.classList.contains('dark')) {
-            document.body.classList.add('dark');
+        if (shouldBeDark && !document.body.classList.contains('dark-theme')) {
+            document.body.classList.add('dark-theme');
             localStorage.setItem('theme', 'dark');
             document.querySelector('.theme-icon').textContent = '☀️';
-        } else if (!shouldBeDark && document.body.classList.contains('dark')) {
-            document.body.classList.remove('dark');
+        } else if (!shouldBeDark && document.body.classList.contains('dark-theme')) {
+            document.body.classList.remove('dark-theme');
             localStorage.setItem('theme', 'light');
             document.querySelector('.theme-icon').textContent = '🌙';
         }

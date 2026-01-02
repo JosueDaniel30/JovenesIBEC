@@ -443,7 +443,7 @@ function initializeThemeSystem() {
     // Cargar tema guardado
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
-        document.body.classList.add('dark');
+        document.body.classList.add('dark-theme');
         applyTheme();
     }
 
@@ -453,7 +453,7 @@ function initializeThemeSystem() {
     // Actualizar ícono del botón principal
     const themeIcon = document.querySelector('.theme-icon');
     if (themeIcon) {
-        const isDark = document.body.classList.contains('dark');
+        const isDark = document.body.classList.contains('dark-theme');
         themeIcon.textContent = isDark ? '☀️' : '🌙';
     }
 }
@@ -777,7 +777,7 @@ function updateMobileThemeIcon() {
     const mobileThemeText = document.querySelector('.mobile-theme-text');
 
     if (mobileThemeIcon && mobileThemeText) {
-        const isDark = document.body.classList.contains('dark');
+        const isDark = document.body.classList.contains('dark-theme');
         mobileThemeIcon.textContent = isDark ? '☀️' : '🌙';
         mobileThemeText.textContent = isDark ? 'Tema Claro' : 'Tema Oscuro';
     }
@@ -790,9 +790,9 @@ function toggleTheme() {
     const mobileThemeIcon = document.querySelector('.mobile-theme-icon');
     const mobileThemeText = document.querySelector('.mobile-theme-text');
 
-    body.classList.toggle('dark');
+    body.classList.toggle('dark-theme');
 
-    const isDark = body.classList.contains('dark');
+    const isDark = body.classList.contains('dark-theme');
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
 
     if (themeIcon) {
@@ -809,7 +809,7 @@ function toggleTheme() {
 }
 
 function applyTheme() {
-    const isDark = document.body.classList.contains('dark');
+    const isDark = document.body.classList.contains('dark-theme');
 
     // Actualizar colores CSS variables si es necesario
     if (isDark) {
