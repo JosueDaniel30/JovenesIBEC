@@ -6,7 +6,7 @@ const BASE_PATH = "/JovenesIBEC";
 
 class BibliaRVR1960 {
     constructor() {
-        this.basePath = `${BASE_PATH}/biblia`; // Ruta base de los archivos JSON
+        this.basePath = '/JovenesIBEC/biblia'; // Ruta base de los archivos JSON
         this.libros = [
             // Antiguo Testamento
             { id: 1, nombre: "Génesis", abrev: "GEN", testament: "AT", cap: 50 },
@@ -119,17 +119,15 @@ class BibliaRVR1960 {
 
     // Mapear nombre del libro a carpeta (ajusta según tu estructura)
     getCarpetaLibro(nombreLibro) {
-        // Remover acentos y normalizar
-        let normalized = nombreLibro.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    // Quitar acentos
+    let normalized = nombreLibro
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
 
-        // Para libros que empiezan con número, mantener el número
-        if (/^\d/.test(normalized)) {
-            return normalized.replace(/\s+/g, '');
-        } else {
-            // Para otros libros, remover números al inicio si existen
-            return normalized.toLowerCase().replace(/^\d+\s+/, '').replace(/\s+/g, '');
-        }
-    }
+    // Mantener mayúsculas como están en las carpetas reales
+    return normalized.replace(/\s+/g, '');
+}
+
 
     // Generar nombre de archivo para un capítulo específico
     getNombreArchivo(nombreLibro, capitulo) {
