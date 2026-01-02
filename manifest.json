@@ -1,8 +1,8 @@
 {
-  "name": "Jóvenes con Cristo",
-  "short_name": "JovenesApp",
-  "description": "Aplicación para jóvenes cristianos - metas espirituales, biblia y crecimiento personal",
-  "start_url": "/index.html",
+  "name": "Jovenes IBEC",
+  "short_name": "IBEC",
+  "start_url": "/JovenesIBEC/",
+  "scope": "/JovenesIBEC/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#4f46e5",
