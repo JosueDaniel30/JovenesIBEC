@@ -1019,15 +1019,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Tema móvil
         if (mobileThemeBtn) {
-            mobileThemeBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                toggleTheme();
-                updateMobileThemeIcon();
-            });
-            // Soporte para dispositivos táctiles
-            mobileThemeBtn.addEventListener('touchstart', function(e) {
-                e.preventDefault();
+            mobileThemeBtn.addEventListener('pointerdown', function(e) {
                 e.stopPropagation();
                 toggleTheme();
                 updateMobileThemeIcon();

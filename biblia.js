@@ -324,23 +324,14 @@ mostrarTestamento("AT");
 // Abrir libro (capítulos)
 // ============================
 async function openBook(book) {
-    if (book === 'Genesis') {
-        try {
-            const res = await fetch('biblia/genesis.json');
-            const data = await res.json();
-            showChapter(book, 1, data[0], data);
-        } catch {
-            notify("Libro aún no disponible", "⚠️");
-        }
-    } else {
-        try {
-            const res = await fetch(`biblia/${book}/1.json`);
-            if (!res.ok) throw "No existe";
+    try {
+        const fileName = `${book.toLowerCase()}_1.json`;
+        const res = await fetch(`biblia/${book}/${fileName}`);
+        if (!res.ok) throw "No existe";
 
-            showChapter(book, 1, await res.json());
-        } catch {
-            notify("Libro aún no disponible", "⚠️");
-        }
+        showChapter(book, 1, await res.json());
+    } catch {
+        notify("Error cargando el capítulo", "⚠️");
     }
 }
 
@@ -351,17 +342,12 @@ function showChapter(book, chapter, verses, fullBookData = null) {
     const modal = document.createElement("div");
     modal.className = "modal";
 
-    let navButtons = '';
-    if (book === 'Genesis' && fullBookData) {
-        const prevDisabled = chapter <= 1 ? 'disabled' : '';
-        const nextDisabled = chapter >= fullBookData.length ? 'disabled' : '';
-        navButtons = `
-            <div class="chapter-nav">
-                <button onclick="navigateChapter('${book}', ${chapter - 1}, ${JSON.stringify(fullBookData).replace(/"/g, '"')})" ${prevDisabled}>← Anterior</button>
-                <button onclick="navigateChapter('${book}', ${chapter + 1}, ${JSON.stringify(fullBookData).replace(/"/g, '"')})" ${nextDisabled}>Siguiente →</button>
-            </div>
-        `;
-    }
+    let navButtons = `
+        <div class="chapter-nav">
+            <button onclick="navigateChapter('${book}', ${chapter - 1})" ${chapter <= 1 ? 'disabled' : ''}>← Anterior</button>
+            <button onclick="navigateChapter('${book}', ${chapter + 1})">Siguiente →</button>
+        </div>
+    `;
 
     modal.innerHTML = `
         <div class="modal-box">
@@ -380,11 +366,21 @@ function showChapter(book, chapter, verses, fullBookData = null) {
 // ============================
 // Navegar entre capítulos
 // ============================
-function navigateChapter(book, chapter, fullBookData) {
-    // Cerrar modal actual
-    document.querySelector('.modal').remove();
-    // Mostrar nuevo capítulo
-    showChapter(book, chapter, fullBookData[chapter - 1], fullBookData);
+async function navigateChapter(book, chapter) {
+    if (chapter < 1) return; // No permitir capítulos menores a 1
+
+    try {
+        const fileName = `${book.toLowerCase()}_${chapter}.json`;
+        const res = await fetch(`biblia/${book}/${fileName}`);
+        if (!res.ok) throw "No existe";
+
+        // Cerrar modal actual
+        document.querySelector('.modal').remove();
+        // Mostrar nuevo capítulo
+        showChapter(book, chapter, await res.json());
+    } catch {
+        notify("Capítulo no encontrado", "⚠️");
+    }
 }
 
 // ============================

@@ -3477,45 +3477,246 @@ body.dark-theme .book-card[data-testament="NT"] {
 }
 
 /* =====================================
-   RESPONSIVE ADICIONAL
+   RESPONSIVE ADICIONAL - MEJORADO
    ===================================== */
-   @media (max-width: 480px) {
-    .search-container,
-    .card-premium,
-    .stat-card,
-    .goal-card {
-      padding: 1rem;
-    }
 
-    .page-title {
-      font-size: 1.5rem;
-    }
-
-    .btn-plus,
-    .search-btn-primary {
-      padding: 0.75rem 1rem;
-      font-size: 0.9rem;
-    }
-
-    .filters-section {
-      grid-template-columns: 1fr;
-    }
-
-    .stats-grid-detailed {
-      grid-template-columns: 1fr;
-    }
+/* Teléfonos muy pequeños (320px - 480px) */
+@media (max-width: 480px) {
+  .search-container,
+  .card-premium,
+  .stat-card,
+  .goal-card,
+  .reading-guide-card,
+  .reflection-card {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
   }
-  
-  @media (min-width: 769px) and (max-width: 1024px) {
-    .stats-grid,
-    .tools-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .goals-grid {
-      grid-template-columns: 1fr;
-    }
+
+  .page-title {
+    font-size: 1.4rem;
+    line-height: 1.2;
   }
+
+  .btn-plus,
+  .search-btn-primary,
+  .btn-secondary {
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    min-height: 44px; /* Tamaño mínimo para toque */
+  }
+
+  .filters-section {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .stats-grid-detailed {
+    grid-template-columns: 1fr;
+  }
+
+  /* Navegación móvil mejorada */
+  .mobile-menu {
+    width: 250px;
+  }
+
+  .mobile-nav-link {
+    padding: 0.75rem 1rem;
+  }
+
+  /* Grids adaptativos */
+  .quick-stats,
+  .tools-grid,
+  .books-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  /* Formularios */
+  .form-group input,
+  .form-group textarea,
+  .quiz-select {
+    font-size: 16px; /* Previene zoom en iOS */
+  }
+
+  /* Botones táctiles */
+  .btn-icon,
+  .theme-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Texto y espaciado */
+  .welcome-title {
+    font-size: 1.8rem;
+  }
+
+  .welcome-subtitle {
+    font-size: 1rem;
+  }
+
+  /* Tarjetas */
+  .goal-item,
+  .favorite-card {
+    padding: 1rem;
+  }
+
+  .goal-title {
+    font-size: 1rem;
+  }
+
+  /* Quiz */
+  .quiz-content {
+    padding: 1rem;
+  }
+
+  .question-card {
+    padding: 1rem;
+  }
+
+  .option-btn {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Teléfonos estándar (481px - 767px) */
+@media (min-width: 481px) and (max-width: 767px) {
+  .search-container,
+  .card-premium,
+  .stat-card,
+  .goal-card {
+    padding: 1rem;
+  }
+
+  .page-title {
+    font-size: 1.6rem;
+  }
+
+  .btn-plus,
+  .search-btn-primary {
+    padding: 0.8rem 1.2rem;
+    font-size: 0.95rem;
+    min-height: 44px;
+  }
+
+  .filters-section {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .quick-stats,
+  .tools-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .books-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+
+  .goals-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Navegación */
+  .mobile-menu {
+    width: 280px;
+  }
+
+  /* Formularios */
+  .form-group input,
+  .form-group textarea {
+    font-size: 16px;
+  }
+}
+
+/* Tablets pequeñas (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .stats-grid,
+  .tools-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .goals-grid {
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  }
+
+  .books-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+
+  .quick-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .motivational-reminders {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Navegación desktop */
+  .nav-menu {
+    display: flex;
+  }
+
+  .mobile-menu-toggle {
+    display: none;
+  }
+
+  /* Ajustes de espaciado */
+  .welcome-section {
+    padding: 1.5rem;
+  }
+
+  .welcome-title {
+    font-size: 2.2rem;
+  }
+}
+
+/* Tablets grandes y laptops pequeñas (1024px - 1199px) */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .stats-grid,
+  .tools-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .goals-grid {
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  }
+
+  .books-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+
+  .quick-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .motivational-reminders {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Pantallas grandes (1200px+) */
+@media (min-width: 1200px) {
+  .stats-grid,
+  .tools-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .goals-grid {
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  }
+
+  .books-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+
+  .quick-stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .motivational-reminders {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
   
   /* Impresión */
   @media print {
