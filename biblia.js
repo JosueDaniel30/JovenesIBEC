@@ -321,12 +321,21 @@ function mostrarTestamento(tipo) {
 mostrarTestamento("AT");
 
 // ============================
+// Función para mapear nombres de libros a nombres de carpetas
+// ============================
+function getFolderName(book) {
+    // Remover underscores de libros que empiezan con números
+    return book.replace(/_/g, '');
+}
+
+// ============================
 // Abrir libro (capítulos)
 // ============================
 async function openBook(book) {
     try {
-        const fileName = `${book.toLowerCase()}_1.json`;
-        const res = await fetch(`biblia/${book}/${fileName}`);
+        const folderName = getFolderName(book);
+        const fileName = `${book.toLowerCase().replace(/_/g, '_')}_1.json`;
+        const res = await fetch(`biblia/${folderName}/${fileName}`);
         if (!res.ok) throw "No existe";
 
         showChapter(book, 1, await res.json());
@@ -370,8 +379,9 @@ async function navigateChapter(book, chapter) {
     if (chapter < 1) return; // No permitir capítulos menores a 1
 
     try {
-        const fileName = `${book.toLowerCase()}_${chapter}.json`;
-        const res = await fetch(`biblia/${book}/${fileName}`);
+        const folderName = getFolderName(book);
+        const fileName = `${book.toLowerCase().replace(/_/g, '_')}_${chapter}.json`;
+        const res = await fetch(`biblia/${folderName}/${fileName}`);
         if (!res.ok) throw "No existe";
 
         // Cerrar modal actual

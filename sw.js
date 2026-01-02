@@ -5,110 +5,33 @@ const DYNAMIC_CACHE = 'jovenes-dynamic-v1.0.0';
 
 // Recursos a cachear inicialmente
 const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/biblia.html',
-  '/metas.html',
-  '/perfil.html',
-  '/login.html',
-  '/styles.css',
-  '/notificacion.css',
-  '/script.js',
-  '/biblia.js',
-  '/metas.js',
-  '/profile.js',
-  '/login.js',
-  '/logojov.png',
-  '/manifest.json'
+  '/JovenesIBEC/',
+  '/JovenesIBEC/index.html',
+  '/JovenesIBEC/biblia.html',
+  '/JovenesIBEC/metas.html',
+  '/JovenesIBEC/perfil.html',
+  '/JovenesIBEC/login.html',
+  '/JovenesIBEC/styles.css',
+  '/JovenesIBEC/notificacion.css',
+  '/JovenesIBEC/script.js',
+  '/JovenesIBEC/biblia.js',
+  '/JovenesIBEC/metas.js',
+  '/JovenesIBEC/profile.js',
+  '/JovenesIBEC/login.js',
+  '/JovenesIBEC/logojov.png',
+  '/JovenesIBEC/manifest.json'
 ];
 
-// Recursos de la Biblia (versículos offline)
-const BIBLE_ASSETS = [
-  '/biblia/genesis.json',
-  '/biblia/exodo.json',
-  '/biblia/levitico.json',
-  '/biblia/numeros.json',
-  '/biblia/deuteronomio.json',
-  '/biblia/josue.json',
-  '/biblia/jueces.json',
-  '/biblia/rut.json',
-  '/biblia/1samuel.json',
-  '/biblia/2samuel.json',
-  '/biblia/1reyes.json',
-  '/biblia/2reyes.json',
-  '/biblia/1cronicas.json',
-  '/biblia/2cronicas.json',
-  '/biblia/esdras.json',
-  '/biblia/nehemias.json',
-  '/biblia/ester.json',
-  '/biblia/job.json',
-  '/biblia/salmos.json',
-  '/biblia/proverbios.json',
-  '/biblia/ecclesiastes.json',
-  '/biblia/cantares.json',
-  '/biblia/isaías.json',
-  '/biblia/jeremias.json',
-  '/biblia/lamentaciones.json',
-  '/biblia/ezequiel.json',
-  '/biblia/daniel.json',
-  '/biblia/oseas.json',
-  '/biblia/joel.json',
-  '/biblia/amos.json',
-  '/biblia/abdias.json',
-  '/biblia/jonas.json',
-  '/biblia/miqueas.json',
-  '/biblia/nahum.json',
-  '/biblia/habacuc.json',
-  '/biblia/sofonías.json',
-  '/biblia/hageo.json',
-  '/biblia/zacarias.json',
-  '/biblia/malaquias.json',
-  '/biblia/mateo.json',
-  '/biblia/marcos.json',
-  '/biblia/lucas.json',
-  '/biblia/juan.json',
-  '/biblia/hechos.json',
-  '/biblia/romanos.json',
-  '/biblia/1corintios.json',
-  '/biblia/2corintios.json',
-  '/biblia/galatas.json',
-  '/biblia/efesios.json',
-  '/biblia/filipenses.json',
-  '/biblia/colosenses.json',
-  '/biblia/1tesalonicenses.json',
-  '/biblia/2tesalonicenses.json',
-  '/biblia/1timoteo.json',
-  '/biblia/2timoteo.json',
-  '/biblia/tito.json',
-  '/biblia/filemon.json',
-  '/biblia/hebreos.json',
-  '/biblia/santiago.json',
-  '/biblia/1pedro.json',
-  '/biblia/2pedro.json',
-  '/biblia/1juan.json',
-  '/biblia/2juan.json',
-  '/biblia/3juan.json',
-  '/biblia/judas.json',
-  '/biblia/apocalipsis.json'
-];
+// Recursos de la Biblia se cachearán dinámicamente
 
 // Instalación del Service Worker
 self.addEventListener('install', event => {
   console.log('Service Worker: Instalando...');
   event.waitUntil(
-    Promise.all([
-      caches.open(STATIC_CACHE).then(cache => {
-        console.log('Cacheando recursos estáticos...');
-        return cache.addAll(STATIC_ASSETS);
-      }),
-      caches.open('bible-cache-v1').then(cache => {
-        console.log('Cacheando recursos de la Biblia...');
-        return cache.addAll(BIBLE_ASSETS.filter(asset => {
-          // Solo cachear si el archivo existe
-          return fetch(asset, { method: 'HEAD' }).then(response => response.ok).catch(() => false);
-        }));
-      })
-    ]).then(() => {
+    caches.open(STATIC_CACHE).then(cache => {
+      console.log('Cacheando recursos estáticos...');
+      return cache.addAll(STATIC_ASSETS);
+    }).then(() => {
       console.log('Service Worker: Instalación completada');
       return self.skipWaiting();
     })
@@ -206,7 +129,7 @@ self.addEventListener('fetch', event => {
         }
         // Página offline por defecto
         if (request.destination === 'document') {
-          return caches.match('/index.html');
+          return caches.match('/JovenesIBEC/index.html');
         }
         return new Response('Offline content not available', {
           status: 503,

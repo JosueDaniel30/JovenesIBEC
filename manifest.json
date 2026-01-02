@@ -7,7 +7,6 @@
   "background_color": "#ffffff",
   "theme_color": "#4f46e5",
   "orientation": "portrait-primary",
-  "scope": "/",
   "lang": "es",
   "categories": ["lifestyle", "productivity", "books"],
   "icons": [
@@ -29,21 +28,21 @@
       "name": "Biblia",
       "short_name": "Biblia",
       "description": "Leer la Biblia",
-      "url": "/biblia.html",
+      "url": "/JovenesIBEC/biblia.html",
       "icons": [{ "src": "logojov.png", "sizes": "96x96" }]
     },
     {
       "name": "Metas",
       "short_name": "Metas",
       "description": "Ver mis metas espirituales",
-      "url": "/metas.html",
+      "url": "/JovenesIBEC/metas.html",
       "icons": [{ "src": "logojov.png", "sizes": "96x96" }]
     },
     {
       "name": "Perfil",
       "short_name": "Perfil",
       "description": "Mi perfil personal",
-      "url": "/perfil.html",
+      "url": "/JovenesIBEC/perfil.html",
       "icons": [{ "src": "logojov.png", "sizes": "96x96" }]
     }
   ]
