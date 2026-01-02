@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Inicio | App Jóvenes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Aplicación para jóvenes cristianos - metas espirituales, biblia y crecimiento personal">
+  <meta name="theme-color" content="#4f46e5">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="logojov.png">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="notificacion.css">
+</head>
+<body>
+
+<script>
+  // Check if user is logged in
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  if (!currentUser) {
+    window.location.href = 'login.html';
+  }
+</script>
+
+<header class="top-nav">
+  <div class="nav-container">
+    <div class="logo-section">
+      <h1 class="logo">
+        <img src="logojov.png" alt="Logo Jovenes" class="logo-icon">
+        <span class="logo-text">Jovenes con Cristo</span>
+      </h1>
+    </div>
+
+    <nav class="nav-menu">
+      <a class="nav-link active" href="index.html" data-tooltip="Inicio">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-text">Inicio</span>
+        <span class="nav-glow"></span>
+      </a>
+
+      <a class="nav-link" href="perfil.html" data-tooltip="Mi Perfil">
+        <span class="nav-icon">👤</span>
+        <span class="nav-text">Perfil</span>
+        <span class="nav-glow"></span>
+      </a>
+
+      <a class="nav-link" href="biblia.html" data-tooltip="La Biblia">
+        <span class="nav-icon">📖</span>
+        <span class="nav-text">Biblia</span>
+        <span class="nav-glow"></span>
+      </a>
+
+      <a class="nav-link" href="metas.html" data-tooltip="Mis Metas">
+        <span class="nav-icon">🎯</span>
+        <span class="nav-text">Metas</span>
+        <span class="nav-glow"></span>
+      </a>
+
+      <div class="nav-divider"></div>
+
+      <button id="theme-toggle" class="theme-btn" data-tooltip="Cambiar Tema">
+        <span class="theme-icon">🌙</span>
+        <span class="theme-glow"></span>
+      </button>
+
+      <button id="logout-btn" class="theme-btn" data-tooltip="Cerrar Sesión">
+        <span class="theme-icon">🚪</span>
+        <span class="theme-glow"></span>
+      </button>
+    </nav>
+
+    <button class="mobile-menu-toggle" id="mobile-menu-btn">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+  </div>
+
+  <!-- Menú móvil -->
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-menu-header">
+      <h3>Menú</h3>
+      <button class="mobile-menu-close" id="mobile-menu-close">✕</button>
+    </div>
+    <nav class="mobile-nav">
+      <a class="mobile-nav-link active" href="index.html">
+        <span class="mobile-nav-icon">🏠</span>
+        <span class="mobile-nav-text">Inicio</span>
+      </a>
+      <a class="mobile-nav-link" href="perfil.html">
+        <span class="mobile-nav-icon">👤</span>
+        <span class="mobile-nav-text">Perfil</span>
+      </a>
+      <a class="mobile-nav-link" href="biblia.html">
+        <span class="mobile-nav-icon">📖</span>
+        <span class="mobile-nav-text">Biblia</span>
+      </a>
+      <a class="mobile-nav-link" href="metas.html">
+        <span class="mobile-nav-icon">🎯</span>
+        <span class="mobile-nav-text">Metas</span>
+      </a>
+      <div class="mobile-nav-divider"></div>
+      <button id="mobile-theme-toggle" class="mobile-theme-btn">
+        <span class="mobile-theme-icon">🌙</span>
+        <span class="mobile-theme-text">Tema Oscuro</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- Bienvenida Personalizada -->
+  <section class="welcome-section">
+    <div class="welcome-content">
+      <h1 class="welcome-title" id="welcome-title">¡Hola! 👋</h1>
+      <p class="welcome-subtitle" style="color: white;">Hoy es un día perfecto para crecer espiritualmente</p>
+      <div class="daily-motivation">
+        <span id="current-date"></span>
+        <span id="motivational-quote"></span>
+      </div>
+    </div>
+    <div class="welcome-visual">
+      <div class="streak-indicator">
+        <div class="streak-icon">🔥</div>
+        <div class="streak-info">
+          <span class="streak-number" id="streak-count">0</span>
+          <span class="streak-label">días de racha</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Check-in Diario -->
+  <section class="daily-checkin card-premium">
+    <h2>✅ Check-in Diario</h2>
+    <p class="checkin-subtitle">¿Has completado tus hábitos espirituales hoy?</p>
+    <div class="checkin-actions">
+      <button id="checkin-btn" class="btn-plus checkin-main-btn">
+        <span class="checkin-icon">✨</span>
+        <span class="checkin-text">Marcar como completado</span>
+      </button>
+      <div class="checkin-status" id="checkin-status">
+        <span class="status-icon">⏳</span>
+        <span class="status-text">Pendiente por hoy</span>
+      </div>
+    </div>
+    <div class="checkin-rewards">
+      <div class="reward-item">
+        <span class="reward-icon">⭐</span>
+        <span class="reward-text">+10 puntos de experiencia</span>
+      </div>
+      <div class="reward-item">
+        <span class="reward-icon">🔥</span>
+        <span class="reward-text">Mantén tu racha viva</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Estadísticas Rápidas -->
+  <section class="quick-stats">
+    <div class="stat-card">
+      <div class="stat-icon">📚</div>
+      <div class="stat-info">
+        <span class="stat-number" id="verses-read">0</span>
+        <span class="stat-label">Versículos leídos</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🎯</div>
+      <div class="stat-info">
+        <span class="stat-number" id="goals-completed">0</span>
+        <span class="stat-label">Metas completadas</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🙏</div>
+      <div class="stat-info">
+        <span class="stat-number" id="prayer-streak">0</span>
+        <span class="stat-label">Días orando</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🏆</div>
+      <div class="stat-info">
+        <span class="stat-number" id="level">1</span>
+        <span class="stat-label">Nivel espiritual</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Versículo del Día Interactivo -->
+  <section class="daily-verse-card">
+    <div class="verse-header">
+      <h3>📖 Versículo del Día</h3>
+      <div class="verse-actions">
+        <button onclick="loadVerse()" class="btn-icon">🔄</button>
+        <button onclick="copyVerse()" class="btn-icon">📋</button>
+        <button onclick="shareVerse()" class="btn-icon">📤</button>
+      </div>
+    </div>
+    <blockquote id="verse-text">
+      "Todo lo puedo en Cristo que me fortalece."
+    </blockquote>
+    <cite id="verse-ref">Filipenses 4:13</cite>
+    <div class="verse-theme" id="verse-theme">FORTALEZA</div>
+  </section>
+
+  <!-- Próximas Actividades -->
+  <section class="upcoming-activities card-premium">
+    <h2>🎯 Próximas Actividades</h2>
+    <div class="activity-list">
+      <div class="activity-item">
+        <div class="activity-icon">📖</div>
+        <div class="activity-content">
+          <h4>Lee tu versículo diario</h4>
+          <p>5 minutos de reflexión espiritual</p>
+        </div>
+        <div class="activity-time">Hoy</div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-icon">🎯</div>
+        <div class="activity-content">
+          <h4>Revisa tus metas</h4>
+          <p>¿Qué progreso has hecho esta semana?</p>
+        </div>
+        <div class="activity-time">Esta semana</div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-icon">🙏</div>
+        <div class="activity-content">
+          <h4>Tiempo de oración</h4>
+          <p>Dedica tiempo especial a conversar con Dios</p>
+        </div>
+        <div class="activity-time">Diario</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recordatorios Motivacionales -->
+  <section class="motivational-reminders">
+    <div class="reminder-card">
+      <div class="reminder-icon">💪</div>
+      <div class="reminder-content">
+        <h4>¡Tú puedes!</h4>
+        <p>Cada día es una nueva oportunidad para crecer en tu fe</p>
+      </div>
+    </div>
+    <div class="reminder-card">
+      <div class="reminder-icon">🌅</div>
+      <div class="reminder-content">
+        <h4>Comienza tu día con Dios</h4>
+        <p>La mejor manera de enfrentar el día es con Su presencia</p>
+      </div>
+    </div>
+    <div class="reminder-card">
+      <div class="reminder-icon">🎉</div>
+      <div class="reminder-content">
+        <h4>Celebra tus victorias</h4>
+        <p>Cada paso cuenta en tu camino espiritual</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Llamado a la Acción -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2>¿Listo para crecer hoy?</h2>
+      <p>Explora las herramientas que tenemos para ti</p>
+      <div class="cta-buttons">
+        <a href="biblia.html" class="btn-plus">📖 Leer la Biblia</a>
+        <a href="metas.html" class="btn-secondary">🎯 Ver mis Metas</a>
+        <a href="perfil.html" class="btn-secondary">👤 Mi Perfil</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="script.js"></script>
+<script>
+  // Actualizar título de bienvenida con el nombre del usuario
+  document.addEventListener('DOMContentLoaded', function() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const welcomeTitle = document.getElementById('welcome-title');
+    
+    if (currentUser && currentUser.name) {
+      welcomeTitle.textContent = `¡Hola, ${currentUser.name}! 👋`;
+    } else {
+      welcomeTitle.textContent = '¡Hola! 👋';
+    }
+
+    // Mostrar notificación de bienvenida si acaba de hacer login
+    if (sessionStorage.getItem('justLoggedIn') === 'true') {
+      const userName = currentUser?.name || currentUser?.username || 'Usuario';
+      
+      // Emoji dinámico según la hora del día
+      const hour = new Date().getHours();
+      let emoji = '👋';
+      if (hour >= 5 && hour < 12) emoji = '☀️'; // Mañana
+      else if (hour >= 12 && hour < 18) emoji = '🌤️'; // Tarde
+      else if (hour >= 18 && hour < 22) emoji = '🌙'; // Noche
+      else emoji = '⭐'; // Madrugada
+      
+      setTimeout(() => {
+        if (typeof showNotification === 'function') {
+          showNotification(`¡Bienvenido, ${userName}!`, emoji);
+        }
+      }, 500);
+      sessionStorage.removeItem('justLoggedIn');
+    }
+  });
+
+  // Logout functionality
+  document.getElementById('logout-btn').addEventListener('click', function() {
+    localStorage.removeItem('currentUser');
+    window.location.href = 'login.html';
+  });
+</script>
+
+<!-- PWA Service Worker Registration -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js')
+        .then(function(registration) {
+          console.log('Service Worker registrado con éxito:', registration.scope);
+
+          // Escuchar por actualizaciones del service worker
+          registration.addEventListener('updatefound', function() {
+            const newWorker = registration.installing;
+            newWorker.addEventListener('statechange', function() {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                // Nueva versión disponible
+                if (confirm('Hay una nueva versión disponible. ¿Quieres actualizar?')) {
+                  newWorker.postMessage({ type: 'SKIP_WAITING' });
+                  window.location.reload();
+                }
+              }
+            });
+          });
+        })
+        .catch(function(error) {
+          console.log('Error al registrar el Service Worker:', error);
+        });
+    });
+
+    // Escuchar cambios en el service worker
+    navigator.serviceWorker.addEventListener('controllerchange', function() {
+      window.location.reload();
+    });
+  }
+
+  // Detectar si estamos en modo standalone (PWA instalada)
+  if (window.matchMedia('(display-mode: standalone)').matches ||
+      window.navigator.standalone === true) {
+    console.log('Ejecutándose en modo PWA');
+    // Aquí puedes agregar lógica específica para cuando la app está instalada
+  }
+
+  // Solicitar permisos para notificaciones (opcional)
+  if ('Notification' in window && navigator.serviceWorker) {
+    if (Notification.permission === 'default') {
+      // Puedes mostrar un botón para solicitar permisos más tarde
+      console.log('Notificaciones disponibles pero no solicitadas aún');
+    }
+  }
+</script>
+</body>
+</html>

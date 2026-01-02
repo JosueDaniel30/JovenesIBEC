@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Metas | App Jóvenes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Aplicación para jóvenes cristianos - metas espirituales, biblia y crecimiento personal">
+  <meta name="theme-color" content="#4f46e5">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="logojov.png">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="notificacion.css">
+</head>
+<body>
+
+<header class="top-nav">
+  <div class="nav-container">
+    <div class="logo-section">
+      <h1 class="logo">
+        <img src="logojov.png" alt="Logo Jovenes" class="logo-icon">
+        <span class="logo-text">Jovenes con Cristo</span>
+      </h1>
+    </div>
+
+    <nav class="nav-menu">
+      <a class="nav-link" href="index.html" data-tooltip="Inicio">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-text">Inicio</span>
+        <span class="nav-glow"></span>
+      </a>
+
+      <a class="nav-link" href="perfil.html" data-tooltip="Mi Perfil">
+        <span class="nav-icon">👤</span>
+        <span class="nav-text">Perfil</span>
+        <span class="nav-glow"></span>
+      </a>
+
+      <a class="nav-link" href="biblia.html" data-tooltip="La Biblia">
+        <span class="nav-icon">📖</span>
+        <span class="nav-text">Biblia</span>
+        <span class="nav-glow"></span>
+      </a>
+
+      <a class="nav-link active" href="metas.html" data-tooltip="Mis Metas">
+        <span class="nav-icon">🎯</span>
+        <span class="nav-text">Metas</span>
+        <span class="nav-glow"></span>
+      </a>
+
+      <div class="nav-divider"></div>
+
+      <button id="theme-toggle" class="theme-btn" data-tooltip="Cambiar Tema">
+        <span class="theme-icon">🌙</span>
+        <span class="theme-glow"></span>
+      </button>
+    </nav>
+
+    <button class="mobile-menu-toggle" id="mobile-menu-btn">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+  </div>
+
+  <!-- Menú móvil -->
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-menu-header">
+      <h3>Menú</h3>
+      <button class="mobile-menu-close" id="mobile-menu-close">✕</button>
+    </div>
+    <nav class="mobile-nav">
+      <a class="mobile-nav-link" href="index.html">
+        <span class="mobile-nav-icon">🏠</span>
+        <span class="mobile-nav-text">Inicio</span>
+      </a>
+      <a class="mobile-nav-link" href="perfil.html">
+        <span class="mobile-nav-icon">👤</span>
+        <span class="mobile-nav-text">Perfil</span>
+      </a>
+      <a class="mobile-nav-link" href="biblia.html">
+        <span class="mobile-nav-icon">📖</span>
+        <span class="mobile-nav-text">Biblia</span>
+      </a>
+      <a class="mobile-nav-link active" href="metas.html">
+        <span class="mobile-nav-icon">🎯</span>
+        <span class="mobile-nav-text">Metas</span>
+      </a>
+      <div class="mobile-nav-divider"></div>
+      <button id="mobile-theme-toggle" class="mobile-theme-btn">
+        <span class="mobile-theme-icon">🌙</span>
+        <span class="mobile-theme-text">Tema Oscuro</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="hero-section">
+    <h1 class="page-title">¡Alcanza tus Metas Espirituales!</h1>
+    <p class="hero-subtitle">Cada paso cuenta en tu camino de fe</p>
+  </section>
+
+  <!-- Progreso General -->
+  <section class="card-premium overall-progress">
+    <h2>📊 Tu Progreso General</h2>
+    <div class="progress-circle">
+      <div class="progress-circle-inner">
+        <span id="total-progress">0</span>%
+      </div>
+    </div>
+    <div class="progress-bar">
+      <div id="overall-progress-fill" class="progress-fill"></div>
+    </div>
+    <p class="progress-text">Completa todas las metas para convertirte en un líder espiritual</p>
+  </section>
+
+  <!-- Herramientas -->
+  <section class="tools-grid">
+    <div class="tool-card" onclick="showAddGoalModal()">
+      <div class="tool-icon">➕</div>
+      <h3>Agregar Meta</h3>
+      <p>Crea una meta personalizada</p>
+    </div>
+
+    <div class="tool-card" onclick="showStats()">
+      <div class="tool-icon">📈</div>
+      <h3>Estadísticas</h3>
+      <p>Ve tu progreso detallado</p>
+    </div>
+
+    <div class="tool-card" onclick="shareProgress()">
+      <div class="tool-icon">📤</div>
+      <h3>Compartir</h3>
+      <p>Muestra tus logros</p>
+    </div>
+
+    <div class="tool-card" onclick="resetAllProgress()">
+      <div class="tool-icon">🔄</div>
+      <h3>Reiniciar</h3>
+      <p>Empieza de nuevo</p>
+    </div>
+  </section>
+
+  <!-- Metas por Nivel -->
+  <section class="levels-section">
+    <div class="level-section bronze">
+      <div class="level-header">
+        <button class="level-toggle" aria-expanded="true">
+          <span class="level-icon">🥉</span>
+          <div class="level-info">
+            <h3>Nivel Bronce</h3>
+            <p>Hábitos diarios básicos</p>
+          </div>
+          <span class="level-progress-text" id="bronze-percentage">0%</span>
+          <span class="toggle-icon">▼</span>
+        </button>
+      </div>
+      <div id="bronze-goals" class="goals-grid" data-level="bronze">
+        <div class="goal-item" data-goal-id="bronze1">
+          <div class="goal-checkbox-section">
+            <div class="goal-checkbox-wrapper">
+              <input type="checkbox" id="bronze1">
+              <label for="bronze1" class="goal-checkbox-label">
+                <div class="checkbox-custom">
+                  <div class="checkbox-icon">📖</div>
+                  <div class="checkbox-checkmark">✓</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="goal-content-section">
+            <div class="goal-header">
+              <div class="goal-title-section">
+                <h4 class="goal-title">Leer un versículo diario</h4>
+                <span class="goal-description">Dedica tiempo a la Palabra de Dios cada día</span>
+              </div>
+              <div class="goal-reward-badge">
+                <span class="reward-points">+5</span>
+                <span class="reward-icon">⭐</span>
+              </div>
+            </div>
+            <div class="goal-progress">
+              <div class="streak-info">
+                <span class="streak-count">0</span> días de racha
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="goal-item" data-goal-id="bronze2">
+          <div class="goal-checkbox-section">
+            <div class="goal-checkbox-wrapper">
+              <input type="checkbox" id="bronze2">
+              <label for="bronze2" class="goal-checkbox-label">
+                <div class="checkbox-custom">
+                  <div class="checkbox-icon">🙏</div>
+                  <div class="checkbox-checkmark">✓</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="goal-content-section">
+            <div class="goal-header">
+              <div class="goal-title-section">
+                <h4 class="goal-title">Orar por 5 minutos</h4>
+                <span class="goal-description">Conversa con Dios diariamente</span>
+              </div>
+              <div class="goal-reward-badge">
+                <span class="reward-points">+5</span>
+                <span class="reward-icon">🙏</span>
+              </div>
+            </div>
+            <div class="goal-progress">
+              <div class="streak-info">
+                <span class="streak-count">0</span> días de racha
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="goal-item" data-goal-id="bronze3">
+          <div class="goal-checkbox-section">
+            <div class="goal-checkbox-wrapper">
+              <input type="checkbox" id="bronze3">
+              <label for="bronze3" class="goal-checkbox-label">
+                <div class="checkbox-custom">
+                  <div class="checkbox-icon">⛪</div>
+                  <div class="checkbox-checkmark">✓</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="goal-content-section">
+            <div class="goal-header">
+              <div class="goal-title-section">
+                <h4 class="goal-title">Asistir a un culto semanal</h4>
+                <span class="goal-description">Únete a la comunidad de fe</span>
+              </div>
+              <div class="goal-reward-badge">
+                <span class="reward-points">+10</span>
+                <span class="reward-icon">⛪</span>
+              </div>
+            </div>
+            <div class="goal-progress">
+              <div class="streak-info">
+                <span class="streak-count">0</span> semanas de racha
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="goal-item" data-goal-id="bronze4">
+          <div class="goal-checkbox-section">
+            <div class="goal-checkbox-wrapper">
+              <input type="checkbox" id="bronze4">
+              <label for="bronze4" class="goal-checkbox-label">
+                <div class="checkbox-custom">
+                  <div class="checkbox-icon">💬</div>
+                  <div class="checkbox-checkmark">✓</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="goal-content-section">
+            <div class="goal-header">
+              <div class="goal-title-section">
+                <h4 class="goal-title">Compartir un versículo</h4>
+                <span class="goal-description">Inspira a otros con la Palabra</span>
+              </div>
+              <div class="goal-reward-badge">
+                <span class="reward-points">+10</span>
+                <span class="reward-icon">💬</span>
+              </div>
+            </div>
+            <div class="goal-progress">
+              <div class="streak-info">
+                <span class="streak-count">0</span> veces compartido
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="goal-item" data-goal-id="bronze5">
+          <div class="goal-checkbox-section">
+            <div class="goal-checkbox-wrapper">
+              <input type="checkbox" id="bronze5">
+              <label for="bronze5" class="goal-checkbox-label">
+                <div class="checkbox-custom">
+                  <div class="checkbox-icon">📝</div>
+                  <div class="checkbox-checkmark">✓</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="goal-content-section">
+            <div class="goal-header">
+              <div class="goal-title-section">
+                <h4 class="goal-title">Reflexionar sobre tu día</h4>
+                <span class="goal-description">Revisa tu caminar espiritual</span>
+              </div>
+              <div class="goal-reward-badge">
+                <span class="reward-points">+5</span>
+                <span class="reward-icon">📝</span>
+              </div>
+            </div>
+            <div class="goal-progress">
+              <div class="streak-info">
+                <span class="streak-count">0</span> días de racha
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="level-progress">
+        <div id="bronze-progress" class="progress-fill" style="width: 0%"></div>
+      </div>
+      <p class="level-count" id="bronze-count">0/5 completadas</p>
+    </div>
+
+    <div class="level-section silver">
+      <div class="level-header">
+        <button class="level-toggle" aria-expanded="false">
+          <span class="level-icon">🥈</span>
+          <div class="level-info">
+            <h3>Nivel Plata</h3>
+            <p>Desarrollo espiritual intermedio</p>
+          </div>
+          <span class="level-progress-text" id="silver-percentage">0%</span>
+          <span class="toggle-icon">▶</span>
+        </button>
+      </div>
+      <div id="silver-goals" class="goals-grid" data-level="silver" style="display: none;">
+        <div class="goal-item" data-goal-id="silver1">
+          <div class="goal-checkbox-section">
+            <div class="goal-checkbox-wrapper">
+              <input type="checkbox" id="silver1">
+              <label for="silver1" class="goal-checkbox-label">
+                <div class="checkbox-custom">
+                  <div class="checkbox-icon">🧠</div>
+                  <div class="checkbox-checkmark">✓</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="goal-content-section">
+            <div class="goal-header">
+              <div class="goal-title-section">
+                <h4 class="goal-title">Memorizar 5 versículos</h4>
+                <span class="goal-description">Graba la Palabra en tu corazón</span>
+              </div>
+              <div class="goal-reward-badge">
+                <span class="reward-points">+15</span>
+                <span class="reward-icon">🧠</span>
+              </div>
+            </div>
+            <div class="goal-progress">
+              <div class="progress-tracker">
+                <div class="progress-bar-mini">
+                  <div class="progress-fill-mini" style="width: 0%"></div>
+                </div>
+                <span class="progress-text">0/5 versículos</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="goal-item" data-goal-id="silver2">
+          <div class="goal-checkbox-section">
+            <div class="goal-checkbox-wrapper">
+              <input type="checkbox" id="silver2">
+              <label for="silver2" class="goal-checkbox-label">
+                <div class="checkbox-custom">
+                  <div class="checkbox-icon">🤝</div>
+                  <div class="checkbox-checkmark">✓</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="goal-content-section">
+            <div class="goal-header">
+              <div class="goal-title-section">
+                <h4 class="goal-title">Ayudar en un ministerio</h4>
+                <span class="goal-description">Sirve a otros con tus dones</span>
+              </div>
+              <div class="goal-reward-badge">
+                <span class="reward-points">+20</span>
+                <span class="reward-icon">🤝</span>
+              </div>
+            </div>
+            <div class="goal-progress">
+              <div class="streak-info">
+                <span class="streak-count">0</span> semanas de racha
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="goal-item" data-goal-id="silver3">
+          <div class="goal-checkbox-section">
+            <div class="goal-checkbox-wrapper">
+              <input type="checkbox" id="silver3">
+              <label for="silver3" class="goal-checkbox-label">
+                <div class="checkbox-custom">
+                  <div class="checkbox-icon">📚</div>
+                  <div class="checkbox-checkmark">✓</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="goal-content-section">
+            <div class="goal-header">
+              <div class="goal-title-section">
+                <h4 class="goal-title">Estudiar un libro bíblico</h4>
+                <span class="goal-description">Profundiza en la Escritura</span>
+              </div>
+              <div class="goal-reward-badge">
+                <span class="reward-points">+25</span>
+                <span class="reward-icon">📚</span>
+              </div>
+            </div>
+            <div class="goal-progress">
+              <div class="progress-tracker">
+                <div class="progress-bar-mini">
+                  <div class="progress-fill-mini" style="width: 0%"></div>
+                </div>
+                <span class="progress-text">0/10 capítulos</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="goal-item" data-goal-id="silver4">
+          <div class="goal-checkbox-section">
+            <div class="goal-checkbox-wrapper">
+              <input type="checkbox" id="silver4">
+              <label for="silver4" class="goal-checkbox-label">
+                <div class="checkbox-custom">
+                  <div class="checkbox-icon">🎤</div>
+                  <div class="checkbox-checkmark">✓</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="goal-content-section">
+            <div class="goal-header">
+              <div class="goal-title-section">
+                <h4 class="goal-title">Compartir tu testimonio</h4>
+                <span class="goal-description">Da esperanza a otros</span>
+              </div>
+              <div class="goal-reward-badge">
+                <span class="reward-points">+20</span>
+                <span class="reward-icon">🎤</span>
+              </div>
+            </div>
+            <div class="goal-progress">
+              <div class="streak-info">
+                <span class="streak-count">0</span> veces compartido
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="goal-item" data-goal-id="silver5">
+          <div class="goal-checkbox-section">
+            <div class="goal-checkbox-wrapper">
+              <input type="checkbox" id="silver5">
+              <label for="silver5" class="goal-checkbox-label">
+                <div class="checkbox-custom">
+                  <div class="checkbox-icon">❤️</div>
+                  <div class="checkbox-checkmark">✓</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="goal-content-section">
+            <div class="goal-header">
+              <div class="goal-title-section">
+                <h4 class="goal-title">Orar por otros diariamente</h4>
+                <span class="goal-description">Intercede por tu comunidad</span>
+              </div>
+              <div class="goal-reward-badge">
+                <span class="reward-points">+15</span>
+                <span class="reward-icon">❤️</span>
+              </div>
+            </div>
+            <div class="goal-progress">
+              <div class="streak-info">
+                <span class="streak-count">0</span> días de racha
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="level-progress">
+        <div id="silver-progress" class="progress-fill" style="width: 0%"></div>
+      </div>
+      <p class="level-count" id="silver-count">0/5 completadas</p>
+    </div>
+
+    <div class="level-section gold">
+      <div class="level-header">
+        <button class="level-toggle" aria-expanded="false">
+          <span class="level-icon">🥇</span>
+          <div class="level-info">
+            <h3>Nivel Oro</h3>
+            <p>Liderazgo espiritual avanzado</p>
+          </div>
+          <span class="level-progress-text" id="gold-percentage">0%</span>
+          <span class="toggle-icon">▶</span>
+        </button>
+      </div>
+      <div id="gold-goals" class="goals-grid" data-level="gold" style="display: none;">
+        <div class="goal-item" data-goal-id="gold1">
+          <div class="goal-checkbox-section">
+            <div class="goal-checkbox-wrapper">
+              <input type="checkbox" id="gold1">
+              <label for="gold1" class="goal-checkbox-label">
+                <div class="checkbox-custom">
+                  <div class="checkbox-icon">👨‍🏫</div>
+                  <div class="checkbox-checkmark">✓</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="goal-content-section">
+            <div class="goal-header">
+              <div class="goal-title-section">
+                <h4 class="goal-title">Discipular a alguien</h4>
+                <span class="goal-description">Guía a otros en su caminar espiritual</span>
+              </div>
+              <div class="goal-reward-badge">
+                <span class="reward-points">+30</span>
+                <span class="reward-icon">👨‍🏫</span>
+              </div>
+            </div>
+            <div class="goal-progress">
+              <div class="progress-tracker">
+                <div class="progress-bar-mini">
+                  <div class="progress-fill-mini" style="width: 0%"></div>
+                </div>
+                <span class="progress-text">0/3 personas</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="goal-item" data-goal-id="gold2">
+          <div class="goal-checkbox-section">
+            <div class="goal-checkbox-wrapper">
+              <input type="checkbox" id="gold2">
+              <label for="gold2" class="goal-checkbox-label">
+                <div class="checkbox-custom">
+                  <div class="checkbox-icon">👥</div>
+                  <div class="checkbox-checkmark">✓</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="goal-content-section">
+            <div class="goal-header">
+              <div class="goal-title-section">
+                <h4 class="goal-title">Liderar un grupo de estudio</h4>
+                <span class="goal-description">Facilita el aprendizaje colectivo</span>
+              </div>
+              <div class="goal-reward-badge">
+                <span class="reward-points">+35</span>
+                <span class="reward-icon">👥</span>
+              </div>
+            </div>
+            <div class="goal-progress">
+              <div class="streak-info">
+                <span class="streak-count">0</span> semanas liderando
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="goal-item" data-goal-id="gold3">
+          <div class="goal-checkbox-section">
+            <div class="goal-checkbox-wrapper">
+              <input type="checkbox" id="gold3">
+              <label for="gold3" class="goal-checkbox-label">
+                <div class="checkbox-custom">
+                  <div class="checkbox-icon">🎓</div>
+                  <div class="checkbox-checkmark">✓</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="goal-content-section">
+            <div class="goal-header">
+              <div class="goal-title-section">
+                <h4 class="goal-title">Completar un curso bíblico</h4>
+                <span class="goal-description">Amplía tu conocimiento teológico</span>
+              </div>
+              <div class="goal-reward-badge">
+                <span class="reward-points">+40</span>
+                <span class="reward-icon">🎓</span>
+              </div>
+            </div>
+            <div class="goal-progress">
+              <div class="progress-tracker">
+                <div class="progress-bar-mini">
+                  <div class="progress-fill-mini" style="width: 0%"></div>
+                </div>
+                <span class="progress-text">0/12 lecciones</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="goal-item" data-goal-id="gold4">
+          <div class="goal-checkbox-section">
+            <div class="goal-checkbox-wrapper">
+              <input type="checkbox" id="gold4">
+              <label for="gold4" class="goal-checkbox-label">
+                <div class="checkbox-custom">
+                  <div class="checkbox-icon">⚡</div>
+                  <div class="checkbox-checkmark">✓</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="goal-content-section">
+            <div class="goal-header">
+              <div class="goal-title-section">
+                <h4 class="goal-title">Servir en múltiples ministerios</h4>
+                <span class="goal-description">Multiplica tu impacto en la iglesia</span>
+              </div>
+              <div class="goal-reward-badge">
+                <span class="reward-points">+35</span>
+                <span class="reward-icon">⚡</span>
+              </div>
+            </div>
+            <div class="goal-progress">
+              <div class="progress-tracker">
+                <div class="progress-bar-mini">
+                  <div class="progress-fill-mini" style="width: 0%"></div>
+                </div>
+                <span class="progress-text">0/3 ministerios</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="goal-item" data-goal-id="gold5">
+          <div class="goal-checkbox-section">
+            <div class="goal-checkbox-wrapper">
+              <input type="checkbox" id="gold5">
+              <label for="gold5" class="goal-checkbox-label">
+                <div class="checkbox-custom">
+                  <div class="checkbox-icon">🌟</div>
+                  <div class="checkbox-checkmark">✓</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="goal-content-section">
+            <div class="goal-header">
+              <div class="goal-title-section">
+                <h4 class="goal-title">Impactar vidas para Cristo</h4>
+                <span class="goal-description">Sé instrumento de transformación</span>
+              </div>
+              <div class="goal-reward-badge">
+                <span class="reward-points">+50</span>
+                <span class="reward-icon">🌟</span>
+              </div>
+            </div>
+            <div class="goal-progress">
+              <div class="progress-tracker">
+                <div class="progress-bar-mini">
+                  <div class="progress-fill-mini" style="width: 0%"></div>
+                </div>
+                <span class="progress-text">0/5 vidas</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="level-progress">
+        <div id="gold-progress" class="progress-fill" style="width: 0%"></div>
+      </div>
+      <p class="level-count" id="gold-count">0/5 completadas</p>
+    </div>
+  </section>
+
+  <!-- Metas Personalizadas -->
+  <section id="custom-goals-section" class="card-premium">
+    <h2>🎯 Tus Metas Personalizadas</h2>
+    <div id="custom-goals-list" class="goals-grid" data-level="custom">
+      <p class="empty-state">No tienes metas personalizadas aún. ¡Agrega una!</p>
+    </div>
+  </section>
+
+  <!-- Modal para agregar meta -->
+  <div id="add-goal-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <h3>Agregar Nueva Meta (Admin)</h3>
+      <form id="add-goal-form">
+        <label for="admin-password">Contraseña de Admin:</label>
+        <input type="password" id="admin-password" placeholder="Ingresa la contraseña de admin" required>
+        <small style="color: var(--text-secondary); display: block; margin-bottom: 1rem;">
+          Solo los administradores pueden agregar nuevas metas.
+        </small>
+
+        <label for="goal-title">Título de la meta:</label>
+        <input type="text" id="goal-title" required>
+
+        <label for="goal-description">Descripción:</label>
+        <textarea id="goal-description" rows="3"></textarea>
+
+        <label for="goal-deadline">Fecha límite:</label>
+        <input type="date" id="goal-deadline">
+
+        <label for="goal-level">Nivel:</label>
+        <select id="goal-level" required>
+          <option value="bronze">🥉 Bronce</option>
+          <option value="silver">🥈 Plata</option>
+          <option value="gold">🥇 Oro</option>
+          <option value="custom">🎯 Personalizada</option>
+        </select>
+
+        <div class="modal-actions">
+          <button type="button" onclick="closeModal()" class="btn-secondary">Cancelar</button>
+          <button type="submit" class="btn-plus">Agregar Meta</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</main>
+
+<script src="script.js"></script>
+<script src="metas.js"></script>
+
+<!-- PWA Service Worker Registration -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js')
+        .then(function(registration) {
+          console.log('Service Worker registrado con éxito:', registration.scope);
+
+          // Escuchar por actualizaciones del service worker
+          registration.addEventListener('updatefound', function() {
+            const newWorker = registration.installing;
+            newWorker.addEventListener('statechange', function() {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                // Nueva versión disponible
+                if (confirm('Hay una nueva versión disponible. ¿Quieres actualizar?')) {
+                  newWorker.postMessage({ type: 'SKIP_WAITING' });
+                  window.location.reload();
+                }
+              }
+            });
+          });
+        })
+        .catch(function(error) {
+          console.log('Error al registrar el Service Worker:', error);
+        });
+    });
+
+    // Escuchar cambios en el service worker
+    navigator.serviceWorker.addEventListener('controllerchange', function() {
+      window.location.reload();
+    });
+  }
+
+  // Detectar si estamos en modo standalone (PWA instalada)
+  if (window.matchMedia('(display-mode: standalone)').matches ||
+      window.navigator.standalone === true) {
+    console.log('Ejecutándose en modo PWA');
+    // Aquí puedes agregar lógica específica para cuando la app está instalada
+  }
+
+  // Solicitar permisos para notificaciones (opcional)
+  if ('Notification' in window && navigator.serviceWorker) {
+    if (Notification.permission === 'default') {
+      // Puedes mostrar un botón para solicitar permisos más tarde
+      console.log('Notificaciones disponibles pero no solicitadas aún');
+    }
+  }
+</script>
+</body>
+</html>
