@@ -154,12 +154,12 @@ function applySettings() {
     if (settings.autoDark) {
         const hour = new Date().getHours();
         const shouldBeDark = hour < 6 || hour > 18;
-        if (shouldBeDark && !document.body.classList.contains('dark')) {
-            document.body.classList.add('dark');
+        if (shouldBeDark && !document.body.classList.contains('dark-theme')) {
+            document.body.classList.add('dark-theme');
             localStorage.setItem('theme', 'dark');
             document.querySelector('.theme-icon').textContent = '☀️';
-        } else if (!shouldBeDark && document.body.classList.contains('dark')) {
-            document.body.classList.remove('dark');
+        } else if (!shouldBeDark && document.body.classList.contains('dark-theme')) {
+            document.body.classList.remove('dark-theme');
             localStorage.setItem('theme', 'light');
             document.querySelector('.theme-icon').textContent = '🌙';
         }
@@ -167,7 +167,7 @@ function applySettings() {
 }
 
 function loadFavorites() {
-    const favorites = JSON.parse(localStorage.getItem('favoriteVerses') || '[]');
+    const favorites = JSON.parse(localStorage.getItem('versiculosFavoritos') || '[]');
     const favoritesList = document.getElementById('favorites-list');
 
     if (favorites.length === 0) {
@@ -177,20 +177,21 @@ function loadFavorites() {
 
     const favoritesHTML = favorites.map((fav, index) => `
         <div class="favorite-item">
-            <blockquote class="favorite-verse">"${fav.text}"</blockquote>
-            <cite class="favorite-ref">${fav.ref}</cite>
-            <div class="favorite-date">${new Date(fav.date).toLocaleDateString()}</div>
-            <button onclick="removeFavorite(${index})" class="btn-secondary">🗑️</button>
+            <blockquote class="favorite-verse">"${fav.texto}"</blockquote>
+            <cite class="favorite-ref">${fav.libro} ${fav.capitulo}:${fav.versiculo}</cite>
+            <button onclick="removeFavorite('${fav.libro}', ${fav.capitulo}, ${fav.versiculo})" class="btn-secondary">🗑️</button>
         </div>
     `).join('');
 
     favoritesList.innerHTML = favoritesHTML;
 }
 
-function removeFavorite(index) {
-    let favorites = JSON.parse(localStorage.getItem('favoriteVerses') || '[]');
-    favorites.splice(index, 1);
-    localStorage.setItem('favoriteVerses', JSON.stringify(favorites));
+function removeFavorite(libro, capitulo, versiculo) {
+    let favorites = JSON.parse(localStorage.getItem('versiculosFavoritos') || '[]');
+    favorites = favorites.filter(fav =>
+        !(fav.libro === libro && fav.capitulo === capitulo && fav.versiculo === versiculo)
+    );
+    localStorage.setItem('versiculosFavoritos', JSON.stringify(favorites));
     loadFavorites();
 }
 
@@ -271,6 +272,7 @@ document.addEventListener('DOMContentLoaded', function() {
     displayProfile();
     updateStats();
     loadProfilePic();
+    loadFavorites();
     document.getElementById('edit-profile-btn').addEventListener('click', toggleEditSection);
     document.getElementById('cancel-edit-btn').addEventListener('click', cancelEdit);
     document.getElementById('edit-pic-btn').addEventListener('click', changeProfilePic);
