@@ -131,9 +131,15 @@ class BibliaRVR1960 {
 
     // Generar nombre de archivo para un capítulo específico
     getNombreArchivo(nombreLibro, capitulo) {
-        const carpeta = this.getCarpetaLibro(nombreLibro);
-        return `${carpeta}_${capitulo}.json`;
-    }
+    const limpio = nombreLibro
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/\s+/g, '');
+
+    return `${limpio}_${capitulo}.json`;
+}
+
 
     // Obtener versículo aleatorio
     async obtenerVersiculoAleatorio() {
