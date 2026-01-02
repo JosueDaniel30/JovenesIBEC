@@ -70,7 +70,7 @@ self.addEventListener('fetch', event => {
   if (url.protocol === 'chrome-extension:') return;
 
   // Estrategia para recursos de la Biblia
-  if (url.pathname.startsWith('/biblia/') && url.pathname.endsWith('.json')) {
+  if (url.pathname.startsWith('/JovenesIBEC/biblia/') && url.pathname.endsWith('.json')) {
     event.respondWith(
       caches.match(request).then(cachedResponse => {
         if (cachedResponse) {

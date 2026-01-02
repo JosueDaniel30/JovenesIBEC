@@ -2,9 +2,11 @@
    📖 BIBLIA RVR1960 COMPLETA - CARGADA DESDE ARCHIVOS JSON
 ============================ */
 
+const BASE_PATH = "/JovenesIBEC";
+
 class BibliaRVR1960 {
     constructor() {
-        this.basePath = './biblia'; // Ruta base de los archivos JSON
+        this.basePath = `${BASE_PATH}/biblia`; // Ruta base de los archivos JSON
         this.libros = [
             // Antiguo Testamento
             { id: 1, nombre: "Génesis", abrev: "GEN", testament: "AT", cap: 50 },
