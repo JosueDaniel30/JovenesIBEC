@@ -393,6 +393,15 @@ function notify(msg, icon) {
 
 // Iniciar quiz
 function startQuizGame() {
+    // Ocultar otras secciones
+    document.getElementById('search-section').style.display = 'none';
+    document.getElementById('favorites-section').style.display = 'none';
+    document.getElementById('verse-section').style.display = 'none';
+    document.getElementById('books-section').style.display = 'none';
+
+    // Mostrar sección del quiz
+    document.getElementById('quiz-section').style.display = 'block';
+
     // Mostrar configuración del quiz
     showQuizSetup();
 }
@@ -821,4 +830,75 @@ function shuffleArray(array) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
     }
+}
+
+// ============================
+// Mostrar Favoritos
+// ============================
+function showFavorites() {
+    // Ocultar otras secciones
+    document.getElementById('search-section').style.display = 'none';
+    document.getElementById('quiz-section').style.display = 'none';
+    document.getElementById('verse-section').style.display = 'none';
+    document.getElementById('books-section').style.display = 'none';
+
+    // Mostrar sección de favoritos
+    document.getElementById('favorites-section').style.display = 'block';
+
+    // Cargar favoritos
+    loadFavorites();
+}
+
+// Cargar y mostrar favoritos
+function loadFavorites() {
+    const favoritesList = document.getElementById('favorites-list');
+    const favs = JSON.parse(localStorage.getItem("favorites") || "[]");
+
+    if (favs.length === 0) {
+        favoritesList.innerHTML = '<p class="empty-state">No tienes versículos favoritos aún. ¡Agrega algunos!</p>';
+        return;
+    }
+
+    favoritesList.innerHTML = favs.map((fav, index) => `
+        <div class="verse-card">
+            <div class="verse-content">
+                <blockquote>"${fav.text}"</blockquote>
+                <cite>${fav.ref}</cite>
+            </div>
+            <div class="verse-actions">
+                <button onclick="shareFavorite('${fav.text}', '${fav.ref}')" class="btn-icon">📤</button>
+                <button onclick="removeFavorite(${index})" class="btn-icon">🗑️</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Compartir favorito
+function shareFavorite(text, ref) {
+    const message = `${text} ${ref}`;
+    navigator.clipboard.writeText(message);
+    notify("Copiado 📋", "✅");
+}
+
+// Remover favorito
+function removeFavorite(index) {
+    let favs = JSON.parse(localStorage.getItem("favorites") || "[]");
+    favs.splice(index, 1);
+    localStorage.setItem("favorites", JSON.stringify(favs));
+    loadFavorites();
+    notify("Versículo removido de favoritos", "🗑️");
+}
+
+// ============================
+// Mostrar Búsqueda
+// ============================
+function showSearch() {
+    // Ocultar otras secciones
+    document.getElementById('favorites-section').style.display = 'none';
+    document.getElementById('quiz-section').style.display = 'none';
+    document.getElementById('verse-section').style.display = 'none';
+    document.getElementById('books-section').style.display = 'none';
+
+    // Mostrar sección de búsqueda
+    document.getElementById('search-section').style.display = 'block';
 }

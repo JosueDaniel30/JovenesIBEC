@@ -12,7 +12,16 @@ const verses = [
     { text: 'El que habita al abrigo del Altísimo morará bajo la sombra del Omnipotente.', ref: 'Salmos 91:1', theme: 'protección' },
     { text: 'Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree, no se pierda, mas tenga vida eterna.', ref: 'Juan 3:16', theme: 'amor' },
     { text: 'Y sabemos que a los que aman a Dios, todas las cosas les ayudan a bien, esto es, a los que conforme a su propósito son llamados.', ref: 'Romanos 8:28', theme: 'propósito' },
-    { text: 'Pero los que esperan a Jehová tendrán nuevas fuerzas; levantarán alas como las águilas; correrán, y no se cansarán; caminarán, y no se fatigarán.', ref: 'Isaías 40:31', theme: 'esperanza' }
+    { text: 'Pero los que esperan a Jehová tendrán nuevas fuerzas; levantarán alas como las águilas; correrán, y no se cansarán; caminarán, y no se fatigarán.', ref: 'Isaías 40:31', theme: 'esperanza' },
+    { text: 'En el principio creó Dios los cielos y la tierra.', ref: 'Génesis 1:1', theme: 'creación' },
+    { text: 'No tendrás dioses ajenos delante de mí.', ref: 'Éxodo 20:3', theme: 'adoración' },
+    { text: 'Fíate de Jehová de todo tu corazón, y no te apoyes en tu propia prudencia.', ref: 'Proverbios 3:5', theme: 'sabiduría' },
+    { text: 'Por tanto, id, y haced discípulos a todas las naciones, bautizándolos en el nombre del Padre, y del Hijo, y del Espíritu Santo.', ref: 'Mateo 28:19', theme: 'misión' },
+    { text: 'Porque por gracia sois salvos por medio de la fe; y esto no de vosotros, pues es don de Dios.', ref: 'Efesios 2:8', theme: 'gracia' },
+    { text: 'Bienaventurado el varón que no anduvo en consejo de malos, ni estuvo en camino de pecadores, ni en silla de escarnecedores se ha sentado.', ref: 'Salmos 1:1', theme: 'bendición' },
+    { text: 'El temor de Jehová es el principio de la sabiduría; y el conocimiento del Santísimo es la inteligencia.', ref: 'Proverbios 9:10', theme: 'temor' },
+    { text: 'Venid a mí todos los que estáis trabajados y cargados, y yo os haré descansar.', ref: 'Mateo 11:28', theme: 'descanso' },
+    { text: 'De manera que si alguno está en Cristo, nueva criatura es; las cosas viejas pasaron; he aquí todas son hechas nuevas.', ref: '2 Corintios 5:17', theme: 'renovación' }
 ];
 
 function loadVerse() {
@@ -387,9 +396,6 @@ function toggleTheme() {
         mobileThemeIcon.textContent = isDark ? '☀️' : '🌙';
         mobileThemeText.textContent = isDark ? 'Tema Claro' : 'Tema Oscuro';
     }
-
-    // Aplicar tema a elementos específicos
-    applyTheme();
 }
 
 function applyTheme() {
