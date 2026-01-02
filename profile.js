@@ -167,32 +167,91 @@ function applySettings() {
 }
 
 function loadFavorites() {
-    const favorites = JSON.parse(localStorage.getItem('versiculosFavoritos') || '[]');
+    const favorites = JSON.parse(localStorage.getItem('favoriteVerses') || '[]');
     const favoritesList = document.getElementById('favorites-list');
 
     if (favorites.length === 0) {
-        favoritesList.innerHTML = '<p class="empty-state">No tienes versículos favoritos aún. ¡Agrega algunos desde la página de la Biblia!</p>';
+        favoritesList.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">📖</div>
+                <h3>No tienes versículos favoritos aún</h3>
+                <p>¡Agrega algunos desde la página de la Biblia para tenerlos siempre a mano!</p>
+                <a href="biblia.html" class="btn-plus">Ir a la Biblia</a>
+            </div>
+        `;
         return;
     }
 
-    const favoritesHTML = favorites.map((fav, index) => `
-        <div class="favorite-item">
-            <blockquote class="favorite-verse">"${fav.texto}"</blockquote>
-            <cite class="favorite-ref">${fav.libro} ${fav.capitulo}:${fav.versiculo}</cite>
-            <button onclick="removeFavorite('${fav.libro}', ${fav.capitulo}, ${fav.versiculo})" class="btn-secondary">🗑️</button>
-        </div>
-    `).join('');
+    const favoritesHTML = favorites.map((fav, index) => {
+        const dateAdded = new Date(fav.dateAdded).toLocaleDateString('es-ES', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+
+        return `
+            <div class="favorite-card" data-index="${index}">
+                <div class="favorite-header">
+                    <div class="favorite-theme">${fav.theme.toUpperCase()}</div>
+                    <div class="favorite-actions">
+                        <button onclick="shareFavorite(${index})" class="btn-icon" title="Compartir">📤</button>
+                        <button onclick="removeFavorite(${index})" class="btn-icon btn-danger" title="Eliminar">🗑️</button>
+                    </div>
+                </div>
+                <div class="favorite-content">
+                    <blockquote class="favorite-text">"${fav.text}"</blockquote>
+                    <cite class="favorite-ref">${fav.ref}</cite>
+                </div>
+                <div class="favorite-footer">
+                    <small class="favorite-date">Agregado: ${dateAdded}</small>
+                </div>
+            </div>
+        `;
+    }).join('');
 
     favoritesList.innerHTML = favoritesHTML;
 }
 
-function removeFavorite(libro, capitulo, versiculo) {
-    let favorites = JSON.parse(localStorage.getItem('versiculosFavoritos') || '[]');
-    favorites = favorites.filter(fav =>
-        !(fav.libro === libro && fav.capitulo === capitulo && fav.versiculo === versiculo)
-    );
-    localStorage.setItem('versiculosFavoritos', JSON.stringify(favorites));
-    loadFavorites();
+function removeFavorite(index) {
+    let favorites = JSON.parse(localStorage.getItem('favoriteVerses') || '[]');
+    if (index >= 0 && index < favorites.length) {
+        const removed = favorites.splice(index, 1)[0];
+        localStorage.setItem('favoriteVerses', JSON.stringify(favorites));
+        showNotification(`Versículo "${removed.ref}" eliminado de favoritos`, '🗑️');
+        loadFavorites();
+    }
+}
+
+function shareFavorite(index) {
+    const favorites = JSON.parse(localStorage.getItem('favoriteVerses') || '[]');
+    if (index >= 0 && index < favorites.length) {
+        const fav = favorites[index];
+        const message = `"${fav.text}" - ${fav.ref}`;
+
+        if (navigator.share) {
+            navigator.share({
+                title: 'Versículo Favorito - Jóvenes en Cristo',
+                text: message,
+                url: window.location.href
+            }).then(() => {
+                showNotification('Versículo compartido con éxito 🚀', '✅');
+            }).catch(err => {
+                console.error('Error al compartir:', err);
+                copyToClipboard(message);
+            });
+        } else {
+            copyToClipboard(message);
+        }
+    }
+}
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        showNotification('Versículo copiado al portapapeles 📋', '✅');
+    }).catch(err => {
+        console.error('Error al copiar:', err);
+        showNotification('Error al copiar el versículo', '❌');
+    });
 }
 
 // Exponer funciones globales

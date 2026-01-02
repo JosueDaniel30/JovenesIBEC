@@ -90,16 +90,25 @@ class BibliaRVR1960 {
             return null;
         }
 
-        // Nombre de carpeta según tu estructura
+        // Nombre de carpeta según la estructura real
         const carpeta = this.getCarpetaLibro(libro.nombre);
-        const url = `${this.basePath}/${carpeta}/${capitulo}.json`;
-        
+        const archivo = this.getNombreArchivo(libro.nombre, capitulo);
+        const url = `${this.basePath}/${carpeta}/${archivo}`;
+
         try {
             const response = await fetch(url);
             if (!response.ok) {
                 throw new Error(`Error HTTP ${response.status}`);
             }
-            return await response.json();
+            const chapterData = await response.json();
+
+            // Convertir la estructura del JSON a la esperada por el código
+            const versiculos = {};
+            chapterData.verses.forEach(verse => {
+                versiculos[verse.verse] = verse.text;
+            });
+
+            return versiculos;
         } catch (error) {
             console.error('Error cargando capítulo:', error);
             return null;
@@ -108,8 +117,22 @@ class BibliaRVR1960 {
 
     // Mapear nombre del libro a carpeta (ajusta según tu estructura)
     getCarpetaLibro(nombreLibro) {
-        // Remover números si existen (ej: "1 Samuel" -> "Samuel")
-        return nombreLibro.replace(/^\d+\s+/, '');
+        // Remover acentos y normalizar
+        let normalized = nombreLibro.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+        // Para libros que empiezan con número, mantener el número
+        if (/^\d/.test(normalized)) {
+            return normalized.replace(/\s+/g, '');
+        } else {
+            // Para otros libros, remover números al inicio si existen
+            return normalized.toLowerCase().replace(/^\d+\s+/, '').replace(/\s+/g, '');
+        }
+    }
+
+    // Generar nombre de archivo para un capítulo específico
+    getNombreArchivo(nombreLibro, capitulo) {
+        const carpeta = this.getCarpetaLibro(nombreLibro);
+        return `${carpeta}_${capitulo}.json`;
     }
 
     // Obtener versículo aleatorio
@@ -179,9 +202,9 @@ class BibliaRVR1960 {
     // Obtener versículo por referencia exacta
     async obtenerPorReferencia(referencia) {
         // Parsear referencia (ej: "Juan 3:16" o "1 Juan 2:1")
-        const match = referencia.match(/(\d*\s*\w+)\s+(\d+):(\d+)/);
+        const match = referencia.match(/([^\d:]+)\s+(\d+):(\d+)/);
         if (!match) return null;
-        
+
         const [, libroStr, capituloStr, versiculoStr] = match;
         
         // Encontrar libro
@@ -364,11 +387,11 @@ async function abrirLibro(nombreLibro) {
     document.getElementById('reading-book-title').textContent = libro.nombre;
     document.getElementById('reading-book-chapters').textContent = `${libro.cap} capítulos`;
     
-    // Cargar lista de capítulos
+    // Cargar lista completa de capítulos
     const chaptersGrid = document.getElementById('reading-chapters-grid');
     let chaptersHTML = '';
-    
-    for (let i = 1; i <= Math.min(libro.cap, 10); i++) {
+
+    for (let i = 1; i <= libro.cap; i++) {
         chaptersHTML += `
             <button class="chapter-btn" onclick="cargarCapitulo('${libro.nombre}', ${i})">
                 Capítulo ${i}
@@ -772,3 +795,5 @@ window.showSearch = showSearch;
 window.showFavorites = showFavorites;
 window.startQuiz = startQuiz;
 window.addToFavorites = addToFavorites;
+window.mostrarTestamento = mostrarTestamento;
+window.abrirLibro = abrirLibro;

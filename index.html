@@ -193,16 +193,53 @@
     <div class="verse-header">
       <h3>📖 Versículo del Día</h3>
       <div class="verse-actions">
-        <button onclick="loadVerse()" class="btn-icon">🔄</button>
+        <button onclick="markVerseAsRead()" class="btn-icon" id="mark-read-btn" title="Marcar como leído">✅</button>
+        <button onclick="addToFavorites()" class="btn-icon">❤️</button>
         <button onclick="copyVerse()" class="btn-icon">📋</button>
         <button onclick="shareVerse()" class="btn-icon">📤</button>
       </div>
     </div>
-    <blockquote id="verse-text">
+    <blockquote id="daily-verse-text">
       "Todo lo puedo en Cristo que me fortalece."
     </blockquote>
-    <cite id="verse-ref">Filipenses 4:13</cite>
+    <cite id="daily-verse-ref">Filipenses 4:13</cite>
     <div class="verse-theme" id="verse-theme">FORTALEZA</div>
+    <div class="verse-status" id="verse-status">
+      <span class="status-icon">⏳</span>
+      <span class="status-text">Pendiente por leer</span>
+    </div>
+  </section>
+
+  <!-- Tiempo de Oración Diario -->
+  <section class="prayer-section card-premium">
+    <h3>🙏 Tiempo de Oración</h3>
+    <p class="prayer-subtitle">Dedica tiempo especial a conversar con Dios</p>
+    <div class="prayer-actions">
+      <button id="start-prayer-btn" class="btn-plus prayer-main-btn">
+        <span class="prayer-icon">⏱️</span>
+        <span class="prayer-text">Iniciar Oración</span>
+      </button>
+      <div class="prayer-status" id="prayer-status">
+        <span class="status-icon">⏳</span>
+        <span class="status-text">Pendiente por hoy</span>
+      </div>
+    </div>
+    <div class="prayer-timer" id="prayer-timer" style="display: none;">
+      <div class="timer-display">
+        <span id="timer-minutes">00</span>:<span id="timer-seconds">00</span>
+      </div>
+      <button id="stop-prayer-btn" class="btn-secondary">Detener Oración</button>
+    </div>
+    <div class="prayer-rewards">
+      <div class="reward-item">
+        <span class="reward-icon">🙏</span>
+        <span class="reward-text">+1 día de oración</span>
+      </div>
+      <div class="reward-item">
+        <span class="reward-icon">⭐</span>
+        <span class="reward-text">+5 puntos de experiencia</span>
+      </div>
+    </div>
   </section>
 
   <!-- Próximas Actividades -->
@@ -277,22 +314,28 @@
 </main>
 
 <script src="script.js"></script>
+<script src="1960.js"></script>
 <script>
   // Actualizar título de bienvenida con el nombre del usuario
   document.addEventListener('DOMContentLoaded', function() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const welcomeTitle = document.getElementById('welcome-title');
-    
+
     if (currentUser && currentUser.name) {
       welcomeTitle.textContent = `¡Hola, ${currentUser.name}! 👋`;
     } else {
       welcomeTitle.textContent = '¡Hola! 👋';
     }
 
+    // Cargar versículo del día
+    if (typeof cargarVersiculoDelDia === 'function') {
+      cargarVersiculoDelDia();
+    }
+
     // Mostrar notificación de bienvenida si acaba de hacer login
     if (sessionStorage.getItem('justLoggedIn') === 'true') {
       const userName = currentUser?.name || currentUser?.username || 'Usuario';
-      
+
       // Emoji dinámico según la hora del día
       const hour = new Date().getHours();
       let emoji = '👋';
@@ -300,7 +343,7 @@
       else if (hour >= 12 && hour < 18) emoji = '🌤️'; // Tarde
       else if (hour >= 18 && hour < 22) emoji = '🌙'; // Noche
       else emoji = '⭐'; // Madrugada
-      
+
       setTimeout(() => {
         if (typeof showNotification === 'function') {
           showNotification(`¡Bienvenido, ${userName}!`, emoji);

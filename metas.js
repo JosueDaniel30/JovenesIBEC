@@ -3,9 +3,9 @@
 /* ============================ */
 
 const LEVELS = {
-    bronze: { name: 'Bronce', color: '#d97706', reward: 'Guía de oración básica', icon: '🥉' },
-    silver: { name: 'Plata', color: '#9ca3af', reward: 'Guía de estudio bíblico', icon: '🥈' },
-    gold: { name: 'Oro', color: '#fbbf24', reward: 'Certificado de Liderazgo Espiritual', icon: '🥇' }
+    bronze: { name: 'Bronce', color: '#d97706', reward: 'Guía de oración básica', icon: '🥉', frequency: 'daily' },
+    silver: { name: 'Plata', color: '#9ca3af', reward: 'Guía de estudio bíblico', icon: '🥈', frequency: 'weekly' },
+    gold: { name: 'Oro', color: '#fbbf24', reward: 'Certificado de Liderazgo Espiritual', icon: '🥇', frequency: 'monthly' }
 };
 
 const TOTAL_GOALS = 15;
@@ -200,14 +200,14 @@ function setupEventListeners() {
 function updateProgress(level) {
     let completed = 0;
     let total = 5; // Metas predefinidas
-    
+
     // Contar metas predefinidas
     for (let i = 1; i <= 5; i++) {
         const checkbox = document.getElementById(`${level}${i}`);
         if (checkbox?.checked) completed++;
         if (checkbox) localStorage.setItem(`${level}${i}`, checkbox.checked);
     }
-    
+
     // Contar metas personalizadas del nivel
     const levelCustomGoals = JSON.parse(localStorage.getItem(`${level}_custom_goals`) || '[]');
     total += levelCustomGoals.length;
@@ -235,6 +235,37 @@ function updateProgress(level) {
     }
 
     if (completed === 5) showReward(level);
+
+    // Actualizar contador global de metas completadas
+    updateGlobalGoalsCount();
+}
+
+function updateGlobalGoalsCount() {
+    let totalCompleted = 0;
+
+    // Contar metas predefinidas de todos los niveles
+    Object.keys(LEVELS).forEach(level => {
+        for (let i = 1; i <= 5; i++) {
+            const checkbox = document.getElementById(`${level}${i}`);
+            if (checkbox?.checked) totalCompleted++;
+        }
+
+        // Contar metas personalizadas del nivel
+        const levelCustomGoals = JSON.parse(localStorage.getItem(`${level}_custom_goals`) || '[]');
+        levelCustomGoals.forEach(goal => {
+            const checkbox = document.getElementById(goal.id);
+            if (checkbox?.checked) totalCompleted++;
+        });
+    });
+
+    // Contar metas personalizadas generales
+    const customGoals = JSON.parse(localStorage.getItem('customGoals') || '[]');
+    customGoals.forEach(goal => {
+        if (goal.completed) totalCompleted++;
+    });
+
+    // Guardar en localStorage
+    localStorage.setItem('goalsCompleted', totalCompleted);
 }
 
 function updateOverallProgress() {
@@ -834,6 +865,7 @@ function toggleCustomGoal(id) {
         goal.completed = !goal.completed;
         localStorage.setItem('customGoals', JSON.stringify(customGoals));
         loadCustomGoals();
+        updateGlobalGoalsCount();
         showNotification(goal.completed ? '🎉 ¡Meta completada!' : 'Meta marcada como pendiente', goal.completed ? '✅' : '⏳');
     }
 }

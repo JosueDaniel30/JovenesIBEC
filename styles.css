@@ -298,6 +298,95 @@ a:hover {
   position: relative;
 }
 
+/* Estilos para sección de oración */
+.prayer-section {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-soft);
+  margin-bottom: 2rem;
+}
+
+.prayer-subtitle {
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.prayer-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.prayer-main-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.prayer-main-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.prayer-main-btn.completed {
+  background: linear-gradient(135deg, #059669, #047857);
+  cursor: default;
+}
+
+.prayer-timer {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.timer-display {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--accent);
+  font-family: monospace;
+  margin-bottom: 1rem;
+}
+
+.prayer-rewards {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.prayer-rewards .reward-item {
+  flex: 1;
+  text-align: center;
+  padding: 0.5rem;
+  background: rgba(16, 185, 129, 0.1);
+  border-radius: var(--radius-sm);
+}
+
+/* Estilos para estado del versículo */
+.verse-status {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.verse-status .status-icon {
+  font-size: 1.1rem;
+}
+
 .progress-circle-inner {
   position: absolute;
   top: 50%;
@@ -2405,7 +2494,7 @@ body.dark-theme .quick-search-input::placeholder {
   font-size: 1rem;
   width: 100%;
   background: transparent;
-  color: #333;
+  color: var(--text-main);
 }
 
 /* Hover */
@@ -3956,4 +4045,229 @@ body.dark-theme .option-btn {
 
 body.dark-theme .review-item {
   background: var(--bg-card);
+}
+
+/* =====================================
+   ESTILOS PARA FAVORITOS EN PERFIL
+   ===================================== */
+
+.favorites-section {
+  margin-bottom: 2rem;
+}
+
+.favorites-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.favorites-title {
+  font-size: 1.5rem;
+  color: var(--primary);
+  margin: 0;
+}
+
+.favorites-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Tarjetas de favoritos */
+.favorite-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.5s ease;
+}
+
+.favorite-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--primary-soft);
+}
+
+.favorite-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.favorite-theme {
+  background: var(--primary-soft);
+  color: var(--primary);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.favorite-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.favorite-content {
+  margin-bottom: 1rem;
+}
+
+.favorite-text {
+  font-style: italic;
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+  color: var(--text-main);
+  font-size: 1.1rem;
+  position: relative;
+  padding-left: 1rem;
+}
+
+.favorite-text::before {
+  content: '"';
+  font-size: 2rem;
+  color: var(--primary);
+  position: absolute;
+  left: -0.5rem;
+  top: -0.5rem;
+  opacity: 0.3;
+}
+
+.favorite-ref {
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 0.95rem;
+  display: block;
+}
+
+.favorite-footer {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 0.75rem;
+}
+
+.favorite-date {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* Estado vacío */
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  color: var(--text-main);
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.empty-state p {
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Botones de icono */
+.btn-icon {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--radius-sm);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+}
+
+.btn-icon:hover {
+  background: var(--primary-soft);
+  transform: scale(1.1);
+}
+
+.btn-danger {
+  color: var(--danger);
+}
+
+.btn-danger:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+}
+
+/* Responsive para favoritos */
+@media (max-width: 768px) {
+  .favorite-card {
+    padding: 1rem;
+  }
+
+  .favorite-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .favorite-actions {
+    align-self: flex-end;
+  }
+
+  .favorite-text {
+    font-size: 1rem;
+  }
+
+  .empty-state {
+    padding: 2rem 1rem;
+  }
+
+  .empty-icon {
+    font-size: 3rem;
+  }
+}
+
+/* Modo oscuro para favoritos */
+body.dark-theme .favorite-card {
+  background: var(--bg-card);
+  border-color: rgba(255,255,255,0.08);
+}
+
+body.dark-theme .favorite-card:hover {
+  border-color: var(--primary-soft);
+}
+
+body.dark-theme .favorite-theme {
+  background: var(--primary-soft);
+}
+
+body.dark-theme .favorite-footer {
+  border-top-color: rgba(255,255,255,0.08);
+}
+
+body.dark-theme .empty-state {
+  background: var(--bg-card);
+  color: var(--text-muted);
+}
+
+body.dark-theme .empty-state h3 {
+  color: var(--text-main);
 }

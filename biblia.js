@@ -324,26 +324,49 @@ mostrarTestamento("AT");
 // Abrir libro (capítulos)
 // ============================
 async function openBook(book) {
-    try {
-        const res = await fetch(`biblia/${book}/1.json`);
-        if (!res.ok) throw "No existe";
+    if (book === 'Genesis') {
+        try {
+            const res = await fetch('biblia/genesis.json');
+            const data = await res.json();
+            showChapter(book, 1, data[0], data);
+        } catch {
+            notify("Libro aún no disponible", "⚠️");
+        }
+    } else {
+        try {
+            const res = await fetch(`biblia/${book}/1.json`);
+            if (!res.ok) throw "No existe";
 
-        showChapter(book, 1, await res.json());
-    } catch {
-        notify("Libro aún no disponible", "⚠️");
+            showChapter(book, 1, await res.json());
+        } catch {
+            notify("Libro aún no disponible", "⚠️");
+        }
     }
 }
 
 // ============================
 // Mostrar capítulo
 // ============================
-function showChapter(book, chapter, verses) {
+function showChapter(book, chapter, verses, fullBookData = null) {
     const modal = document.createElement("div");
     modal.className = "modal";
+
+    let navButtons = '';
+    if (book === 'Genesis' && fullBookData) {
+        const prevDisabled = chapter <= 1 ? 'disabled' : '';
+        const nextDisabled = chapter >= fullBookData.length ? 'disabled' : '';
+        navButtons = `
+            <div class="chapter-nav">
+                <button onclick="navigateChapter('${book}', ${chapter - 1}, ${JSON.stringify(fullBookData).replace(/"/g, '"')})" ${prevDisabled}>← Anterior</button>
+                <button onclick="navigateChapter('${book}', ${chapter + 1}, ${JSON.stringify(fullBookData).replace(/"/g, '"')})" ${nextDisabled}>Siguiente →</button>
+            </div>
+        `;
+    }
 
     modal.innerHTML = `
         <div class="modal-box">
             <h2>${book.replaceAll("_"," ")} ${chapter}</h2>
+            ${navButtons}
             <div class="chapter-text">
                 ${verses.map(v => `<p><sup>${v[0]}</sup> ${v[1]}</p>`).join("")}
             </div>
@@ -352,6 +375,16 @@ function showChapter(book, chapter, verses) {
     `;
 
     document.body.appendChild(modal);
+}
+
+// ============================
+// Navegar entre capítulos
+// ============================
+function navigateChapter(book, chapter, fullBookData) {
+    // Cerrar modal actual
+    document.querySelector('.modal').remove();
+    // Mostrar nuevo capítulo
+    showChapter(book, chapter, fullBookData[chapter - 1], fullBookData);
 }
 
 // ============================

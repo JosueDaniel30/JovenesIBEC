@@ -339,7 +339,7 @@
 </main>
 
 <script src="script.js"></script>
-<script src="biblia.js"></script>
+<!-- <script src="biblia.js"></script> -->
 <script src="1960.js"></script>
 <script>
     // Mantener compatibilidad con funciones existentes
@@ -347,6 +347,11 @@
         // Inicializar funcionalidades específicas si existen
         if (typeof initBibliaFunctions === 'function') {
             initBibliaFunctions();
+        }
+
+        // Inicializar la sección de libros
+        if (typeof mostrarTestamento === 'function') {
+            mostrarTestamento('AT');
         }
     });
 </script>
