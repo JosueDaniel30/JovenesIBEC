@@ -355,124 +355,27 @@
     });
 </script>
 
-<!-- PWA Service Worker Registration -->
+<!-- Service Worker Registration -->
 <script>
-  if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
-    window.addEventListener('load', function() {
-      // Ruta CORRECTA para GitHub Pages
-        const swPath = window.location.href.includes('/JovenesIBEC/') 
-            ? '/JovenesIBEC/sw.js' 
-            : '/sw.js';
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            // Detectar entorno y registrar el service worker apropiado
+            const currentHost = window.location.hostname;
+            let swPath = '/sw.js'; // Default para localhost
 
-        navigator.serviceWorker.register(swPath)
-        .then(function(registration) {
-          console.log('Service Worker registrado con éxito:', registration.scope);
-
-          // Escuchar por actualizaciones del service worker
-          registration.addEventListener('updatefound', function() {
-            const newWorker = registration.installing;
-            newWorker.addEventListener('statechange', function() {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                // Nueva versión disponible
-                if (confirm('Hay una nueva versión disponible. ¿Quieres actualizar?')) {
-                  newWorker.postMessage({ type: 'SKIP_WAITING' });
-                  window.location.reload();
-                }
-              }
-            });
-          });
-        })
-        .catch(function(error) {
-          console.log('Error al registrar el Service Worker:', error);
-        });
-    });
-
-    // Escuchar cambios en el service worker
-    navigator.serviceWorker.addEventListener('controllerchange', function() {
-      window.location.reload();
-    });
-  }
-
-  // Detectar si estamos en modo standalone (PWA instalada)
-  if (window.matchMedia('(display-mode: standalone)').matches ||
-      window.navigator.standalone === true) {
-    console.log('Ejecutándose en modo PWA');
-    // Aquí puedes agregar lógica específica para cuando la app está instalada
-  }
-
-  // Solicitar permisos para notificaciones (opcional)
-  if ('Notification' in window && navigator.serviceWorker) {
-    if (Notification.permission === 'default') {
-      // Puedes mostrar un botón para solicitar permisos más tarde
-      console.log('Notificaciones disponibles pero no solicitadas aún');
-    }
-  }
-</script>
-<script>
-    // SOLO inicializar después de cargar todo
-    document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(() => {
-        if (typeof mostrarTestamento === 'function') {
-            mostrarTestamento('AT');
-        }
-    }, 100);
-});
-        
-        // Probar carga de Génesis 1 para debug
-        setTimeout(() => {
-            console.log('=== PRUEBA AUTOMÁTICA ===');
-            if (typeof biblia !== 'undefined') {
-                biblia.obtenerCapitulo('Génesis', 1)
-                    .then(data => {
-                        console.log('Resultado prueba:', data ? 'ÉXITO' : 'FALLO');
-                        if (data) {
-                            console.log('Versículos cargados:', Object.keys(data).length);
-                            // Actualizar versículo del día con el cargado
-                            if (data[1]) {
-                                mostrarVersiculo(data[1], "Génesis 1:1");
-                            }
-                        }
-                    })
-                    .catch(err => console.error('Error prueba:', err));
+            if (currentHost.includes('github.io')) {
+                swPath = '/JovenesIBEC/sw.js'; // Para GitHub Pages
             }
-        }, 2000);
-    });
-</script>
-<script>
-// DEBUG: Verificar rutas en consola
-console.log('=== DEBUG RUTAS ===');
-console.log('URL actual:', window.location.href);
-console.log('Hostname:', window.location.hostname);
-console.log('Protocol:', window.location.protocol);
 
-// Probar ruta directamente
-fetch('./biblia/Genesis/genesis_1.json')
-    .then(r => console.log('Génesis 1:', r.ok ? 'OK' : 'Error ' + r.status))
-    .catch(e => console.error('Fetch error:', e));
-</script>
-<script>
-// DEBUG: Mostrar info en consola
-console.log('=== DIAGNÓSTICO GITHUB PAGES ===');
-console.log('URL completa:', window.location.href);
-console.log('Hostname:', window.location.hostname);
-console.log('Ruta:', window.location.pathname);
-
-// Probar acceso directo a un JSON
-const testUrl = '/JovenesIBEC/biblia/Genesis/genesis_1.json';
-console.log('Probando:', testUrl);
-
-fetch(testUrl)
-    .then(response => {
-        console.log('Status:', response.status);
-        console.log('OK:', response.ok);
-        return response.text().then(text => {
-            console.log('Primeros 100 chars:', text.substring(0, 100));
+            navigator.serviceWorker.register(swPath)
+                .then(function(registration) {
+                    console.log('✅ Service Worker registrado:', registration.scope);
+                })
+                .catch(function(error) {
+                    console.error('❌ Error registrando Service Worker:', error);
+                });
         });
-    })
-    .catch(error => {
-        console.error('Error fetch:', error);
-        console.log('⚠️ Esto es normal en file://, pero debería funcionar en GitHub Pages');
-    });
+    }
 </script>
 </body>
 </html>

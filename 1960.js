@@ -118,7 +118,10 @@ class BibliaRVR1960 {
         }
         
         // ¡ESTA ES LA PARTE CRÍTICA! Tu JSON tiene estructura específica
-        const chapterData = await response.json();
+        // Los archivos JSON usan comillas simples, así que necesitamos parsear manualmente
+        const text = await response.text();
+        const jsonText = text.replace(/'/g, '"'); // Reemplazar comillas simples por dobles
+        const chapterData = JSON.parse(jsonText);
         console.log('✅ JSON recibido. Estructura:', {
             book: chapterData.book,
             chapter: chapterData.chapter,
@@ -463,47 +466,45 @@ function cargarLibrosInterfaz() {
 // Mostrar testamento específico
 function mostrarTestamento(testamento) {
     console.log('🔽 Cambiando a testamento:', testamento);
-    
-    try {
-        // 1. Obtener el grid de libros
-        const booksGrid = document.getElementById('books-grid');
-        if (!booksGrid) {
-            console.error('❌ No se encontró #books-grid en el DOM');
-            return;
-        }
-        
-        // 2. Obtener libros del testamento
-        const libros = biblia.obtenerLibrosPorTestamento(testamento);
-        console.log(`📚 Libros del ${testamento}:`, libros.length);
-        
-        // 3. Actualizar botones activos
-        const buttons = document.querySelectorAll('.tab-btn');
+
+    const booksGrid = document.getElementById('books-grid');
+    if (!booksGrid) return;
+
+    const libros = biblia.obtenerLibrosPorTestamento(testamento);
+
+    // Botones
+    const buttons = document.querySelectorAll('.tab-btn');
+    if (buttons && buttons.length) {
         buttons.forEach(btn => {
+            if (!btn || !btn.classList) return;
             btn.classList.remove('active');
-            if (btn.textContent.includes(testamento === 'AT' ? 'Antiguo' : 'Nuevo')) {
+
+            const texto = btn.textContent || '';
+            if (
+                (testamento === 'AT' && texto.includes('Antiguo')) ||
+                (testamento === 'NT' && texto.includes('Nuevo'))
+            ) {
                 btn.classList.add('active');
             }
         });
-        
-        // 4. Generar HTML
-        let html = '';
-        libros.forEach(libro => {
-            html += `
-                <div class="book-card" onclick="abrirLibro('${libro.nombre.replace(/'/g, "\\'")}')">
-                    <div class="book-icon">📖</div>
-                    <h3>${libro.nombre}</h3>
-                    <p>${libro.cap} capítulos</p>
-                </div>
-            `;
-        });
-        
-        booksGrid.innerHTML = html;
-        console.log('✅ Testamento cargado:', testamento);
-        
-    } catch (error) {
-        console.error('❌ Error en mostrarTestamento:', error);
     }
+
+    // Render libros
+    let html = '';
+    libros.forEach(libro => {
+        html += `
+            <div class="book-card" onclick="abrirLibro('${libro.nombre.replace(/'/g, "\\'")}')">
+                <div class="book-icon">📖</div>
+                <h3>${libro.nombre}</h3>
+                <p>${libro.cap} capítulos</p>
+            </div>
+        `;
+    });
+
+    booksGrid.innerHTML = html;
+    console.log('✅ Testamento cargado correctamente:', testamento);
 }
+
 
 // Abrir libro para lectura
 async function abrirLibro(nombreLibro) {
