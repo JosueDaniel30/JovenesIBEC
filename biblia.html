@@ -102,25 +102,25 @@
   </section>
 
   <section class="tools-grid">
-    <div class="tool-card" onclick="loadRandomVerse()">
+    <div class="tool-card" onclick="cargarVersiculoDelDia()">
       <div class="tool-icon">🎲</div>
       <h3>Versículo Aleatorio</h3>
       <p>Descubre un versículo nuevo</p>
     </div>
 
-    <div class="tool-card" onclick="showSearch()">
+    <div class="tool-card" onclick="mostrarSeccion('busqueda')">
       <div class="tool-icon">🔍</div>
       <h3>Buscar Versículos</h3>
       <p>Encuentra versículos por tema</p>
     </div>
 
-    <div class="tool-card" onclick="showFavorites()">
+    <div class="tool-card" onclick="mostrarSeccion('favoritos')">
       <div class="tool-icon">❤️</div>
       <h3>Mis Favoritos</h3>
       <p>Versículos que te inspiran</p>
     </div>
 
-    <div class="tool-card" onclick="startQuizGame()">
+    <div class="tool-card" onclick="mostrarSeccion('quiz')">
       <div class="tool-icon">🧠</div>
       <h3>Quiz Bíblico</h3>
       <p>Pon a prueba tu conocimiento</p>
@@ -332,14 +332,13 @@
     <h2>🧠 Quiz Bíblico</h2>
     <div id="quiz-content">
       <p>¿Listo para el desafío? Responde preguntas sobre la Biblia y gana puntos!</p>
-      <<button onclick="startQuizGame()" class="btn-plus">Comenzar Quiz</button>
+      <button onclick="startQuizGame()" class="btn-plus">Comenzar Quiz</button>
     </div>
   </section>
 
 </main>
 
 <script src="script.js"></script>
-<script src="biblia.js"></script>
 <script src="1960.js"></script>
 <script>
     // Mantener compatibilidad con funciones existentes
@@ -358,7 +357,7 @@
 
 <!-- PWA Service Worker Registration -->
 <script>
-  if ('serviceWorker' in navigator) {
+  if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
     window.addEventListener('load', function() {
       navigator.serviceWorker.register('/sw.js')
         .then(function(registration) {

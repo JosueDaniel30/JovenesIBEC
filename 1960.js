@@ -5,10 +5,16 @@
 
 class BibliaRVR1960 {
     constructor() {
-        // Ruta base para GitHub Pages
-        this.basePath = window.location.hostname.includes('github.io') 
-            ? '/JovenesIBEC/biblia' 
-            : '/biblia';
+        // Ruta base para GitHub Pages y desarrollo local
+        if (window.location.hostname.includes('github.io')) {
+            this.basePath = '/JovenesIBEC/biblia';
+        } else if (window.location.protocol === 'file:') {
+            // Para desarrollo local con file:// protocol
+            this.basePath = './biblia';
+        } else {
+            // Para servidores locales (localhost, etc.)
+            this.basePath = '/biblia';
+        }
         
         this.libros = [
             // Antiguo Testamento
@@ -760,14 +766,24 @@ function mostrarSeccion(seccion) {
 function configurarEventListeners() {
     const searchInput = document.getElementById('search-input');
     const searchBtn = document.getElementById('search-btn');
-    
+
     if (searchInput && searchBtn) {
         searchBtn.addEventListener('click', realizarBusquedaAvanzada);
         searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') realizarBusquedaAvanzada();
         });
+
+        // Agregar listener para sugerencias dinámicas
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim();
+            if (query.length > 2) {
+                mostrarSugerencias(query);
+            } else {
+                ocultarSugerencias();
+            }
+        });
     }
-    
+
     const chapterInput = document.getElementById('chapter-input');
     if (chapterInput) {
         chapterInput.addEventListener('change', function() {
@@ -935,3 +951,97 @@ function addToFavorites() {
 window.showSearch = showSearch;
 window.showFavorites = showFavorites;
 window.addToFavorites = addToFavorites;
+
+// Funciones de búsqueda avanzada
+function quickSearch(query) {
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.value = query;
+        realizarBusquedaAvanzada();
+    }
+}
+
+function realizarBusquedaAvanzada() {
+    const searchInput = document.getElementById('search-input');
+    const query = searchInput ? searchInput.value.trim() : '';
+
+    if (!query) {
+        showNotification('Ingresa un término de búsqueda', 'ℹ️');
+        return;
+    }
+
+    showNotification(`Buscando: ${query}`, '🔍');
+
+    // Intentar parsear como referencia bíblica
+    const referenciaMatch = query.match(/(\d*\s*\w+)\s+(\d+):(\d+)/);
+    if (referenciaMatch) {
+        buscarPorReferencia(query);
+        return;
+    }
+
+    // Búsqueda por tema o palabra clave
+    buscarPorTema(query);
+}
+
+async function buscarPorTema(tema) {
+    // Simular búsqueda por tema (en una implementación completa, buscaría en todos los versículos)
+    showNotification(`Búsqueda por tema: ${tema}`, '🔍');
+
+    // Por ahora, mostrar un mensaje de que la búsqueda avanzada está en desarrollo
+    const searchResults = document.getElementById('search-results');
+    if (searchResults) {
+        searchResults.innerHTML = `
+            <div class="results-placeholder">
+                <div class="placeholder-icon">🔍</div>
+                <h3>Búsqueda en desarrollo</h3>
+                <p>La búsqueda avanzada por temas estará disponible próximamente.</p>
+                <p>Por ahora, puedes buscar versículos por referencia (ej: Juan 3:16)</p>
+            </div>
+        `;
+    }
+}
+
+function mostrarSugerencias(query) {
+    const suggestionsList = document.getElementById('suggestions-list');
+    const searchSuggestions = document.getElementById('search-suggestions');
+
+    if (!suggestionsList || !searchSuggestions) return;
+
+    // Sugerencias predefinidas
+    const sugerenciasPredefinidas = [
+        'amor', 'fe', 'fortaleza', 'paz', 'esperanza', 'oración', 'perdón', 'gracia',
+        'Juan 3:16', 'Salmos 23', 'Filipenses 4:13', 'Jeremías 29:11'
+    ];
+
+    const sugerenciasFiltradas = sugerenciasPredefinidas.filter(sugerencia =>
+        sugerencia.toLowerCase().includes(query.toLowerCase())
+    );
+
+    if (sugerenciasFiltradas.length > 0) {
+        let html = '';
+        sugerenciasFiltradas.forEach(sugerencia => {
+            html += `<div class="suggestion-item" onclick="quickSearch('${sugerencia}')">${sugerencia}</div>`;
+        });
+        suggestionsList.innerHTML = html;
+        searchSuggestions.style.display = 'block';
+    } else {
+        ocultarSugerencias();
+    }
+}
+
+function ocultarSugerencias() {
+    const searchSuggestions = document.getElementById('search-suggestions');
+    if (searchSuggestions) {
+        searchSuggestions.style.display = 'none';
+    }
+}
+
+// Inicializar arrays para evitar errores
+let searchResults = new Set();
+let searchSuggestions = [];
+
+// Exportar funciones al ámbito global
+window.quickSearch = quickSearch;
+window.realizarBusquedaAvanzada = realizarBusquedaAvanzada;
+window.mostrarSugerencias = mostrarSugerencias;
+window.ocultarSugerencias = ocultarSugerencias;
