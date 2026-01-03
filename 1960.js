@@ -89,7 +89,7 @@ class BibliaRVR1960 {
 
     // Obtener archivo JSON de un capítulo - CORREGIDO PARA TU ESTRUCTURA
     async obtenerCapitulo(nombreLibro, capitulo) {
-    console.log(`Obteniendo capítulo: ${nombreLibro} ${capitulo}`);
+    console.log(`📖 Obteniendo: ${nombreLibro} ${capitulo}`);
     
     const libro = this.libros.find(l => l.nombre === nombreLibro);
     if (!libro) {
@@ -97,6 +97,7 @@ class BibliaRVR1960 {
         return null;
     }
 
+    // Obtener rutas
     const carpeta = this.getCarpetaLibro(nombreLibro);
     const archivo = this.getNombreArchivo(nombreLibro, capitulo);
     
@@ -105,23 +106,53 @@ class BibliaRVR1960 {
         return null;
     }
 
-    // RUTA CORREGIDA: ELIMINA "/biblia" DUPLICADO
-    const url = `${this.basePath}/biblia/${carpeta}/${archivo}`;
-    console.log('📁 URL completa:', url);
+    // Construir URL - CORREGIDA
+    const url = `${this.basePath}/biblia/${carpeta}/${archivo.toLowerCase()}`;
+    console.log('🌐 URL:', url);
 
     try {
         const response = await fetch(url);
         if (!response.ok) {
-            console.error(`Error HTTP ${response.status} para: ${url}`);
+            console.error(`❌ Error HTTP ${response.status} para: ${url}`);
             return null;
         }
         
-        // ... resto de la función igual
+        // ¡ESTA ES LA PARTE CRÍTICA! Tu JSON tiene estructura específica
+        const chapterData = await response.json();
+        console.log('✅ JSON recibido. Estructura:', {
+            book: chapterData.book,
+            chapter: chapterData.chapter,
+            versesCount: chapterData.verses?.length || 0
+        });
+        
+        // PROCESAR TU FORMATO ESPECÍFICO
+        const versiculos = {};
+        
+        if (chapterData.verses && Array.isArray(chapterData.verses)) {
+            // Tu formato: {book: "...", chapter: X, verses: [{verse: 1, text: "..."}, ...]}
+            chapterData.verses.forEach(item => {
+                if (item && item.verse && item.text) {
+                    versiculos[item.verse] = item.text;
+                }
+            });
+            console.log(`📊 ${versiculos.length} versículos extraídos del array "verses"`);
+        } else {
+            console.warn('⚠️ Formato inesperado:', chapterData);
+        }
+        
+        // Si no se extrajeron versículos, intentar formato alternativo
+        if (Object.keys(versiculos).length === 0) {
+            console.warn('Intentando procesar formato alternativo...');
+            // ... otros formatos (mantén el código anterior para compatibilidad)
+        }
+        
+        return versiculos;
+        
     } catch (error) {
-        console.error('Error cargando capítulo:', error);
+        console.error('❌ Error cargando capítulo:', error);
         return null;
     }
-    }
+}
 
     // Mapear nombre del libro a carpeta - AJUSTADO A TU ESTRUCTURA REAL
     getCarpetaLibro(nombreLibro) {
@@ -203,10 +234,9 @@ class BibliaRVR1960 {
     // Generar nombre de archivo - AJUSTADO A TU ESTRUCTURA REAL
     getNombreArchivo(nombreLibro, capitulo) {
     const carpeta = this.getCarpetaLibro(nombreLibro);
-    // CRÍTICO: GitHub Pages es case-sensitive
-    // Tus archivos son en minúscula: genesis_1.json
+    // ¡IMPORTANTE! Todo en minúsculas para GitHub Pages
     return `${carpeta.toLowerCase()}_${capitulo}.json`;
-    }
+}
 
     // Obtener versículo aleatorio
     async obtenerVersiculoAleatorio() {
@@ -1005,3 +1035,46 @@ window.quickSearch = quickSearch;
 window.realizarBusquedaAvanzada = realizarBusquedaAvanzada;
 window.mostrarSugerencias = mostrarSugerencias;
 window.ocultarSugerencias = ocultarSugerencias;
+
+// AL FINAL DE 1960.js, añade:
+window.testBiblia = async function() {
+    console.log('🧪 TEST PROFUNDO DE BIBLIA');
+    
+    // 1. Probar fetch directo
+    const testUrl = '/JovenesIBEC/biblia/Genesis/genesis_1.json';
+    console.log('Fetch a:', testUrl);
+    
+    try {
+        const response = await fetch(testUrl);
+        const data = await response.json();
+        console.log('✅ Datos crudos:', {
+            book: data.book,
+            chapter: data.chapter,
+            versesCount: data.verses?.length,
+            firstVerse: data.verses?.[0]
+        });
+        
+        // 2. Probar con la clase Biblia
+        const result = await biblia.obtenerCapitulo('Génesis', 1);
+        console.log('✅ Resultado procesado:', {
+            success: !!result,
+            versiclesCount: result ? Object.keys(result).length : 0,
+            firstText: result ? result[1] : 'none'
+        });
+        
+        // 3. Mostrar en UI si funciona
+        if (result && result[1]) {
+            mostrarVersiculo(result[1], "Génesis 1:1 (Test)");
+        }
+        
+    } catch (error) {
+        console.error('❌ Error en test:', error);
+    }
+};
+
+// Ejecutar automáticamente después de 3 segundos
+setTimeout(() => {
+    if (window.location.href.includes('github.io') || window.location.href.includes('localhost')) {
+        window.testBiblia && window.testBiblia();
+    }
+}, 3000);

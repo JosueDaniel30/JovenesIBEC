@@ -340,7 +340,7 @@ async function openBook(book) {
 
         showChapter(book, 1, await res.json());
     } catch {
-        notify("Error cargando el capítulo", "⚠️");
+        showNotification("Error cargando el capítulo", "⚠️");
     }
 }
 
@@ -389,7 +389,7 @@ async function navigateChapter(book, chapter) {
         // Mostrar nuevo capítulo
         showChapter(book, chapter, await res.json());
     } catch {
-        notify("Capítulo no encontrado", "⚠️");
+        showNotification("Capítulo no encontrado", "⚠️");
     }
 }
 
@@ -413,17 +413,72 @@ function addToFavorites() {
 function shareVerse() {
     const msg = `${document.getElementById("daily-verse-text").textContent} ${document.getElementById("daily-verse-ref").textContent}`;
     navigator.clipboard.writeText(msg);
-    notify("Copiado 📋", "✅");
+    showNotification("Copiado 📋", "✅");
 }
 
 // ============================
 // Notificaciones
 // ============================
-function notify(msg, icon) {
-    const n = document.getElementById("notification");
-    n.textContent = `${icon} ${msg}`;
-    n.classList.add("show");
-    setTimeout(() => n.classList.remove("show"), 2500);
+function showNotification(message, icon = 'ℹ️') {
+    // Remover notificaciones existentes
+    const existing = document.querySelectorAll('.notification');
+    existing.forEach(notif => notif.remove());
+    
+    // Crear nueva notificación
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.setAttribute('role', 'alert');
+    notification.setAttribute('aria-live', 'assertive');
+    
+    notification.innerHTML = `
+        <span class="notification-icon">${icon}</span>
+        <span class="notification-text">${message}</span>
+        <button class="notification-close" onclick="this.parentElement.remove()">×</button>
+    `;
+    
+    // Estilos
+    Object.assign(notification.style, {
+        position: 'fixed',
+        top: '20px',
+        right: '20px',
+        background: 'var(--card-bg)',
+        color: 'var(--text-color)',
+        padding: '1rem 1.5rem',
+        borderRadius: 'var(--radius-lg)',
+        boxShadow: 'var(--shadow-xl)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '1rem',
+        zIndex: '9999',
+        animation: 'slideIn 0.3s ease',
+        maxWidth: '400px',
+        border: '2px solid var(--nav-border)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)'
+    });
+    
+    // Estilos para el botón de cerrar
+    const closeBtn = notification.querySelector('.notification-close');
+    Object.assign(closeBtn.style, {
+        background: 'none',
+        border: 'none',
+        color: 'var(--text-secondary)',
+        fontSize: '1.5rem',
+        cursor: 'pointer',
+        padding: '0',
+        marginLeft: '0.5rem',
+        lineHeight: '1'
+    });
+    
+    document.body.appendChild(notification);
+    
+    // Auto-remover después de 5 segundos
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => notification.remove(), 300);
+        }
+    }, 5000);
 }
 
 // ============================
@@ -859,7 +914,7 @@ function clearQuizStats() {
     if (confirm('¿Estás seguro de que quieres limpiar todas las estadísticas del quiz?')) {
         localStorage.removeItem('quizStats');
         showQuizStats();
-        notify('Estadísticas limpiadas', '🗑️');
+        showNotification('Estadísticas limpiadas', '🗑️');
     }
 }
 
@@ -916,7 +971,7 @@ function loadFavorites() {
 function shareFavorite(text, ref) {
     const message = `${text} ${ref}`;
     navigator.clipboard.writeText(message);
-    notify("Copiado 📋", "✅");
+    showNotification("Copiado 📋", "✅");
 }
 
 // Remover favorito
