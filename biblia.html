@@ -411,7 +411,12 @@
 <script>
     // SOLO inicializar después de cargar todo
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('Biblia cargada - verificando rutas...');
+    setTimeout(() => {
+        if (typeof mostrarTestamento === 'function') {
+            mostrarTestamento('AT');
+        }
+    }, 100);
+});
         
         // Probar carga de Génesis 1 para debug
         setTimeout(() => {
