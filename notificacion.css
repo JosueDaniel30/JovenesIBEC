@@ -200,7 +200,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.9);
+    background: transparent;
     border-radius: inherit;
     animation: slide-in-right 0.3s ease-out;
     z-index: -1;
@@ -262,4 +262,3 @@
         transform: translateX(0);
     }
 }
-

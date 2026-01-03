@@ -407,92 +407,6 @@ function stopTimer() {
 }
 
 /* ============================ */
-/* 🌙 MODO OSCURO MEJORADO */
-/* ============================ */
-
-function toggleTheme() {
-    const body = document.body;
-    const themeIcon = document.querySelector('.theme-icon');
-    const mobileThemeIcon = document.querySelector('.mobile-theme-icon');
-    const mobileThemeText = document.querySelector('.mobile-theme-text');
-
-    body.classList.toggle('dark-theme');
-
-    const isDark = body.classList.contains('dark-theme');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-
-    if (themeIcon) {
-        themeIcon.textContent = isDark ? '☀️' : '🌙';
-    }
-
-    if (mobileThemeIcon && mobileThemeText) {
-        mobileThemeIcon.textContent = isDark ? '☀️' : '🌙';
-        mobileThemeText.textContent = isDark ? 'Tema Claro' : 'Tema Oscuro';
-    }
-}
-
-function applyTheme() {
-    const isDark = document.body.classList.contains('dark-theme');
-
-    // Actualizar colores CSS variables si es necesario
-    if (isDark) {
-        document.documentElement.style.setProperty('--bg-main', '#1f2937');
-        document.documentElement.style.setProperty('--bg-card', '#374151');
-        document.documentElement.style.setProperty('--text-main', '#f9fafb');
-        document.documentElement.style.setProperty('--text-muted', '#9ca3af');
-    } else {
-        document.documentElement.style.setProperty('--bg-main', '#f9fafb');
-        document.documentElement.style.setProperty('--bg-card', '#ffffff');
-        document.documentElement.style.setProperty('--text-main', '#111827');
-        document.documentElement.style.setProperty('--text-muted', '#6b7280');
-    }
-}
-
-// Cargar tema al iniciar
-document.addEventListener('DOMContentLoaded', function() {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-theme');
-        applyTheme();
-    }
-    updateMobileThemeIcon();
-});
-
-function updateMobileThemeIcon() {
-    const mobileThemeIcon = document.querySelector('.mobile-theme-icon');
-    const mobileThemeText = document.querySelector('.mobile-theme-text');
-
-    if (mobileThemeIcon && mobileThemeText) {
-        const isDark = document.body.classList.contains('dark-theme');
-        mobileThemeIcon.textContent = isDark ? '☀️' : '🌙';
-        mobileThemeText.textContent = isDark ? 'Tema Claro' : 'Tema Oscuro';
-    }
-}
-
-// Event listener para el botón de tema móvil (se configura más abajo en DOMContentLoaded)
-
-function initializeThemeSystem() {
-    // Cargar tema guardado
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-theme');
-        applyTheme();
-    }
-
-    // Actualizar íconos
-    updateMobileThemeIcon();
-
-    // Actualizar ícono del botón principal
-    const themeIcon = document.querySelector('.theme-icon');
-    if (themeIcon) {
-        const isDark = document.body.classList.contains('dark-theme');
-        themeIcon.textContent = isDark ? '☀️' : '🌙';
-    }
-}
-
-
-
-/* ============================ */
 /* 🎉 NOTIFICACIONES MEJORADAS */
 /* ============================ */
 
@@ -518,8 +432,8 @@ function showNotification(message, icon = 'ℹ️') {
         position: 'fixed',
         top: '20px',
         right: '20px',
-        background: 'var(--card-bg)',
-        color: 'var(--text-color)',
+        background: 'transparent',
+        color: 'white',
         padding: '1rem 1.5rem',
         borderRadius: 'var(--radius-lg)',
         boxShadow: 'var(--shadow-xl)',
@@ -991,7 +905,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
     const mobileMenuClose = document.getElementById('mobile-menu-close');
-    const mobileThemeBtn = document.getElementById('mobile-theme-toggle');
 
     if (mobileMenuBtn && mobileMenu) {
         // Toggle menú móvil
@@ -1016,24 +929,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.body.style.overflow = '';
             });
         });
-
-        // Tema móvil
-        if (mobileThemeBtn) {
-            mobileThemeBtn.addEventListener('pointerdown', function(e) {
-                e.stopPropagation();
-                toggleTheme();
-                updateMobileThemeIcon();
-            });
-        }
-    }
-
-    // Event listener para el botón de tema principal
-    const themeBtn = document.getElementById('theme-toggle');
-    if (themeBtn) {
-        themeBtn.addEventListener('click', function() {
-            toggleTheme();
-            updateMobileThemeIcon();
-        });
     }
 
     // Cerrar menú móvil al hacer clic fuera
@@ -1044,16 +939,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Actualizar ícono del tema móvil
-    updateMobileThemeIcon();
-
-    // Cargar tema guardado
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-theme');
-        applyTheme();
-    }
-
     // Saludo personalizado en todas las páginas
     setTimeout(() => {
         showPersonalizedGreeting();
@@ -1063,59 +948,6 @@ document.addEventListener('DOMContentLoaded', function() {
 /* ============================ */
 /* 📱 FUNCIONALIDAD DEL MENÚ MÓVIL */
 /* ============================ */
-
-function updateMobileThemeIcon() {
-    const mobileThemeIcon = document.querySelector('.mobile-theme-icon');
-    const mobileThemeText = document.querySelector('.mobile-theme-text');
-
-    if (mobileThemeIcon && mobileThemeText) {
-        const isDark = document.body.classList.contains('dark-theme');
-        mobileThemeIcon.textContent = isDark ? '☀️' : '🌙';
-        mobileThemeText.textContent = isDark ? 'Tema Claro' : 'Tema Oscuro';
-    }
-}
-
-// Actualizar la función toggleTheme para que también actualice el menú móvil
-function toggleTheme() {
-    const body = document.body;
-    const themeIcon = document.querySelector('.theme-icon');
-    const mobileThemeIcon = document.querySelector('.mobile-theme-icon');
-    const mobileThemeText = document.querySelector('.mobile-theme-text');
-
-    body.classList.toggle('dark-theme');
-
-    const isDark = body.classList.contains('dark-theme');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-
-    if (themeIcon) {
-        themeIcon.textContent = isDark ? '☀️' : '🌙';
-    }
-
-    if (mobileThemeIcon && mobileThemeText) {
-        mobileThemeIcon.textContent = isDark ? '☀️' : '🌙';
-        mobileThemeText.textContent = isDark ? 'Tema Claro' : 'Tema Oscuro';
-    }
-
-    // Aplicar tema a elementos específicos
-    applyTheme();
-}
-
-function applyTheme() {
-    const isDark = document.body.classList.contains('dark-theme');
-
-    // Actualizar colores CSS variables si es necesario
-    if (isDark) {
-        document.documentElement.style.setProperty('--bg-main', '#1f2937');
-        document.documentElement.style.setProperty('--bg-card', '#374151');
-        document.documentElement.style.setProperty('--text-main', '#f9fafb');
-        document.documentElement.style.setProperty('--text-muted', '#9ca3af');
-    } else {
-        document.documentElement.style.setProperty('--bg-main', '#f9fafb');
-        document.documentElement.style.setProperty('--bg-card', '#ffffff');
-        document.documentElement.style.setProperty('--text-main', '#111827');
-        document.documentElement.style.setProperty('--text-muted', '#6b7280');
-    }
-}
 
 // Agregar animaciones CSS para las notificaciones
 const style = document.createElement('style');
@@ -1238,7 +1070,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Inicializar sistemas
     initializeStreakSystem();
-    initializeThemeSystem();
 
     // Actualizar estadísticas
     updateHomeStats();
@@ -1349,7 +1180,6 @@ window.copyVerse = copyVerse;
 window.shareVerse = shareVerse;
 window.addToFavorites = addToFavorites;
 window.completeDay = completeDay;
-window.toggleTheme = toggleTheme;
 window.startTimer = startTimer;
 window.stopTimer = stopTimer;
 window.startDevotional = startDevotional;

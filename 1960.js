@@ -1,6 +1,6 @@
 /* ============================
    📖 BIBLIA RVR1960 COMPLETA - AJUSTADO PARA JovenesIBEC
-   VERSIÓN CORREGIDA 100% FUNCIONAL
+   VERSIÓN OPTIMIZADA UI/UX
 ============================ */
 
 class BibliaRVR1960 {
@@ -75,7 +75,6 @@ class BibliaRVR1960 {
         
         // RESTO DEL CONSTRUCTOR SIN CAMBIOS
         this.libros = [
-            this.libros = [
                 { id: 1, nombre: "Génesis", abrev: "GEN", testament: "AT", cap: 50 },
                 { id: 2, nombre: "Éxodo", abrev: "EXO", testament: "AT", cap: 40 },
                 { id: 3, nombre: "Levítico", abrev: "LEV", testament: "AT", cap: 27 },
@@ -142,8 +141,6 @@ class BibliaRVR1960 {
                 { id: 64, nombre: "3 Juan", abrev: "3JU", testament: "NT", cap: 1 },
                 { id: 65, nombre: "Judas", abrev: "JUD", testament: "NT", cap: 1 },
                 { id: 66, nombre: "Apocalipsis", abrev: "APO", testament: "NT", cap: 22 }
-            ]
-           
         ];
         
         this.versiculosCache = new Map();
@@ -184,43 +181,25 @@ class BibliaRVR1960 {
             return null;
         }
         
-        // ¡ESTA ES LA PARTE CRÍTICA! Tu JSON tiene estructura específica
-        // Los archivos JSON usan comillas simples, así que necesitamos parsear manualmente
-        const text = await response.text();
-        const jsonText = text.replace(/'/g, '"'); // Reemplazar comillas simples por dobles
-        const chapterData = JSON.parse(jsonText);
-        console.log('✅ JSON recibido. Estructura:', {
-            book: chapterData.book,
-            chapter: chapterData.chapter,
-            versesCount: chapterData.verses?.length || 0
-        });
+        // Usar response.json() directamente ya que los archivos son JSON válido
+        const chapterData = await response.json();
         
         // PROCESAR TU FORMATO ESPECÍFICO
         const versiculos = {};
 
-// DEBUG: Ver estructura real
-console.log('📦 Estructura JSON recibida:', {
-    tipo: typeof chapterData,
-    claves: Object.keys(chapterData),
-    tieneVerses: !!chapterData.verses,
-    esArrayVerses: Array.isArray(chapterData.verses),
-    longitudVerses: chapterData.verses?.length
-});
-
-// FORMATO ACTUAL DE TUS ARCHIVOS: {book: "...", chapter: X, verses: [{verse: 1, text: "..."}]}
-if (chapterData.verses && Array.isArray(chapterData.verses)) {
-    console.log('🔄 Procesando formato verses array');
-    chapterData.verses.forEach(verseObj => {
-        if (verseObj && typeof verseObj.verse !== 'undefined' && verseObj.text) {
-            versiculos[verseObj.verse] = verseObj.text;
+        // FORMATO ACTUAL DE TUS ARCHIVOS: {book: "...", chapter: X, verses: [{verse: 1, text: "..."}]}
+        if (chapterData.verses && Array.isArray(chapterData.verses)) {
+            chapterData.verses.forEach(verseObj => {
+                if (verseObj && typeof verseObj.verse !== 'undefined' && verseObj.text) {
+                    versiculos[verseObj.verse] = verseObj.text;
+                }
+            });
+            console.log(`✅ Extraídos ${Object.keys(versiculos).length} versículos de ${nombreLibro} ${capitulo}`);
+        } else {
+            console.warn('⚠️ Formato no reconocido, datos completos:', chapterData);
         }
-    });
-    console.log(`✅ Extraídos ${Object.keys(versiculos).length} versículos`);
-} else {
-    console.warn('⚠️ Formato no reconocido, datos completos:', chapterData);
-}
 
-return versiculos;
+        return versiculos;
         
     } catch (error) {
         console.error('❌ Error cargando capítulo:', error);
@@ -305,15 +284,22 @@ return versiculos;
     return map[nombreLibro] || nombreLibro;
     }   
 
-    // Generar nombre de archivo - AJUSTADO A TU ESTRUCTURA REAL
+    // Generar nombre de archivo - AJUSTADO PARA SOPORTAR "2_samuel_15.json"
     getNombreArchivo(nombreLibro, capitulo) {
-    const carpeta = this.getCarpetaLibro(nombreLibro);
-    // ¡IMPORTANTE! Todo en minúsculas para GitHub Pages
-    return `${carpeta.toLowerCase()}_${capitulo}.json`;
-}
+        // Normalizar nombre para el archivo:
+        // 1. Reemplazar espacios con guiones bajos (para "2 Samuel" -> "2_Samuel")
+        // 2. Quitar acentos (para "Génesis" -> "Genesis")
+        // 3. Convertir a minúsculas
+        const nombreNormalizado = nombreLibro
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Quitar acentos
+            .replace(/ /g, '_') // Espacios a guiones bajos
+            .toLowerCase();
+            
+        return `${nombreNormalizado}_${capitulo}.json`;
+    }
 
     // Obtener versículo aleatorio
-    async obtenerVersiculoAleatorio() {
+    async obtenerVersiculoAleatorio(intentos = 0) {
         try {
             const libro = this.libros[Math.floor(Math.random() * this.libros.length)];
             const capitulo = Math.floor(Math.random() * libro.cap) + 1;
@@ -321,6 +307,8 @@ return versiculos;
             const data = await this.obtenerCapitulo(libro.nombre, capitulo);
             if (!data || Object.keys(data).length === 0) {
                 // Fallback a versículo conocido
+                if (intentos < 3) return this.obtenerVersiculoAleatorio(intentos + 1);
+                
                 return {
                     libro: "Juan",
                     capitulo: 3,
@@ -415,13 +403,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     // Configurar event listeners
     configurarEventListeners();
-    
-    // Probar con un libro conocido
-    setTimeout(() => {
-        console.log('Probando carga de Génesis 1...');
-        // Esto es solo para debug - puedes comentarlo después
-        testLoadGenesis();
-    }, 1000);
 });
 
 // Función de prueba
@@ -458,7 +439,7 @@ async function cargarVersiculoDelDia() {
     
     const versiculo = await biblia.obtenerVersiculoAleatorio();
     if (versiculo && versiculo.texto) {
-        mostrarVersiculo(versiculo.texto, versiculo.referencia);
+        mostrarVersiculo(versiculo.texto, versiculo.referencia, versiculo.libro, versiculo.capitulo, versiculo.versiculo);
         
         localStorage.setItem('versiculoDelDia', JSON.stringify({
             ...versiculo,
@@ -474,12 +455,19 @@ async function cargarVersiculoDelDia() {
 }
 
 // Mostrar versículo en la interfaz
-function mostrarVersiculo(texto, referencia) {
+function mostrarVersiculo(texto, referencia, libro, capitulo, versiculo) {
     const verseTextEl = document.getElementById('daily-verse-text');
     const verseRefEl = document.getElementById('daily-verse-ref');
     
     if (verseTextEl) verseTextEl.textContent = `"${texto}"`;
-    if (verseRefEl) verseRefEl.textContent = referencia;
+    if (verseRefEl) {
+        verseRefEl.textContent = referencia;
+        // Hacer la referencia clicable para ir al contexto
+        if (libro && capitulo) {
+            verseRefEl.onclick = () => abrirLibro(libro, capitulo);
+            verseRefEl.style.cursor = 'pointer';
+        }
+    }
 }
 
 // Inicializar búsqueda rápida
@@ -501,7 +489,7 @@ async function buscarPorReferencia(referencia) {
     showNotification(`Buscando: ${referencia}`, '🔍');
     const versiculo = await biblia.obtenerPorReferencia(referencia);
     if (versiculo) {
-        mostrarVersiculo(versiculo.texto, versiculo.referencia);
+        mostrarVersiculo(versiculo.texto, versiculo.referencia, versiculo.libro, versiculo.capitulo, versiculo.versiculo);
         mostrarSeccion('versiculo');
         showNotification(`Versículo encontrado: ${versiculo.referencia}`, '✅');
     } else {
@@ -519,10 +507,10 @@ function cargarLibrosInterfaz() {
     
     librosAT.forEach(libro => {
         html += `
-            <div class="book-card" onclick="abrirLibro('${libro.nombre}')">
+            <div class="book-card" onclick="abrirLibro('${libro.nombre.replace(/'/g, "\\'")}')" data-testament="${libro.testament}">
                 <div class="book-icon">📖</div>
-                <h3>${libro.nombre}</h3>
-                <p>${libro.cap} capítulos</p>
+                <h3 class="book-title">${libro.nombre}</h3>
+                <span class="book-chapters">${libro.cap} caps</span>
             </div>
         `;
     });
@@ -591,10 +579,10 @@ function mostrarTestamento(testamento) {
         }
 
         html += `
-            <div class="book-card" onclick="abrirLibro('${libro.nombre.replace(/'/g, "\\'")}')">
+            <div class="book-card animate-fade-in" onclick="abrirLibro('${libro.nombre.replace(/'/g, "\\'")}')" data-testament="${libro.testament}">
                 <div class="book-icon">📖</div>
-                <h3>${libro.nombre}</h3>
-                <p>${libro.cap || 0} capítulos</p>
+                <h3 class="book-title">${libro.nombre}</h3>
+                <span class="book-chapters">${libro.cap || 0} caps</span>
             </div>
         `;
     });
@@ -605,7 +593,7 @@ function mostrarTestamento(testamento) {
 
 
 // Abrir libro para lectura
-async function abrirLibro(nombreLibro) {
+async function abrirLibro(nombreLibro, capituloInicial = 1) {
     console.log(`Abriendo libro: ${nombreLibro}`);
     
     const libro = biblia.libros.find(l => l.nombre === nombreLibro);
@@ -626,7 +614,7 @@ async function abrirLibro(nombreLibro) {
     
     // Cargar información del libro
     document.getElementById('reading-book-title').textContent = libro.nombre;
-    document.getElementById('reading-book-chapters').textContent = `${libro.cap} capítulos`;
+    document.getElementById('reading-book-chapters').textContent = `${libro.testament === 'AT' ? 'Antiguo' : 'Nuevo'} Testamento • ${libro.cap} Capítulos`;
     
     // Cargar lista completa de capítulos
     const chaptersGrid = document.getElementById('reading-chapters-grid');
@@ -643,7 +631,7 @@ async function abrirLibro(nombreLibro) {
     chaptersGrid.innerHTML = chaptersHTML;
     
     // Cargar primer capítulo por defecto
-    await cargarCapitulo(libro.nombre, 1);
+    await cargarCapitulo(libro.nombre, capituloInicial);
 }
 
 // Crear sección de lectura
@@ -658,7 +646,7 @@ function crearSeccionLectura() {
     
     readingSection.innerHTML = `
         <div class="reading-header">
-            <button onclick="mostrarSeccion('versiculo')" class="btn-back">← Volver</button>
+            <button onclick="mostrarSeccion('versiculo')" class="btn-back"><span class="btn-icon">⬅️</span> Volver</button>
             <div class="reading-book-info">
                 <h2 id="reading-book-title">Libro</h2>
                 <p id="reading-book-chapters">Capítulos</p>
@@ -666,22 +654,22 @@ function crearSeccionLectura() {
         </div>
         
         <div class="reading-content">
-            <div class="chapters-section">
-                <h3>Capítulos</h3>
+            <aside class="chapters-sidebar">
+                <h3 class="sidebar-title">Capítulos</h3>
                 <div id="reading-chapters-grid" class="chapters-grid"></div>
-            </div>
+            </aside>
             
-            <div class="chapter-section">
+            <article class="chapter-display">
                 <div class="chapter-header">
                     <h3 id="chapter-title">Capítulo 1</h3>
                     <div class="chapter-nav">
-                        <button onclick="navegarCapitulo('prev')" class="btn-icon">◀</button>
+                        <button onclick="navegarCapitulo('prev')" class="btn-nav">◀</button>
                         <input type="number" id="chapter-input" min="1" value="1" class="chapter-input">
-                        <button onclick="navegarCapitulo('next')" class="btn-icon">▶</button>
+                        <button onclick="navegarCapitulo('next')" class="btn-nav">▶</button>
                     </div>
                 </div>
                 <div id="chapter-content" class="chapter-content">
-                    <p>Selecciona un capítulo para leer</p>
+                    <div class="loading-spinner"></div>
                 </div>
             </div>
         </div>
@@ -709,6 +697,15 @@ async function cargarCapitulo(nombreLibro, numeroCapitulo) {
     // Actualizar UI
     document.getElementById('chapter-title').textContent = `${libro.nombre} ${numeroCapitulo}`;
     document.getElementById('chapter-input').value = numeroCapitulo;
+    
+    // Actualizar botones de capítulos activos
+    const chapterBtns = document.querySelectorAll('.chapter-btn');
+    chapterBtns.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.textContent.trim() === `Capítulo ${numeroCapitulo}`) {
+            btn.classList.add('active');
+        }
+    });
     
     // Mostrar loading
     const chapterContent = document.getElementById('chapter-content');
@@ -740,7 +737,7 @@ async function cargarCapitulo(nombreLibro, numeroCapitulo) {
     Object.entries(data).forEach(([versiculo, texto]) => {
         html += `
             <div class="verse-item" id="verse-${versiculo}">
-                <span class="verse-number">${versiculo}</span>
+                <span class="verse-number">${versiculo}</span> 
                 <span class="verse-text">${texto}</span>
                 <button onclick="marcarVersiculo('${nombreLibro}', ${numeroCapitulo}, ${versiculo})" 
                         class="btn-verse-action" title="Marcar versículo">
@@ -852,6 +849,7 @@ function mostrarSeccion(seccion) {
         case 'versiculo':
             document.getElementById('verse-section').style.display = 'block';
             document.getElementById('books-section').style.display = 'block';
+            document.querySelector('.quick-search').style.display = 'block';
             break;
         case 'busqueda':
             document.getElementById('search-section').style.display = 'block';
@@ -866,6 +864,7 @@ function mostrarSeccion(seccion) {
         case 'lectura':
             if (readingSection) {
                 readingSection.style.display = 'block';
+                document.querySelector('.quick-search').style.display = 'none';
             }
             break;
     }
@@ -980,7 +979,7 @@ function showNotification(message, icon = 'ℹ️') {
         position: fixed;
         top: 20px;
         right: 20px;
-        background: rgba(34, 197, 94, 0.9);
+        background: transparent;
         color: white;
         padding: 12px 20px;
         border-radius: 8px;
@@ -1156,11 +1155,3 @@ window.quickSearch = quickSearch;
 window.realizarBusquedaAvanzada = realizarBusquedaAvanzada;
 window.mostrarSugerencias = mostrarSugerencias;
 window.ocultarSugerencias = ocultarSugerencias;
-
-
-// Ejecutar automáticamente después de 3 segundos
-setTimeout(() => {
-    if (window.location.href.includes('github.io') || window.location.href.includes('localhost')) {
-        window.testBiblia && window.testBiblia();
-    }
-}, 3000);

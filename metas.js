@@ -10,16 +10,78 @@ const LEVELS = {
 
 const TOTAL_GOALS = 15;
 
+// Funciones auxiliares para fechas
+function getWeekNumber(d) {
+    d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+    var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+    var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7);
+    return [d.getUTCFullYear(), weekNo];
+}
+
+function shouldResetGoal(goalId, level) {
+    const isCompleted = localStorage.getItem(goalId) === 'true';
+    if (!isCompleted) return false;
+
+    let lastDateStr = null;
+    
+    if (isGoalQuantitative(goalId)) {
+        const progressData = JSON.parse(localStorage.getItem(`progress_${goalId}`) || '{}');
+        if (progressData.completed && progressData.completionDate) {
+            lastDateStr = progressData.completionDate;
+        }
+    } else {
+        const progressData = JSON.parse(localStorage.getItem(`progress_${goalId}`) || '[]');
+        if (progressData.length > 0) {
+            lastDateStr = progressData[progressData.length - 1].date;
+        }
+    }
+
+    if (!lastDateStr) return false; 
+
+    const lastDate = new Date(lastDateStr);
+    const now = new Date();
+
+    if (level === 'bronze') {
+        // Diario: Reset si no es hoy
+        return lastDate.toDateString() !== now.toDateString();
+    } else if (level === 'silver') {
+        // Semanal: Reset si no es la misma semana
+        const lastWeek = getWeekNumber(lastDate);
+        const currentWeek = getWeekNumber(now);
+        return lastWeek[0] !== currentWeek[0] || lastWeek[1] !== currentWeek[1];
+    } else if (level === 'gold') {
+        // Mensual: Reset si no es el mismo mes
+        return lastDate.getMonth() !== now.getMonth() || lastDate.getFullYear() !== now.getFullYear();
+    }
+    return false;
+}
+
 // Este listener se maneja más abajo junto con el formulario
 
 function loadGoals() {
     Object.keys(LEVELS).forEach(level => {
         // Cargar metas predefinidas
         for (let i = 1; i <= 5; i++) {
-            const checkbox = document.getElementById(`${level}${i}`);
+            const goalId = `${level}${i}`;
+            
+            // Verificar si debe reiniciarse por tiempo
+            if (shouldResetGoal(goalId, level)) {
+                localStorage.setItem(goalId, 'false');
+                // Resetear progreso cuantitativo si existe
+                if (isGoalQuantitative(goalId)) {
+                    const progressData = JSON.parse(localStorage.getItem(`progress_${goalId}`) || '{}');
+                    progressData.completed = false;
+                    progressData.current = 0;
+                    delete progressData.completionDate;
+                    localStorage.setItem(`progress_${goalId}`, JSON.stringify(progressData));
+                }
+            }
+
+            const checkbox = document.getElementById(goalId);
             if (checkbox) {
-                checkbox.checked = localStorage.getItem(`${level}${i}`) === 'true';
-                updateGoalProgress(`${level}${i}`);
+                checkbox.checked = localStorage.getItem(goalId) === 'true';
+                updateGoalProgress(goalId);
             }
         }
         
@@ -302,6 +364,7 @@ function showReward(level) {
     rewardElement.style.animation = 'fadeInUp 0.5s ease';
 
     showNotification(`🎉 ¡Felicidades! Completaste el Nivel ${levelData.name}`, levelData.icon);
+    localStorage.setItem(`congrats-${level}`, 'true'); // Persistir logro para el perfil
 }
 
 function playCheckmarkAnimation(checkbox) {
@@ -411,6 +474,7 @@ function recordGoalProgress(goalId, isChecked) {
 
             if (progressData.current >= progressData.target) {
                 progressData.completed = true;
+                progressData.completionDate = new Date().toISOString(); // Guardar fecha de completado
                 // Marcar checkbox como completada
                 const checkbox = document.getElementById(goalId);
                 if (checkbox) checkbox.checked = true;

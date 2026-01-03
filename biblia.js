@@ -1,27 +1,6 @@
 /* ============================
-   📖 BIBLIA RVR1960 - CORE
+   🧠 QUIZ BÍBLICO - MÓDULO
 ============================ */
-
-// Libros
-const oldTestament = [
-    "Genesis","Exodo","Levitico","Numeros","Deuteronomio","Josue","Jueces","Rut",
-    "1_Samuel","2_Samuel","1_Reyes","2_Reyes","1_Cronicas","2_Cronicas",
-    "Esdras","Nehemias","Ester","Job","Salmos","Proverbios","Eclesiastes",
-    "Cantares","Isaias","Jeremias","Lamentaciones","Ezequiel","Daniel",
-    "Oseas","Joel","Amos","Abdias","Jonas","Miqueas","Nahum","Habacuc",
-    "Sofonias","Hageo","Zacarias","Malaquias"
-];
-
-const newTestament = [
-    "Mateo","Marcos","Lucas","Juan","Hechos","Romanos","1_Corintios","2_Corintios",
-    "Galatas","Efesios","Filipenses","Colosenses","1_Tesalonicenses",
-    "2_Tesalonicenses","1_Timoteo","2_Timoteo","Tito","Filemon","Hebreos",
-    "Santiago","1_Pedro","2_Pedro","1_Juan","2_Juan","3_Juan","Judas","Apocalipsis"
-];
-
-// ============================
-// 🧠 QUIZ BÍBLICO
-// ============================
 
 // Base de preguntas del quiz
 const quizQuestions = [
@@ -285,237 +264,17 @@ const quizConfig = {
 };
 
 // ============================
-// Versículo del día (simple)
-// ============================
-const dailyVerses = [
-    { text: "Jehová es mi pastor; nada me faltará.", ref: "Salmos 23:1" },
-    { text: "Todo lo puedo en Cristo que me fortalece.", ref: "Filipenses 4:13" },
-    { text: "Porque de tal manera amó Dios al mundo.", ref: "Juan 3:16" }
-];
-
-function loadRandomVerse() {
-    const v = dailyVerses[Math.floor(Math.random() * dailyVerses.length)];
-    document.getElementById("daily-verse-text").textContent = `"${v.text}"`;
-    document.getElementById("daily-verse-ref").textContent = v.ref;
-}
-
-loadRandomVerse();
-
-// ============================
-// Mostrar libros
-// ============================
-function mostrarTestamento(tipo) {
-    // Remove active class from all buttons with safety checks
-    document.querySelectorAll(".tab-btn").forEach(b => {
-        if (b && b.classList) {
-            b.classList.remove("active");
-        }
-    });
-
-    // Add active class to the clicked button with safety checks
-    if (event && event.target && event.target.classList) {
-        event.target.classList.add("active");
-    }
-
-    let books;
-    if (tipo === "AT") {
-        books = oldTestament;
-    } else if (tipo === "NT") {
-        books = newTestament;
-    } else if (tipo === "ALL") {
-        books = [...oldTestament, ...newTestament];
-    } else {
-        books = newTestament; // fallback
-    }
-
-    const grid = document.getElementById("books-grid");
-
-    if (grid) {
-        grid.innerHTML = books.map(book => `
-            <div class="book-card" onclick="openBook('${book}')">
-                📖 ${book.replaceAll("_", " ")}
-            </div>
-        `).join("");
-    }
-}
-
-mostrarTestamento("ALL");
-
-// ============================
-// Función para mapear nombres de libros a nombres de carpetas
-// ============================
-function getFolderName(book) {
-    // Remover underscores de libros que empiezan con números
-    return book.replace(/_/g, '');
-}
-
-// ============================
-// Abrir libro (capítulos)
-// ============================
-async function openBook(book) {
-    try {
-        const folderName = getFolderName(book);
-        const fileName = `${book.toLowerCase()}_1.json`;
-        const res = await fetch(`biblia/${folderName}/${fileName}`);
-        if (!res.ok) throw "No existe";
-
-        showChapter(book, 1, await res.json());
-    } catch {
-        showNotification("Error cargando el capítulo", "⚠️");
-    }
-}
-
-// ============================
-// Mostrar capítulo
-// ============================
-function showChapter(book, chapter, verses, fullBookData = null) {
-    const modal = document.createElement("div");
-    modal.className = "modal";
-
-    let navButtons = `
-        <div class="chapter-nav">
-            <button onclick="navigateChapter('${book}', ${chapter - 1})" ${chapter <= 1 ? 'disabled' : ''}>← Anterior</button>
-            <button onclick="navigateChapter('${book}', ${chapter + 1})">Siguiente →</button>
-        </div>
-    `;
-
-    modal.innerHTML = `
-        <div class="modal-box">
-            <h2>${book.replaceAll("_"," ")} ${chapter}</h2>
-            ${navButtons}
-            <div class="chapter-text">
-                ${verses.map(v => `<p><sup>${v[0]}</sup> ${v[1]}</p>`).join("")}
-            </div>
-            <button onclick="this.closest('.modal').remove()">Cerrar</button>
-        </div>
-    `;
-
-    document.body.appendChild(modal);
-}
-
-// ============================
-// Navegar entre capítulos
-// ============================
-async function navigateChapter(book, chapter) {
-    if (chapter < 1) return; // No permitir capítulos menores a 1
-
-    try {
-        const folderName = getFolderName(book);
-        const fileName = `${book.toLowerCase()}_${chapter}.json`;
-        const res = await fetch(`biblia/${folderName}/${fileName}`);
-        if (!res.ok) throw "No existe";
-
-        // Cerrar modal actual
-        document.querySelector('.modal').remove();
-        // Mostrar nuevo capítulo
-        showChapter(book, chapter, await res.json());
-    } catch {
-        showNotification("Capítulo no encontrado", "⚠️");
-    }
-}
-
-// ============================
-// Favoritos
-// ============================
-function addToFavorites() {
-    const text = document.getElementById("daily-verse-text").textContent;
-    const ref = document.getElementById("daily-verse-ref").textContent;
-
-    let favs = JSON.parse(localStorage.getItem("favorites") || "[]");
-    favs.unshift({ text, ref });
-    localStorage.setItem("favorites", JSON.stringify(favs));
-
-    notify("Versículo guardado ❤️", "✅");
-}
-
-// ============================
-// Compartir
-// ============================
-function shareVerse() {
-    const msg = `${document.getElementById("daily-verse-text").textContent} ${document.getElementById("daily-verse-ref").textContent}`;
-    navigator.clipboard.writeText(msg);
-    showNotification("Copiado 📋", "✅");
-}
-
-// ============================
-// Notificaciones
-// ============================
-function showNotification(message, icon = 'ℹ️') {
-    // Remover notificaciones existentes
-    const existing = document.querySelectorAll('.notification');
-    existing.forEach(notif => notif.remove());
-    
-    // Crear nueva notificación
-    const notification = document.createElement('div');
-    notification.className = 'notification';
-    notification.setAttribute('role', 'alert');
-    notification.setAttribute('aria-live', 'assertive');
-    
-    notification.innerHTML = `
-        <span class="notification-icon">${icon}</span>
-        <span class="notification-text">${message}</span>
-        <button class="notification-close" onclick="this.parentElement.remove()">×</button>
-    `;
-    
-    // Estilos
-    Object.assign(notification.style, {
-        position: 'fixed',
-        top: '20px',
-        right: '20px',
-        background: 'rgba(34, 197, 94, 0.9)',
-        color: 'white',
-        padding: '1rem 1.5rem',
-        borderRadius: 'var(--radius-lg)',
-        boxShadow: 'var(--shadow-xl)',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '1rem',
-        zIndex: '9999',
-        animation: 'slide-in-right 0.3s ease',
-        maxWidth: '400px',
-        border: '2px solid var(--nav-border)',
-        backdropFilter: 'blur(10px)',
-        WebkitBackdropFilter: 'blur(10px)'
-    });
-    
-    // Estilos para el botón de cerrar
-    const closeBtn = notification.querySelector('.notification-close');
-    Object.assign(closeBtn.style, {
-        background: 'none',
-        border: 'none',
-        color: 'var(--text-secondary)',
-        fontSize: '1.5rem',
-        cursor: 'pointer',
-        padding: '0',
-        marginLeft: '0.5rem',
-        lineHeight: '1'
-    });
-    
-    document.body.appendChild(notification);
-    
-    // Auto-remover después de 5 segundos
-    setTimeout(() => {
-        if (notification.parentElement) {
-            notification.style.animation = 'slideOut 0.3s ease';
-            setTimeout(() => notification.remove(), 300);
-        }
-    }, 5000);
-}
-
-// ============================
 // FUNCIONES DEL QUIZ
 // ============================
 
 // Iniciar quiz
 function startQuizGame() {
-    // Ocultar otras secciones
-    document.getElementById('search-section').style.display = 'none';
-    document.getElementById('favorites-section').style.display = 'none';
-    document.getElementById('verse-section').style.display = 'none';
-    document.getElementById('books-section').style.display = 'none';
-
-    // Mostrar sección del quiz
-    document.getElementById('quiz-section').style.display = 'block';
+    // Usar la función global de 1960.js si está disponible
+    if (typeof mostrarSeccion === 'function') {
+        mostrarSeccion('quiz');
+    } else {
+        document.getElementById('quiz-section').style.display = 'block';
+    }
 
     // Mostrar configuración del quiz
     showQuizSetup();
@@ -935,7 +694,9 @@ function clearQuizStats() {
     if (confirm('¿Estás seguro de que quieres limpiar todas las estadísticas del quiz?')) {
         localStorage.removeItem('quizStats');
         showQuizStats();
-        showNotification('Estadísticas limpiadas', '🗑️');
+        if (typeof showNotification === 'function') {
+            showNotification('Estadísticas limpiadas', '🗑️');
+        }
     }
 }
 
@@ -945,75 +706,4 @@ function shuffleArray(array) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
     }
-}
-
-// ============================
-// Mostrar Favoritos
-// ============================
-function showFavorites() {
-    // Ocultar otras secciones
-    document.getElementById('search-section').style.display = 'none';
-    document.getElementById('quiz-section').style.display = 'none';
-    document.getElementById('verse-section').style.display = 'none';
-    document.getElementById('books-section').style.display = 'none';
-
-    // Mostrar sección de favoritos
-    document.getElementById('favorites-section').style.display = 'block';
-
-    // Cargar favoritos
-    loadFavorites();
-}
-
-// Cargar y mostrar favoritos
-function loadFavorites() {
-    const favoritesList = document.getElementById('favorites-list');
-    const favs = JSON.parse(localStorage.getItem("favorites") || "[]");
-
-    if (favs.length === 0) {
-        favoritesList.innerHTML = '<p class="empty-state">No tienes versículos favoritos aún. ¡Agrega algunos!</p>';
-        return;
-    }
-
-    favoritesList.innerHTML = favs.map((fav, index) => `
-        <div class="verse-card">
-            <div class="verse-content">
-                <blockquote>"${fav.text}"</blockquote>
-                <cite>${fav.ref}</cite>
-            </div>
-            <div class="verse-actions">
-                <button onclick="shareFavorite('${fav.text}', '${fav.ref}')" class="btn-icon">📤</button>
-                <button onclick="removeFavorite(${index})" class="btn-icon">🗑️</button>
-            </div>
-        </div>
-    `).join('');
-}
-
-// Compartir favorito
-function shareFavorite(text, ref) {
-    const message = `${text} ${ref}`;
-    navigator.clipboard.writeText(message);
-    showNotification("Copiado 📋", "✅");
-}
-
-// Remover favorito
-function removeFavorite(index) {
-    let favs = JSON.parse(localStorage.getItem("favorites") || "[]");
-    favs.splice(index, 1);
-    localStorage.setItem("favorites", JSON.stringify(favs));
-    loadFavorites();
-    notify("Versículo removido de favoritos", "🗑️");
-}
-
-// ============================
-// Mostrar Búsqueda
-// ============================
-function showSearch() {
-    // Ocultar otras secciones
-    document.getElementById('favorites-section').style.display = 'none';
-    document.getElementById('quiz-section').style.display = 'none';
-    document.getElementById('verse-section').style.display = 'none';
-    document.getElementById('books-section').style.display = 'none';
-
-    // Mostrar sección de búsqueda
-    document.getElementById('search-section').style.display = 'block';
 }

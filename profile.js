@@ -326,10 +326,47 @@ function loadProfilePic() {
     }
 }
 
+function updateBadges() {
+    const badges = [
+        { id: 'badge-bronze', condition: () => localStorage.getItem('congrats-bronze') === 'true' },
+        { id: 'badge-silver', condition: () => localStorage.getItem('congrats-silver') === 'true' },
+        { id: 'badge-gold', condition: () => localStorage.getItem('congrats-gold') === 'true' },
+        { id: 'badge-streak', condition: () => parseInt(localStorage.getItem('streak') || '0') >= 30 },
+        { id: 'badge-reader', condition: () => parseInt(localStorage.getItem('versesRead') || '0') >= 100 },
+        { id: 'badge-disciple', condition: () => {
+            const progress = JSON.parse(localStorage.getItem('progress_gold1') || '{}');
+            return progress.completed === true;
+        }}
+    ];
+
+    badges.forEach(badge => {
+        const el = document.getElementById(badge.id);
+        if (el) {
+            const statusSpan = el.querySelector('.badge-status');
+            if (badge.condition()) {
+                el.classList.add('unlocked');
+                if (statusSpan) {
+                    statusSpan.textContent = 'Desbloqueado';
+                    statusSpan.classList.remove('locked');
+                    statusSpan.classList.add('unlocked');
+                }
+            } else {
+                el.classList.remove('unlocked');
+                if (statusSpan) {
+                    statusSpan.textContent = 'Bloqueado';
+                    statusSpan.classList.add('locked');
+                    statusSpan.classList.remove('unlocked');
+                }
+            }
+        }
+    });
+}
+
 // Inicializar página de perfil
 document.addEventListener('DOMContentLoaded', function() {
     displayProfile();
     updateStats();
+    updateBadges(); // Actualizar estado de insignias
     loadProfilePic();
     loadFavorites();
     document.getElementById('edit-profile-btn').addEventListener('click', toggleEditSection);
