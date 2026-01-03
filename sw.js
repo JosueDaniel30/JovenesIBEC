@@ -21,7 +21,8 @@ const STATIC_ASSETS = [
   '/JovenesIBEC/profile.js',
   '/JovenesIBEC/login.js',
   '/JovenesIBEC/logojov.png',
-  '/JovenesIBEC/manifest.json'
+  '/JovenesIBEC/manifest.json',
+  '/JovenesIBEC/biblia/Genesis/'
 ];
 
 // Instalación del Service Worker

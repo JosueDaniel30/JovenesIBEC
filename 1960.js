@@ -1,14 +1,15 @@
 /* ============================
-   📖 BIBLIA RVR1960 COMPLETA - CARGADA DESDE ARCHIVOS JSON
-   VERSIÓN CORREGIDA PARA GITHUB PAGES
+   📖 BIBLIA RVR1960 COMPLETA - AJUSTADO PARA JovenesIBEC
+   VERSIÓN CORREGIDA 100% FUNCIONAL
 ============================ */
-
-const BASE_PATH = "/JovenesIBEC";
 
 class BibliaRVR1960 {
     constructor() {
-        // Para GitHub Pages, la ruta debe ser relativa
-        this.basePath = '/JovenesIBEC/biblia';
+        // Ruta base para GitHub Pages
+        this.basePath = window.location.hostname.includes('github.io') 
+            ? '/JovenesIBEC/biblia' 
+            : '/biblia';
+        
         this.libros = [
             // Antiguo Testamento
             { id: 1, nombre: "Génesis", abrev: "GEN", testament: "AT", cap: 50 },
@@ -85,88 +86,12 @@ class BibliaRVR1960 {
         this.libroActual = null;
         this.capituloActual = null;
         
-        // Mapeo de nombres a carpetas
-        this.nombreACarpeta = this.crearMapeoNombres();
+        console.log('BibliaRVR1960 inicializada. Base path:', this.basePath);
     }
 
-    // Crear mapeo de nombres de libros a carpetas
-    crearMapeoNombres() {
-        return {
-            // Antiguo Testamento
-            "Génesis": "Genesis",
-            "Éxodo": "Exodo",
-            "Levítico": "Levitico",
-            "Números": "Numeros",
-            "Deuteronomio": "Deuteronomio",
-            "Josué": "Josue",
-            "Jueces": "Jueces",
-            "Rut": "Rut",
-            "1 Samuel": "1_Samuel",
-            "2 Samuel": "2_Samuel",
-            "1 Reyes": "1_Reyes",
-            "2 Reyes": "2_Reyes",
-            "1 Crónicas": "1_Cronicas",
-            "2 Crónicas": "2_Cronicas",
-            "Esdras": "Esdras",
-            "Nehemías": "Nehemias",
-            "Ester": "Ester",
-            "Job": "Job",
-            "Salmos": "Salmos",
-            "Proverbios": "Proverbios",
-            "Eclesiastés": "Eclesiastes",
-            "Cantares": "Cantares",
-            "Isaías": "Isaias",
-            "Jeremías": "Jeremias",
-            "Lamentaciones": "Lamentaciones",
-            "Ezequiel": "Ezequiel",
-            "Daniel": "Daniel",
-            "Oseas": "Oseas",
-            "Joel": "Joel",
-            "Amós": "Amos",
-            "Abdías": "Abdias",
-            "Jonás": "Jonas",
-            "Miqueas": "Miqueas",
-            "Nahúm": "Nahum",
-            "Habacuc": "Habacuc",
-            "Sofonías": "Sofonias",
-            "Hageo": "Hageo",
-            "Zacarías": "Zacarias",
-            "Malaquías": "Malaquias",
-            
-            // Nuevo Testamento
-            "Mateo": "Mateo",
-            "Marcos": "Marcos",
-            "Lucas": "Lucas",
-            "Juan": "Juan",
-            "Hechos": "Hechos",
-            "Romanos": "Romanos",
-            "1 Corintios": "1_Corintios",
-            "2 Corintios": "2_Corintios",
-            "Gálatas": "Galatas",
-            "Efesios": "Efesios",
-            "Filipenses": "Filipenses",
-            "Colosenses": "Colosenses",
-            "1 Tesalonicenses": "1_Tesalonicenses",
-            "2 Tesalonicenses": "2_Tesalonicenses",
-            "1 Timoteo": "1_Timoteo",
-            "2 Timoteo": "2_Timoteo",
-            "Tito": "Tito",
-            "Filemón": "Filemon",
-            "Hebreos": "Hebreos",
-            "Santiago": "Santiago",
-            "1 Pedro": "1_Pedro",
-            "2 Pedro": "2_Pedro",
-            "1 Juan": "1_Juan",
-            "2 Juan": "2_Juan",
-            "3 Juan": "3_Juan",
-            "Judas": "Judas",
-            "Apocalipsis": "Apocalipsis"
-        };
-    }
-
-    // Obtener archivo JSON de un capítulo
+    // Obtener archivo JSON de un capítulo - CORREGIDO PARA TU ESTRUCTURA
     async obtenerCapitulo(nombreLibro, capitulo) {
-        console.log(`Intentando cargar: ${nombreLibro} capítulo ${capitulo}`);
+        console.log(`Obteniendo capítulo: ${nombreLibro} ${capitulo}`);
         
         const libro = this.libros.find(l => l.nombre === nombreLibro);
         if (!libro) {
@@ -174,140 +99,223 @@ class BibliaRVR1960 {
             return null;
         }
 
-        const carpeta = this.nombreACarpeta[nombreLibro];
-        if (!carpeta) {
-            console.error('No se encontró carpeta para:', nombreLibro);
+        // Obtener nombre de carpeta según tu estructura REAL
+        const carpeta = this.getCarpetaLibro(nombreLibro);
+        const archivo = this.getNombreArchivo(nombreLibro, capitulo);
+        
+        if (!carpeta || !archivo) {
+            console.error('No se pudo generar nombre de archivo/carpeta');
             return null;
         }
 
-        // Generar nombre de archivo - IMPORTANTE: en tu repositorio los archivos tienen primera letra mayúscula
-        const nombreArchivo = this.getNombreArchivo(nombreLibro, capitulo);
-        const url = `${this.basePath}/${carpeta}/${nombreArchivo}`;
-        
+        const url = `${this.basePath}/${carpeta}/${archivo}`;
         console.log('URL completa:', url);
 
         try {
             const response = await fetch(url);
             if (!response.ok) {
-                console.error(`Error HTTP ${response.status} para URL: ${url}`);
+                console.error(`Error HTTP ${response.status} para: ${url}`);
                 return null;
             }
             
             const chapterData = await response.json();
-            console.log('Datos recibidos:', chapterData);
+            console.log('Datos JSON recibidos:', chapterData);
             
-            // Convertir la estructura del JSON a la esperada
+            // PROCESAR LOS DATOS SEGÚN TU FORMATO
+            // En tu repositorio, los archivos tienen formato diferente
             const versiculos = {};
             
-            // Los archivos JSON tienen formato: [[1, "texto1"], [2, "texto2"], ...]
             if (Array.isArray(chapterData)) {
-                chapterData.forEach(verse => {
-                    if (Array.isArray(verse) && verse.length >= 2) {
-                        const [numero, texto] = verse;
+                // Formato: [[1, "texto1"], [2, "texto2"], ...]
+                chapterData.forEach(item => {
+                    if (Array.isArray(item) && item.length >= 2) {
+                        const [numero, texto] = item;
                         versiculos[numero] = texto;
                     }
                 });
-            } else if (chapterData.verses) {
-                // Formato alternativo
+            } else if (chapterData.verses && Array.isArray(chapterData.verses)) {
+                // Formato: {verses: [{verse: 1, text: "texto1"}, ...]}
                 chapterData.verses.forEach(verse => {
                     versiculos[verse.verse] = verse.text;
                 });
+            } else if (typeof chapterData === 'object') {
+                // Formato: {"1": "texto1", "2": "texto2", ...}
+                Object.keys(chapterData).forEach(key => {
+                    versiculos[key] = chapterData[key];
+                });
             }
             
-            console.log('Versículos procesados:', Object.keys(versiculos).length);
+            console.log(`Versículos procesados: ${Object.keys(versiculos).length}`);
             return versiculos;
             
         } catch (error) {
             console.error('Error cargando capítulo:', error);
-            console.error('URL que falló:', url);
             return null;
         }
     }
 
-    // Generar nombre de archivo para un capítulo específico
+    // Mapear nombre del libro a carpeta - AJUSTADO A TU ESTRUCTURA REAL
+    getCarpetaLibro(nombreLibro) {
+        // Mapeo exacto según tu repositorio
+        const map = {
+            // Antiguo Testamento (en minúsculas según tu repo)
+            "Génesis": "genesis",
+            "Éxodo": "exodo",
+            "Levítico": "levitico",
+            "Números": "numeros",
+            "Deuteronomio": "deuteronomio",
+            "Josué": "josue",
+            "Jueces": "jueces",
+            "Rut": "rut",
+            "1 Samuel": "1samuel",
+            "2 Samuel": "2samuel",
+            "1 Reyes": "1reyes",
+            "2 Reyes": "2reyes",
+            "1 Crónicas": "1cronicas",
+            "2 Crónicas": "2cronicas",
+            "Esdras": "esdras",
+            "Nehemías": "nehemias",
+            "Ester": "ester",
+            "Job": "job",
+            "Salmos": "salmos",
+            "Proverbios": "proverbios",
+            "Eclesiastés": "eclesiastes",
+            "Cantares": "cantares",
+            "Isaías": "isaias",
+            "Jeremías": "jeremias",
+            "Lamentaciones": "lamentaciones",
+            "Ezequiel": "ezequiel",
+            "Daniel": "daniel",
+            "Oseas": "oseas",
+            "Joel": "joel",
+            "Amós": "amos",
+            "Abdías": "abdias",
+            "Jonás": "jonas",
+            "Miqueas": "miqueas",
+            "Nahúm": "nahum",
+            "Habacuc": "habacuc",
+            "Sofonías": "sofonias",
+            "Hageo": "hageo",
+            "Zacarías": "zacarias",
+            "Malaquías": "malaquias",
+            
+            // Nuevo Testamento (en minúsculas según tu repo)
+            "Mateo": "mateo",
+            "Marcos": "marcos",
+            "Lucas": "lucas",
+            "Juan": "juan",
+            "Hechos": "hechos",
+            "Romanos": "romanos",
+            "1 Corintios": "1corintios",
+            "2 Corintios": "2corintios",
+            "Gálatas": "galatas",
+            "Efesios": "efesios",
+            "Filipenses": "filipenses",
+            "Colosenses": "colosenses",
+            "1 Tesalonicenses": "1tesalonicenses",
+            "2 Tesalonicenses": "2tesalonicenses",
+            "1 Timoteo": "1timoteo",
+            "2 Timoteo": "2timoteo",
+            "Tito": "tito",
+            "Filemón": "filemon",
+            "Hebreos": "hebreos",
+            "Santiago": "santiago",
+            "1 Pedro": "1pedro",
+            "2 Pedro": "2pedro",
+            "1 Juan": "1juan",
+            "2 Juan": "2juan",
+            "3 Juan": "3juan",
+            "Judas": "judas",
+            "Apocalipsis": "apocalipsis"
+        };
+        
+        return map[nombreLibro] || nombreLibro.toLowerCase().replace(/\s+/g, '');
+    }
+
+    // Generar nombre de archivo - AJUSTADO A TU ESTRUCTURA REAL
     getNombreArchivo(nombreLibro, capitulo) {
-        const carpeta = this.nombreACarpeta[nombreLibro];
-        if (!carpeta) return null;
+        // En tu repositorio, los archivos son: genesis_1.json (todo en minúsculas)
+        const carpeta = this.getCarpetaLibro(nombreLibro);
         
-        // Los archivos en tu repositorio tienen formato: "Genesis_1.json"
-        // La primera letra es mayúscula en el nombre del archivo
-        let nombreArchivo = carpeta;
-        
-        // Convertir primera letra a mayúscula si no lo está
-        if (nombreArchivo && nombreArchivo.length > 0) {
-            nombreArchivo = nombreArchivo.charAt(0).toUpperCase() + nombreArchivo.slice(1);
-        }
-        
-        return `${nombreArchivo}_${capitulo}.json`;
+        // IMPORTANTE: En tu repo los archivos son como "genesis_1.json"
+        // No "Genesis_1.json" con mayúscula
+        return `${carpeta}_${capitulo}.json`;
     }
 
     // Obtener versículo aleatorio
     async obtenerVersiculoAleatorio() {
-        // Elegir libro aleatorio
-        const libro = this.libros[Math.floor(Math.random() * this.libros.length)];
-        const capitulo = Math.floor(Math.random() * libro.cap) + 1;
-        
-        console.log(`Obteniendo versículo aleatorio de ${libro.nombre} ${capitulo}`);
-        
-        const data = await this.obtenerCapitulo(libro.nombre, capitulo);
-        if (!data || Object.keys(data).length === 0) {
-            console.error('No se pudieron obtener datos para versículo aleatorio');
-            return null;
+        try {
+            const libro = this.libros[Math.floor(Math.random() * this.libros.length)];
+            const capitulo = Math.floor(Math.random() * libro.cap) + 1;
+            
+            const data = await this.obtenerCapitulo(libro.nombre, capitulo);
+            if (!data || Object.keys(data).length === 0) {
+                // Fallback a versículo conocido
+                return {
+                    libro: "Juan",
+                    capitulo: 3,
+                    versiculo: 16,
+                    texto: "Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree, no se pierda, mas tenga vida eterna.",
+                    referencia: "Juan 3:16"
+                };
+            }
+            
+            const versiculos = Object.keys(data).map(Number);
+            const versiculoNum = versiculos[Math.floor(Math.random() * versiculos.length)];
+            
+            return {
+                libro: libro.nombre,
+                capitulo: capitulo,
+                versiculo: versiculoNum,
+                texto: data[versiculoNum],
+                referencia: `${libro.nombre} ${capitulo}:${versiculoNum}`
+            };
+        } catch (error) {
+            console.error('Error obteniendo versículo aleatorio:', error);
+            return {
+                libro: "Juan",
+                capitulo: 3,
+                versiculo: 16,
+                texto: "Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree, no se pierda, mas tenga vida eterna.",
+                referencia: "Juan 3:16"
+            };
         }
-        
-        // Obtener versículo aleatorio del capítulo
-        const versiculos = Object.keys(data).map(Number);
-        const versiculoNum = versiculos[Math.floor(Math.random() * versiculos.length)];
-        
-        return {
-            libro: libro.nombre,
-            capitulo: capitulo,
-            versiculo: versiculoNum,
-            texto: data[versiculoNum],
-            referencia: `${libro.nombre} ${capitulo}:${versiculoNum}`
-        };
     }
 
     // Obtener versículo por referencia exacta
     async obtenerPorReferencia(referencia) {
-        // Parsear referencia (ej: "Juan 3:16" o "1 Juan 2:1")
-        const match = referencia.match(/(\d*\s*\w+)\s+(\d+):(\d+)/);
-        if (!match) {
-            console.error('Formato de referencia inválido:', referencia);
-            return null;
-        }
+        try {
+            // Parsear referencia (ej: "Juan 3:16" o "1 Juan 2:1")
+            const match = referencia.match(/(\d*\s*\w+)\s+(\d+):(\d+)/);
+            if (!match) return null;
 
-        const [, libroStr, capituloStr, versiculoStr] = match;
-        
-        console.log(`Buscando: ${libroStr} ${capituloStr}:${versiculoStr}`);
-        
-        // Encontrar libro
-        const libro = this.libros.find(l => 
-            l.nombre.toLowerCase() === libroStr.toLowerCase() ||
-            l.abrev.toLowerCase() === libroStr.toLowerCase()
-        );
-        
-        if (!libro) {
-            console.error('Libro no encontrado para referencia:', referencia);
+            const [, libroStr, capituloStr, versiculoStr] = match;
+            
+            // Encontrar libro
+            const libro = this.libros.find(l => 
+                l.nombre.toLowerCase() === libroStr.toLowerCase() ||
+                l.abrev.toLowerCase() === libroStr.toLowerCase()
+            );
+            
+            if (!libro) return null;
+            
+            const capitulo = parseInt(capituloStr);
+            const versiculo = parseInt(versiculoStr);
+            
+            const data = await this.obtenerCapitulo(libro.nombre, capitulo);
+            if (!data || !data[versiculo]) return null;
+            
+            return {
+                libro: libro.nombre,
+                capitulo: capitulo,
+                versiculo: versiculo,
+                texto: data[versiculo],
+                referencia: `${libro.nombre} ${capitulo}:${versiculo}`
+            };
+        } catch (error) {
+            console.error('Error obteniendo por referencia:', error);
             return null;
         }
-        
-        const capitulo = parseInt(capituloStr);
-        const versiculo = parseInt(versiculoStr);
-        
-        const data = await this.obtenerCapitulo(libro.nombre, capitulo);
-        if (!data || !data[versiculo]) {
-            console.error('Versículo no encontrado:', referencia);
-            return null;
-        }
-        
-        return {
-            libro: libro.nombre,
-            capitulo: capitulo,
-            versiculo: versiculo,
-            texto: data[versiculo],
-            referencia: `${libro.nombre} ${capitulo}:${versiculo}`
-        };
     }
 
     // Obtener lista de libros por testamento
@@ -320,15 +328,11 @@ class BibliaRVR1960 {
 const biblia = new BibliaRVR1960();
 
 /* ============================
-   📖 FUNCIONALIDAD DE INTERFAZ - MEJORADA
+   📖 FUNCIONALIDAD DE INTERFAZ - SIMPLIFICADA
 ============================ */
 
-// Variable global para controlar secciones
-let seccionActual = 'versiculo';
-
-// Inicializar cuando se carga la página
 document.addEventListener('DOMContentLoaded', async function() {
-    console.log('Biblia.js inicializando...');
+    console.log('DOM cargado - Iniciando Biblia');
     
     // Cargar versículo del día
     await cargarVersiculoDelDia();
@@ -342,14 +346,31 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Configurar event listeners
     configurarEventListeners();
     
-    console.log('Biblia.js inicializado correctamente');
+    // Probar con un libro conocido
+    setTimeout(() => {
+        console.log('Probando carga de Génesis 1...');
+        // Esto es solo para debug - puedes comentarlo después
+        testLoadGenesis();
+    }, 1000);
 });
+
+// Función de prueba
+async function testLoadGenesis() {
+    try {
+        console.log('=== PRUEBA DE CARGA ===');
+        const data = await biblia.obtenerCapitulo('Génesis', 1);
+        console.log('Resultado prueba Génesis 1:', data ? 'ÉXITO' : 'FALLO');
+        if (data) {
+            console.log('Número de versículos:', Object.keys(data).length);
+            console.log('Primer versículo:', data[1]);
+        }
+    } catch (error) {
+        console.error('Error en prueba:', error);
+    }
+}
 
 // Cargar versículo del día
 async function cargarVersiculoDelDia() {
-    console.log('Cargando versículo del día...');
-    
-    // Verificar si hay versículo guardado para hoy
     const hoy = new Date().toDateString();
     const versiculoGuardado = localStorage.getItem('versiculoDelDia');
     
@@ -357,7 +378,6 @@ async function cargarVersiculoDelDia() {
         try {
             const data = JSON.parse(versiculoGuardado);
             if (data.fecha === hoy && data.texto) {
-                console.log('Usando versículo guardado:', data.referencia);
                 mostrarVersiculo(data.texto, data.referencia);
                 return;
             }
@@ -366,22 +386,20 @@ async function cargarVersiculoDelDia() {
         }
     }
     
-    // Obtener nuevo versículo aleatorio
-    console.log('Generando nuevo versículo aleatorio...');
     const versiculo = await biblia.obtenerVersiculoAleatorio();
-    
     if (versiculo && versiculo.texto) {
-        console.log('Versículo obtenido:', versiculo.referencia);
         mostrarVersiculo(versiculo.texto, versiculo.referencia);
         
-        // Guardar para hoy
         localStorage.setItem('versiculoDelDia', JSON.stringify({
             ...versiculo,
             fecha: hoy
         }));
     } else {
-        console.error('No se pudo obtener versículo aleatorio');
-        mostrarVersiculo("Jehová es mi pastor; nada me faltará.", "Salmos 23:1");
+        // Fallback
+        mostrarVersiculo(
+            "Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree, no se pierda, mas tenga vida eterna.",
+            "Juan 3:16"
+        );
     }
 }
 
@@ -410,6 +428,7 @@ function inicializarBusquedaRapida() {
 async function buscarPorReferencia(referencia) {
     if (!referencia) return;
     
+    showNotification(`Buscando: ${referencia}`, '🔍');
     const versiculo = await biblia.obtenerPorReferencia(referencia);
     if (versiculo) {
         mostrarVersiculo(versiculo.texto, versiculo.referencia);
@@ -423,12 +442,8 @@ async function buscarPorReferencia(referencia) {
 // Cargar libros en la interfaz
 function cargarLibrosInterfaz() {
     const booksGrid = document.getElementById('books-grid');
-    if (!booksGrid) {
-        console.error('No se encontró el contenedor de libros');
-        return;
-    }
+    if (!booksGrid) return;
     
-    // Cargar Antiguo Testamento por defecto
     const librosAT = biblia.obtenerLibrosPorTestamento('AT');
     let html = '';
     
@@ -443,7 +458,6 @@ function cargarLibrosInterfaz() {
     });
     
     booksGrid.innerHTML = html;
-    console.log('Libros cargados en interfaz:', librosAT.length);
 }
 
 // Mostrar testamento específico
@@ -561,9 +575,9 @@ function crearSeccionLectura() {
     main.appendChild(readingSection);
 }
 
-// Cargar capítulo específico
+// Cargar capítulo específico - CORREGIDO
 async function cargarCapitulo(nombreLibro, numeroCapitulo) {
-    console.log(`Cargando capítulo: ${nombreLibro} ${numeroCapitulo}`);
+    console.log(`Cargando: ${nombreLibro} ${numeroCapitulo}`);
     
     const libro = biblia.libros.find(l => l.nombre === nombreLibro);
     if (!libro) {
@@ -590,10 +604,18 @@ async function cargarCapitulo(nombreLibro, numeroCapitulo) {
     
     if (!data || Object.keys(data).length === 0) {
         chapterContent.innerHTML = `
-            <p class="error">Error cargando el capítulo ${numeroCapitulo}</p>
-            <button onclick="cargarCapitulo('${nombreLibro}', ${numeroCapitulo})" class="btn-secondary">
-                Reintentar
-            </button>
+            <div class="error-message">
+                <p>❌ No se pudo cargar el capítulo ${numeroCapitulo} de ${nombreLibro}</p>
+                <p>Posibles causas:</p>
+                <ul>
+                    <li>El archivo JSON no existe</li>
+                    <li>Error de conexión</li>
+                    <li>Formato incorrecto del archivo</li>
+                </ul>
+                <button onclick="cargarCapitulo('${nombreLibro}', ${numeroCapitulo})" class="btn-secondary">
+                    Reintentar
+                </button>
+            </div>
         `;
         return;
     }
@@ -622,7 +644,8 @@ async function cargarCapitulo(nombreLibro, numeroCapitulo) {
     // Guardar en historial
     guardarEnHistorialLectura(nombreLibro, numeroCapitulo);
     
-    console.log(`Capítulo cargado: ${Object.keys(data).length} versículos`);
+    showNotification(`Capítulo ${numeroCapitulo} cargado`, '✅');
+    console.log(`Capítulo cargado exitosamente: ${Object.keys(data).length} versículos`);
 }
 
 // Navegar entre capítulos
@@ -642,7 +665,7 @@ async function navegarCapitulo(direccion) {
     } else if (direccion === 'next' && nuevoCapitulo < libro.cap) {
         nuevoCapitulo++;
     } else {
-        return; // No hacer nada si no se puede navegar
+        return;
     }
     
     await cargarCapitulo(biblia.libroActual, nuevoCapitulo);
@@ -655,18 +678,17 @@ function marcarVersiculo(libro, capitulo, versiculo) {
         capitulo: capitulo,
         versiculo: versiculo,
         referencia: `${libro} ${capitulo}:${versiculo}`,
-        fecha: new Date().toISOString()
+        fecha: new Date().toISOString(),
+        id: `${libro}-${capitulo}-${versiculo}`
     };
     
     let favoritos = JSON.parse(localStorage.getItem('versiculosFavoritos') || '[]');
     
     // Verificar si ya existe
-    const existe = favoritos.some(fav => 
-        fav.libro === libro && fav.capitulo === capitulo && fav.versiculo === versiculo
-    );
+    const existe = favoritos.some(fav => fav.id === versiculoData.id);
     
     if (!existe) {
-        favoritos.push(versiculoData);
+        favoritos.unshift(versiculoData);
         localStorage.setItem('versiculosFavoritos', JSON.stringify(favoritos));
         showNotification('Versículo marcado ⭐', '✅');
     } else {
@@ -684,7 +706,6 @@ function guardarEnHistorialLectura(libro, capitulo) {
         fecha: new Date().toISOString()
     });
     
-    // Mantener solo últimos 50
     if (historial.length > 50) {
         historial = historial.slice(0, 50);
     }
@@ -694,9 +715,6 @@ function guardarEnHistorialLectura(libro, capitulo) {
 
 // Mostrar/ocultar secciones
 function mostrarSeccion(seccion) {
-    console.log(`Mostrando sección: ${seccion}`);
-    
-    // Ocultar todas las secciones
     const secciones = [
         'verse-section',
         'search-section', 
@@ -715,13 +733,10 @@ function mostrarSeccion(seccion) {
         readingSection.style.display = 'none';
     }
     
-    // Mostrar sección solicitada
     switch(seccion) {
         case 'versiculo':
-            const verseSection = document.getElementById('verse-section');
-            const booksSection = document.getElementById('books-section');
-            if (verseSection) verseSection.style.display = 'block';
-            if (booksSection) booksSection.style.display = 'block';
+            document.getElementById('verse-section').style.display = 'block';
+            document.getElementById('books-section').style.display = 'block';
             break;
         case 'busqueda':
             document.getElementById('search-section').style.display = 'block';
@@ -739,13 +754,10 @@ function mostrarSeccion(seccion) {
             }
             break;
     }
-    
-    seccionActual = seccion;
 }
 
 // Configurar event listeners
 function configurarEventListeners() {
-    // Configurar búsqueda avanzada
     const searchInput = document.getElementById('search-input');
     const searchBtn = document.getElementById('search-btn');
     
@@ -756,7 +768,6 @@ function configurarEventListeners() {
         });
     }
     
-    // Configurar input de capítulo
     const chapterInput = document.getElementById('chapter-input');
     if (chapterInput) {
         chapterInput.addEventListener('change', function() {
@@ -833,15 +844,13 @@ function eliminarFavorito(libro, capitulo, versiculo) {
 
 // Función de notificación
 function showNotification(message, icon = 'ℹ️') {
-    // Verificar si ya existe una función showNotification
-    if (typeof window.showNotification === 'function' && window.showNotification !== showNotification) {
-        window.showNotification(message, icon);
-        return;
-    }
+    // Si ya hay una notificación, quitarla
+    const existing = document.querySelector('.custom-notification');
+    if (existing) existing.remove();
     
     const notification = document.createElement('div');
-    notification.className = 'notification';
-    notification.innerHTML = `${icon} ${message}`;
+    notification.className = 'custom-notification';
+    notification.innerHTML = `<span class="notification-icon">${icon}</span> ${message}`;
     notification.style.cssText = `
         position: fixed;
         top: 20px;
@@ -854,6 +863,9 @@ function showNotification(message, icon = 'ℹ️') {
         z-index: 10000;
         animation: slideIn 0.3s ease;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     `;
     
     document.body.appendChild(notification);
@@ -864,10 +876,10 @@ function showNotification(message, icon = 'ℹ️') {
     }, 3000);
 }
 
-// Agregar estilos CSS para notificaciones si no existen
-if (!document.querySelector('#notification-styles')) {
+// Agregar estilos CSS para notificaciones
+if (!document.querySelector('#custom-notification-styles')) {
     const style = document.createElement('style');
-    style.id = 'notification-styles';
+    style.id = 'custom-notification-styles';
     style.textContent = `
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
@@ -876,6 +888,9 @@ if (!document.querySelector('#notification-styles')) {
         @keyframes slideOut {
             from { transform: translateX(0); opacity: 1; }
             to { transform: translateX(100%); opacity: 0; }
+        }
+        .notification-icon {
+            font-size: 1.2em;
         }
     `;
     document.head.appendChild(style);

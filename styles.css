@@ -4473,122 +4473,7 @@ body.dark-theme .empty-state h3 {
   color: var(--text-main);
 }
 
-
-/* ============================
-   📖 ESTILOS PARA LA BIBLIA
-============================ */
-
-/* Sección de libros */
-.books-section {
-    margin: 2rem 0;
-}
-
-.testament-tabs {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-    overflow-x: auto;
-    padding-bottom: 0.5rem;
-}
-
-.tab-btn {
-    padding: 0.75rem 1.5rem;
-    border: none;
-    background: #f1f5f9;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-}
-
-.tab-btn.active {
-    background: #4f46e5;
-    color: white;
-}
-
-.tab-btn:hover:not(.active) {
-    background: #e2e8f0;
-}
-
-.books-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 1rem;
-}
-
-.book-card {
-    background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: 2px solid #e2e8f0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.book-card:hover {
-    transform: translateY(-4px);
-    border-color: #4f46e5;
-    box-shadow: 0 8px 16px rgba(79, 70, 229, 0.1);
-}
-
-.book-icon {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-}
-
-.book-card h3 {
-    margin: 0.5rem 0;
-    font-size: 1.1rem;
-    color: #1e293b;
-}
-
-.book-card p {
-    margin: 0;
-    color: #64748b;
-    font-size: 0.9rem;
-}
-
-/* Sección de lectura */
-.reading-section {
-    margin-top: 2rem;
-}
-
-.reading-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid #e2e8f0;
-}
-
-.btn-back {
-    padding: 0.5rem 1rem;
-    background: #f1f5f9;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background 0.3s ease;
-}
-
-.btn-back:hover {
-    background: #e2e8f0;
-}
-
-.reading-book-info h2 {
-    margin: 0;
-    color: #1e293b;
-}
-
-.reading-book-info p {
-    margin: 0.25rem 0 0;
-    color: #64748b;
-}
-
+/* Estilos para la sección de lectura */
 .reading-content {
     display: grid;
     grid-template-columns: 250px 1fr;
@@ -4599,12 +4484,6 @@ body.dark-theme .empty-state h3 {
     .reading-content {
         grid-template-columns: 1fr;
     }
-}
-
-.chapters-section h3 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    color: #1e293b;
 }
 
 .chapters-grid {
@@ -4631,72 +4510,22 @@ body.dark-theme .empty-state h3 {
     background: #f8fafc;
 }
 
-.chapter-btn.active {
-    background: #4f46e5;
-    color: white;
-    border-color: #4f46e5;
-}
-
-.chapter-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid #e2e8f0;
-}
-
-.chapter-header h3 {
-    margin: 0;
-    color: #1e293b;
-}
-
-.chapter-nav {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.btn-icon {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid #e2e8f0;
-    background: white;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1.2rem;
-    transition: all 0.2s ease;
-}
-
-.btn-icon:hover {
-    border-color: #4f46e5;
-    background: #f8fafc;
-}
-
-.chapter-input {
-    width: 60px;
-    padding: 0.5rem;
-    border: 2px solid #e2e8f0;
-    border-radius: 6px;
-    text-align: center;
-    font-weight: 500;
-}
-
 .chapter-content {
     min-height: 300px;
     line-height: 1.6;
     font-size: 1.1rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 8px;
 }
 
 .verse-item {
     margin-bottom: 1.5rem;
     padding: 1rem;
     border-radius: 8px;
-    background: #f8fafc;
-    transition: background 0.2s ease;
+    background: white;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
 }
 
 .verse-item:hover {
@@ -4713,7 +4542,7 @@ body.dark-theme .empty-state h3 {
 
 .verse-text {
     display: inline-block;
-    width: calc(100% - 70px);
+    width: calc(100% - 80px);
     padding-left: 1rem;
 }
 
@@ -4740,83 +4569,66 @@ body.dark-theme .empty-state h3 {
     font-style: italic;
 }
 
-.error {
-    color: #ef4444;
+.error-message {
     text-align: center;
     padding: 2rem;
     background: #fef2f2;
     border-radius: 8px;
+    color: #dc2626;
 }
 
-/* Favoritos */
-.favorite-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    background: white;
-    border-radius: 8px;
+.error-message ul {
+    text-align: left;
+    display: inline-block;
+    margin: 1rem 0;
+}
+
+.error-message li {
+    margin-bottom: 0.5rem;
+}
+
+.btn-secondary {
+    padding: 0.5rem 1rem;
+    background: #f1f5f9;
     border: 2px solid #e2e8f0;
-}
-
-.favorite-content blockquote {
-    margin: 0 0 0.5rem 0;
+    border-radius: 6px;
+    color: #475569;
+    cursor: pointer;
     font-weight: 500;
-    color: #1e293b;
+    transition: all 0.2s ease;
 }
 
-.favorite-meta {
-    font-size: 0.9rem;
-    color: #64748b;
-}
-
-.favorite-actions {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.empty-state {
-    text-align: center;
-    padding: 3rem;
-    color: #64748b;
-    font-style: italic;
+.btn-secondary:hover {
+    background: #e2e8f0;
 }
 
 /* Modo oscuro */
 @media (prefers-color-scheme: dark) {
-    .book-card,
-    .favorite-item,
+    .chapter-content {
+        background: #1e293b;
+    }
+    
     .verse-item {
         background: #1e293b;
         border-color: #334155;
-        color: #e2e8f0;
-    }
-    
-    .book-card h3,
-    .chapter-header h3,
-    .reading-book-info h2 {
-        color: #f1f5f9;
-    }
-    
-    .chapter-btn,
-    .btn-icon,
-    .chapter-input {
-        background: #1e293b;
-        border-color: #334155;
-        color: #e2e8f0;
-    }
-    
-    .tab-btn:not(.active) {
-        background: #334155;
-        color: #cbd5e1;
-    }
-    
-    .verse-number {
-        color: #818cf8;
     }
     
     .verse-item:hover {
         background: #334155;
+    }
+    
+    .error-message {
+        background: #422626;
+        color: #fca5a5;
+    }
+    
+    .btn-secondary {
+        background: #334155;
+        border-color: #475569;
+        color: #cbd5e1;
+    }
+    
+    .btn-secondary:hover {
+        background: #475569;
     }
 }
