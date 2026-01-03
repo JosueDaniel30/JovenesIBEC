@@ -403,5 +403,42 @@
     }
   }
 </script>
+<script>
+    // SOLO inicializar después de cargar todo
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Biblia cargada - verificando rutas...');
+        
+        // Probar carga de Génesis 1 para debug
+        setTimeout(() => {
+            console.log('=== PRUEBA AUTOMÁTICA ===');
+            if (typeof biblia !== 'undefined') {
+                biblia.obtenerCapitulo('Génesis', 1)
+                    .then(data => {
+                        console.log('Resultado prueba:', data ? 'ÉXITO' : 'FALLO');
+                        if (data) {
+                            console.log('Versículos cargados:', Object.keys(data).length);
+                            // Actualizar versículo del día con el cargado
+                            if (data[1]) {
+                                mostrarVersiculo(data[1], "Génesis 1:1");
+                            }
+                        }
+                    })
+                    .catch(err => console.error('Error prueba:', err));
+            }
+        }, 2000);
+    });
+</script>
+<script>
+// DEBUG: Verificar rutas en consola
+console.log('=== DEBUG RUTAS ===');
+console.log('URL actual:', window.location.href);
+console.log('Hostname:', window.location.hostname);
+console.log('Protocol:', window.location.protocol);
+
+// Probar ruta directamente
+fetch('./biblia/Genesis/genesis_1.json')
+    .then(r => console.log('Génesis 1:', r.ok ? 'OK' : 'Error ' + r.status))
+    .catch(e => console.error('Fetch error:', e));
+</script>
 </body>
 </html>

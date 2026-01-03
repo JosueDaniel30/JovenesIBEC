@@ -1,7 +1,7 @@
 // Service Worker para Jóvenes con Cristo PWA
 // VERSIÓN CORREGIDA PARA GITHUB PAGES
-const CACHE_NAME = 'jovenes-app-v1.2';
-const STATIC_CACHE = 'jovenes-static-v1.2';
+const CACHE_NAME = 'jovenes-app-v1.3';  // Cambia la versión
+const STATIC_CACHE = 'jovenes-static-v1.3';
 const BIBLE_CACHE = 'bible-cache-v1';
 
 // Recursos a cachear inicialmente
@@ -21,8 +21,7 @@ const STATIC_ASSETS = [
   '/JovenesIBEC/profile.js',
   '/JovenesIBEC/login.js',
   '/JovenesIBEC/logojov.png',
-  '/JovenesIBEC/manifest.json',
-  '/JovenesIBEC/biblia/Genesis/'
+  '/JovenesIBEC/manifest.json'
 ];
 
 // Instalación del Service Worker
@@ -77,6 +76,8 @@ self.addEventListener('fetch', event => {
   
   // Para archivos JSON de la Biblia
   if (url.pathname.includes('/biblia/') && url.pathname.endsWith('.json')) {
+    // Usar ruta relativa para GitHub Pages
+    const bibleRequest = new Request(`./biblia/${url.pathname.split('/biblia/')[1]}`);
     event.respondWith(
       caches.open(BIBLE_CACHE).then(cache => {
         return cache.match(request).then(cachedResponse => {

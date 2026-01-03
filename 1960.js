@@ -240,12 +240,10 @@ class BibliaRVR1960 {
 
     // Generar nombre de archivo - AJUSTADO A TU ESTRUCTURA REAL
     getNombreArchivo(nombreLibro, capitulo) {
-        // En tu repositorio, los archivos son: genesis_1.json (todo en minúsculas)
-        const carpeta = this.getCarpetaLibro(nombreLibro);
-        
-        // IMPORTANTE: En tu repo los archivos son como "genesis_1.json"
-        // No "Genesis_1.json" con mayúscula
-        return `${carpeta}_${capitulo}.json`;
+    const carpeta = this.getCarpetaLibro(nombreLibro);
+    // CRÍTICO: GitHub Pages es case-sensitive
+    // Tus archivos son en minúscula: genesis_1.json
+    return `${carpeta.toLowerCase()}_${capitulo}.json`;
     }
 
     // Obtener versículo aleatorio
