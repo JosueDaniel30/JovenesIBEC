@@ -440,5 +440,29 @@ fetch('./biblia/Genesis/genesis_1.json')
     .then(r => console.log('Génesis 1:', r.ok ? 'OK' : 'Error ' + r.status))
     .catch(e => console.error('Fetch error:', e));
 </script>
+<script>
+// DEBUG: Mostrar info en consola
+console.log('=== DIAGNÓSTICO GITHUB PAGES ===');
+console.log('URL completa:', window.location.href);
+console.log('Hostname:', window.location.hostname);
+console.log('Ruta:', window.location.pathname);
+
+// Probar acceso directo a un JSON
+const testUrl = '/JovenesIBEC/biblia/Genesis/genesis_1.json';
+console.log('Probando:', testUrl);
+
+fetch(testUrl)
+    .then(response => {
+        console.log('Status:', response.status);
+        console.log('OK:', response.ok);
+        return response.text().then(text => {
+            console.log('Primeros 100 chars:', text.substring(0, 100));
+        });
+    })
+    .catch(error => {
+        console.error('Error fetch:', error);
+        console.log('⚠️ Esto es normal en file://, pero debería funcionar en GitHub Pages');
+    });
+</script>
 </body>
 </html>
