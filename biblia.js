@@ -305,17 +305,28 @@ loadRandomVerse();
 // Mostrar libros
 // ============================
 function mostrarTestamento(tipo) {
-    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-    event.target.classList.add("active");
+    // Remove active class from all buttons with safety checks
+    document.querySelectorAll(".tab-btn").forEach(b => {
+        if (b && b.classList) {
+            b.classList.remove("active");
+        }
+    });
+
+    // Add active class to the clicked button with safety checks
+    if (event && event.target && event.target.classList) {
+        event.target.classList.add("active");
+    }
 
     const books = tipo === "AT" ? oldTestament : newTestament;
     const grid = document.getElementById("books-grid");
 
-    grid.innerHTML = books.map(book => `
-        <div class="book-card" onclick="openBook('${book}')">
-            📖 ${book.replaceAll("_", " ")}
-        </div>
-    `).join("");
+    if (grid) {
+        grid.innerHTML = books.map(book => `
+            <div class="book-card" onclick="openBook('${book}')">
+                📖 ${book.replaceAll("_", " ")}
+            </div>
+        `).join("");
+    }
 }
 
 mostrarTestamento("AT");
@@ -450,7 +461,7 @@ function showNotification(message, icon = 'ℹ️') {
         alignItems: 'center',
         gap: '1rem',
         zIndex: '9999',
-        animation: 'slideIn 0.3s ease',
+        animation: 'slide-in-right 0.3s ease',
         maxWidth: '400px',
         border: '2px solid var(--nav-border)',
         backdropFilter: 'blur(10px)',

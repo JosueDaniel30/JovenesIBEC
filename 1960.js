@@ -75,8 +75,75 @@ class BibliaRVR1960 {
         
         // RESTO DEL CONSTRUCTOR SIN CAMBIOS
         this.libros = [
-            { id: 1, nombre: "Génesis", abrev: "GEN", testament: "AT", cap: 50 },
-            // ... MANTÉN TODOS LOS LIBROS IGUAL
+            this.libros = [
+                { id: 1, nombre: "Génesis", abrev: "GEN", testament: "AT", cap: 50 },
+                { id: 2, nombre: "Éxodo", abrev: "EXO", testament: "AT", cap: 40 },
+                { id: 3, nombre: "Levítico", abrev: "LEV", testament: "AT", cap: 27 },
+                { id: 4, nombre: "Números", abrev: "NUM", testament: "AT", cap: 36 },
+                { id: 5, nombre: "Deuteronomio", abrev: "DEU", testament: "AT", cap: 34 },
+                { id: 6, nombre: "Josué", abrev: "JOS", testament: "AT", cap: 24 },
+                { id: 7, nombre: "Jueces", abrev: "JUE", testament: "AT", cap: 21 },
+                { id: 8, nombre: "Rut", abrev: "RUT", testament: "AT", cap: 4 },
+                { id: 9, nombre: "1 Samuel", abrev: "1SA", testament: "AT", cap: 31 },
+                { id: 10, nombre: "2 Samuel", abrev: "2SA", testament: "AT", cap: 24 },
+                { id: 11, nombre: "1 Reyes", abrev: "1RE", testament: "AT", cap: 22 },
+                { id: 12, nombre: "2 Reyes", abrev: "2RE", testament: "AT", cap: 25 },
+                { id: 13, nombre: "1 Crónicas", abrev: "1CR", testament: "AT", cap: 29 },
+                { id: 14, nombre: "2 Crónicas", abrev: "2CR", testament: "AT", cap: 36 },
+                { id: 15, nombre: "Esdras", abrev: "ESD", testament: "AT", cap: 10 },
+                { id: 16, nombre: "Nehemías", abrev: "NEH", testament: "AT", cap: 13 },
+                { id: 17, nombre: "Ester", abrev: "EST", testament: "AT", cap: 10 },
+                { id: 18, nombre: "Job", abrev: "JOB", testament: "AT", cap: 42 },
+                { id: 19, nombre: "Salmos", abrev: "SAL", testament: "AT", cap: 150 },
+                { id: 20, nombre: "Proverbios", abrev: "PRO", testament: "AT", cap: 31 },
+                { id: 21, nombre: "Eclesiastés", abrev: "ECL", testament: "AT", cap: 12 },
+                { id: 22, nombre: "Cantares", abrev: "CAN", testament: "AT", cap: 8 },
+                { id: 23, nombre: "Isaías", abrev: "ISA", testament: "AT", cap: 66 },
+                { id: 24, nombre: "Jeremías", abrev: "JER", testament: "AT", cap: 52 },
+                { id: 25, nombre: "Lamentaciones", abrev: "LAM", testament: "AT", cap: 5 },
+                { id: 26, nombre: "Ezequiel", abrev: "EZE", testament: "AT", cap: 48 },
+                { id: 27, nombre: "Daniel", abrev: "DAN", testament: "AT", cap: 12 },
+                { id: 28, nombre: "Oseas", abrev: "OSE", testament: "AT", cap: 14 },
+                { id: 29, nombre: "Joel", abrev: "JOE", testament: "AT", cap: 3 },
+                { id: 30, nombre: "Amós", abrev: "AMO", testament: "AT", cap: 9 },
+                { id: 31, nombre: "Abdías", abrev: "ABD", testament: "AT", cap: 1 },
+                { id: 32, nombre: "Jonás", abrev: "JON", testament: "AT", cap: 4 },
+                { id: 33, nombre: "Miqueas", abrev: "MIQ", testament: "AT", cap: 7 },
+                { id: 34, nombre: "Nahúm", abrev: "NAH", testament: "AT", cap: 3 },
+                { id: 35, nombre: "Habacuc", abrev: "HAB", testament: "AT", cap: 3 },
+                { id: 36, nombre: "Sofonías", abrev: "SOF", testament: "AT", cap: 3 },
+                { id: 37, nombre: "Hageo", abrev: "HAG", testament: "AT", cap: 2 },
+                { id: 38, nombre: "Zacarías", abrev: "ZAC", testament: "AT", cap: 14 },
+                { id: 39, nombre: "Malaquías", abrev: "MAL", testament: "AT", cap: 4 },
+                { id: 40, nombre: "Mateo", abrev: "MAT", testament: "NT", cap: 28 },
+                { id: 41, nombre: "Marcos", abrev: "MAR", testament: "NT", cap: 16 },
+                { id: 42, nombre: "Lucas", abrev: "LUC", testament: "NT", cap: 24 },
+                { id: 43, nombre: "Juan", abrev: "JUA", testament: "NT", cap: 21 },
+                { id: 44, nombre: "Hechos", abrev: "HEC", testament: "NT", cap: 28 },
+                { id: 45, nombre: "Romanos", abrev: "ROM", testament: "NT", cap: 16 },
+                { id: 46, nombre: "1 Corintios", abrev: "1CO", testament: "NT", cap: 16 },
+                { id: 47, nombre: "2 Corintios", abrev: "2CO", testament: "NT", cap: 13 },
+                { id: 48, nombre: "Gálatas", abrev: "GAL", testament: "NT", cap: 6 },
+                { id: 49, nombre: "Efesios", abrev: "EFE", testament: "NT", cap: 6 },
+                { id: 50, nombre: "Filipenses", abrev: "FIL", testament: "NT", cap: 4 },
+                { id: 51, nombre: "Colosenses", abrev: "COL", testament: "NT", cap: 4 },
+                { id: 52, nombre: "1 Tesalonicenses", abrev: "1TS", testament: "NT", cap: 5 },
+                { id: 53, nombre: "2 Tesalonicenses", abrev: "2TS", testament: "NT", cap: 3 },
+                { id: 54, nombre: "1 Timoteo", abrev: "1TI", testament: "NT", cap: 6 },
+                { id: 55, nombre: "2 Timoteo", abrev: "2TI", testament: "NT", cap: 4 },
+                { id: 56, nombre: "Tito", abrev: "TIT", testament: "NT", cap: 3 },
+                { id: 57, nombre: "Filemón", abrev: "FILM", testament: "NT", cap: 1 },
+                { id: 58, nombre: "Hebreos", abrev: "HEB", testament: "NT", cap: 13 },
+                { id: 59, nombre: "Santiago", abrev: "SAN", testament: "NT", cap: 5 },
+                { id: 60, nombre: "1 Pedro", abrev: "1PE", testament: "NT", cap: 5 },
+                { id: 61, nombre: "2 Pedro", abrev: "2PE", testament: "NT", cap: 3 },
+                { id: 62, nombre: "1 Juan", abrev: "1JU", testament: "NT", cap: 5 },
+                { id: 63, nombre: "2 Juan", abrev: "2JU", testament: "NT", cap: 1 },
+                { id: 64, nombre: "3 Juan", abrev: "3JU", testament: "NT", cap: 1 },
+                { id: 65, nombre: "Judas", abrev: "JUD", testament: "NT", cap: 1 },
+                { id: 66, nombre: "Apocalipsis", abrev: "APO", testament: "NT", cap: 22 }
+            ]
+           
         ];
         
         this.versiculosCache = new Map();
@@ -186,7 +253,7 @@ return versiculos;
         "Salmos": "Salmos",
         "Proverbios": "Proverbios",
         "Eclesiastés": "Eclesiastes",
-        "Cantares": "Cantares", // OJO: En tu repo es "Canteres"
+        "Cantares": "Cantares", 
         "Isaías": "Isaias",
         "Jeremías": "Jeremias",
         "Lamentaciones": "Lamentaciones",
@@ -218,7 +285,7 @@ return versiculos;
         "Efesios": "Efesios",
         "Filipenses": "Filipenses",
         "Colosenses": "Colosenses",
-        "1 Tesalonicenses": "1Tesalonicenses", // OJO: En tu repo es "1Tesalonicenes"
+        "1 Tesalonicenses": "1Tesalonicenses", 
         "2 Tesalonicenses": "2Tesalonicenses",
         "1 Timoteo": "1Timoteo",
         "2 Timoteo": "2Timoteo",
@@ -919,7 +986,7 @@ function showNotification(message, icon = 'ℹ️') {
         border-radius: 8px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         z-index: 10000;
-        animation: slideIn 0.3s ease;
+        animation: slide-in-right 0.3s ease;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         display: flex;
         align-items: center;
@@ -1088,41 +1155,6 @@ window.realizarBusquedaAvanzada = realizarBusquedaAvanzada;
 window.mostrarSugerencias = mostrarSugerencias;
 window.ocultarSugerencias = ocultarSugerencias;
 
-// AL FINAL DE 1960.js, añade:
-window.testBiblia = async function() {
-    console.log('🧪 TEST PROFUNDO DE BIBLIA');
-    
-    // 1. Probar fetch directo
-    const testUrl = '/JovenesIBEC/biblia/Genesis/genesis_1.json';
-    console.log('Fetch a:', testUrl);
-    
-    try {
-        const response = await fetch(testUrl);
-        const data = await response.json();
-        console.log('✅ Datos crudos:', {
-            book: data.book,
-            chapter: data.chapter,
-            versesCount: data.verses?.length,
-            firstVerse: data.verses?.[0]
-        });
-        
-        // 2. Probar con la clase Biblia
-        const result = await biblia.obtenerCapitulo('Génesis', 1);
-        console.log('✅ Resultado procesado:', {
-            success: !!result,
-            versiclesCount: result ? Object.keys(result).length : 0,
-            firstText: result ? result[1] : 'none'
-        });
-        
-        // 3. Mostrar en UI si funciona
-        if (result && result[1]) {
-            mostrarVersiculo(result[1], "Génesis 1:1 (Test)");
-        }
-        
-    } catch (error) {
-        console.error('❌ Error en test:', error);
-    }
-};
 
 // Ejecutar automáticamente después de 3 segundos
 setTimeout(() => {
