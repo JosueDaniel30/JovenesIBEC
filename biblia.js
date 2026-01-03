@@ -317,7 +317,17 @@ function mostrarTestamento(tipo) {
         event.target.classList.add("active");
     }
 
-    const books = tipo === "AT" ? oldTestament : newTestament;
+    let books;
+    if (tipo === "AT") {
+        books = oldTestament;
+    } else if (tipo === "NT") {
+        books = newTestament;
+    } else if (tipo === "ALL") {
+        books = [...oldTestament, ...newTestament];
+    } else {
+        books = newTestament; // fallback
+    }
+
     const grid = document.getElementById("books-grid");
 
     if (grid) {
@@ -329,7 +339,7 @@ function mostrarTestamento(tipo) {
     }
 }
 
-mostrarTestamento("AT");
+mostrarTestamento("ALL");
 
 // ============================
 // Función para mapear nombres de libros a nombres de carpetas
@@ -452,8 +462,8 @@ function showNotification(message, icon = 'ℹ️') {
         position: 'fixed',
         top: '20px',
         right: '20px',
-        background: 'var(--card-bg)',
-        color: 'var(--text-color)',
+        background: 'rgba(34, 197, 94, 0.9)',
+        color: 'white',
         padding: '1rem 1.5rem',
         borderRadius: 'var(--radius-lg)',
         boxShadow: 'var(--shadow-xl)',

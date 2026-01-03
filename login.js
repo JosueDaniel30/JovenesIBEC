@@ -1,3 +1,59 @@
+// Función de notificación transparente
+function showNotification(message, icon = 'ℹ️') {
+    // Si ya hay una notificación, quitarla
+    const existing = document.querySelector('.custom-notification');
+    if (existing) existing.remove();
+
+    const notification = document.createElement('div');
+    notification.className = 'custom-notification';
+    notification.innerHTML = `<span class="notification-icon">${icon}</span> ${message}`;
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(34, 197, 94, 0.9);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 10000;
+        animation: slide-in-right 0.3s ease;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    `;
+
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// Agregar estilos CSS para notificaciones
+if (!document.querySelector('#custom-notification-styles')) {
+    const style = document.createElement('style');
+    style.id = 'custom-notification-styles';
+    style.textContent = `
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        .notification-icon {
+            font-size: 1.2em;
+        }
+    `;
+    document.head.appendChild(style);
+}
+
 // Login/Register functionality
 document.addEventListener('DOMContentLoaded', function() {
   // Inicializar usuario Admin por defecto

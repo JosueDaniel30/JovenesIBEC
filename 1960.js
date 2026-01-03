@@ -980,7 +980,7 @@ function showNotification(message, icon = 'ℹ️') {
         position: fixed;
         top: 20px;
         right: 20px;
-        background: #22c55e;
+        background: rgba(34, 197, 94, 0.9);
         color: white;
         padding: 12px 20px;
         border-radius: 8px;
@@ -991,6 +991,8 @@ function showNotification(message, icon = 'ℹ️') {
         display: flex;
         align-items: center;
         gap: 8px;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
     `;
     
     document.body.appendChild(notification);
