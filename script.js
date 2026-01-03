@@ -1287,7 +1287,10 @@ checkDevice();
 function registerServiceWorker() {
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
-            navigator.serviceWorker.register('/sw.js')
+            const swPath = window.location.href.includes('/JovenesIBEC/') 
+                ? '/JovenesIBEC/sw.js' 
+                : '/sw.js';
+            navigator.serviceWorker.register(swPath)
                 .then(function(registration) {
                     console.log('Service Worker registrado exitosamente:', registration.scope);
 

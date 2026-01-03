@@ -359,7 +359,12 @@
 <script>
   if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
     window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/sw.js')
+      // Ruta CORRECTA para GitHub Pages
+        const swPath = window.location.href.includes('/JovenesIBEC/') 
+            ? '/JovenesIBEC/sw.js' 
+            : '/sw.js';
+
+        navigator.serviceWorker.register(swPath)
         .then(function(registration) {
           console.log('Service Worker registrado con éxito:', registration.scope);
 

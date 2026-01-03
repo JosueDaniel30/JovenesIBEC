@@ -127,26 +127,30 @@ class BibliaRVR1960 {
         
         // PROCESAR TU FORMATO ESPECÍFICO
         const versiculos = {};
-        
-        if (chapterData.verses && Array.isArray(chapterData.verses)) {
-            // Tu formato: {book: "...", chapter: X, verses: [{verse: 1, text: "..."}, ...]}
-            chapterData.verses.forEach(item => {
-                if (item && item.verse && item.text) {
-                    versiculos[item.verse] = item.text;
-                }
-            });
-            console.log(`📊 ${versiculos.length} versículos extraídos del array "verses"`);
-        } else {
-            console.warn('⚠️ Formato inesperado:', chapterData);
+
+// DEBUG: Ver estructura real
+console.log('📦 Estructura JSON recibida:', {
+    tipo: typeof chapterData,
+    claves: Object.keys(chapterData),
+    tieneVerses: !!chapterData.verses,
+    esArrayVerses: Array.isArray(chapterData.verses),
+    longitudVerses: chapterData.verses?.length
+});
+
+// FORMATO ACTUAL DE TUS ARCHIVOS: {book: "...", chapter: X, verses: [{verse: 1, text: "..."}]}
+if (chapterData.verses && Array.isArray(chapterData.verses)) {
+    console.log('🔄 Procesando formato verses array');
+    chapterData.verses.forEach(verseObj => {
+        if (verseObj && typeof verseObj.verse !== 'undefined' && verseObj.text) {
+            versiculos[verseObj.verse] = verseObj.text;
         }
-        
-        // Si no se extrajeron versículos, intentar formato alternativo
-        if (Object.keys(versiculos).length === 0) {
-            console.warn('Intentando procesar formato alternativo...');
-            // ... otros formatos (mantén el código anterior para compatibilidad)
-        }
-        
-        return versiculos;
+    });
+    console.log(`✅ Extraídos ${Object.keys(versiculos).length} versículos`);
+} else {
+    console.warn('⚠️ Formato no reconocido, datos completos:', chapterData);
+}
+
+return versiculos;
         
     } catch (error) {
         console.error('❌ Error cargando capítulo:', error);
@@ -458,31 +462,47 @@ function cargarLibrosInterfaz() {
 
 // Mostrar testamento específico
 function mostrarTestamento(testamento) {
-    // Actualizar botones activos
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    if (event && event.target) {
-        event.target.classList.add('active');
+    console.log('🔽 Cambiando a testamento:', testamento);
+    
+    try {
+        // 1. Obtener el grid de libros
+        const booksGrid = document.getElementById('books-grid');
+        if (!booksGrid) {
+            console.error('❌ No se encontró #books-grid en el DOM');
+            return;
+        }
+        
+        // 2. Obtener libros del testamento
+        const libros = biblia.obtenerLibrosPorTestamento(testamento);
+        console.log(`📚 Libros del ${testamento}:`, libros.length);
+        
+        // 3. Actualizar botones activos
+        const buttons = document.querySelectorAll('.tab-btn');
+        buttons.forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.textContent.includes(testamento === 'AT' ? 'Antiguo' : 'Nuevo')) {
+                btn.classList.add('active');
+            }
+        });
+        
+        // 4. Generar HTML
+        let html = '';
+        libros.forEach(libro => {
+            html += `
+                <div class="book-card" onclick="abrirLibro('${libro.nombre.replace(/'/g, "\\'")}')">
+                    <div class="book-icon">📖</div>
+                    <h3>${libro.nombre}</h3>
+                    <p>${libro.cap} capítulos</p>
+                </div>
+            `;
+        });
+        
+        booksGrid.innerHTML = html;
+        console.log('✅ Testamento cargado:', testamento);
+        
+    } catch (error) {
+        console.error('❌ Error en mostrarTestamento:', error);
     }
-    
-    const booksGrid = document.getElementById('books-grid');
-    if (!booksGrid) return;
-    
-    const libros = biblia.obtenerLibrosPorTestamento(testamento);
-    let html = '';
-    
-    libros.forEach(libro => {
-        html += `
-            <div class="book-card" onclick="abrirLibro('${libro.nombre}')">
-                <div class="book-icon">📖</div>
-                <h3>${libro.nombre}</h3>
-                <p>${libro.cap} capítulos</p>
-            </div>
-        `;
-    });
-    
-    booksGrid.innerHTML = html;
 }
 
 // Abrir libro para lectura
