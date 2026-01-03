@@ -12,7 +12,16 @@ const verses = [
     { text: 'El que habita al abrigo del Altísimo morará bajo la sombra del Omnipotente.', ref: 'Salmos 91:1', theme: 'protección' },
     { text: 'Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree, no se pierda, mas tenga vida eterna.', ref: 'Juan 3:16', theme: 'amor' },
     { text: 'Y sabemos que a los que aman a Dios, todas las cosas les ayudan a bien, esto es, a los que conforme a su propósito son llamados.', ref: 'Romanos 8:28', theme: 'propósito' },
-    { text: 'Pero los que esperan a Jehová tendrán nuevas fuerzas; levantarán alas como las águilas; correrán, y no se cansarán; caminarán, y no se fatigarán.', ref: 'Isaías 40:31', theme: 'esperanza' }
+    { text: 'Pero los que esperan a Jehová tendrán nuevas fuerzas; levantarán alas como las águilas; correrán, y no se cansarán; caminarán, y no se fatigarán.', ref: 'Isaías 40:31', theme: 'esperanza' },
+    { text: 'En el principio creó Dios los cielos y la tierra.', ref: 'Génesis 1:1', theme: 'creación' },
+    { text: 'No tendrás dioses ajenos delante de mí.', ref: 'Éxodo 20:3', theme: 'adoración' },
+    { text: 'Fíate de Jehová de todo tu corazón, y no te apoyes en tu propia prudencia.', ref: 'Proverbios 3:5', theme: 'sabiduría' },
+    { text: 'Por tanto, id, y haced discípulos a todas las naciones, bautizándolos en el nombre del Padre, y del Hijo, y del Espíritu Santo.', ref: 'Mateo 28:19', theme: 'misión' },
+    { text: 'Porque por gracia sois salvos por medio de la fe; y esto no de vosotros, pues es don de Dios.', ref: 'Efesios 2:8', theme: 'gracia' },
+    { text: 'Bienaventurado el varón que no anduvo en consejo de malos, ni estuvo en camino de pecadores, ni en silla de escarnecedores se ha sentado.', ref: 'Salmos 1:1', theme: 'bendición' },
+    { text: 'El temor de Jehová es el principio de la sabiduría; y el conocimiento del Santísimo es la inteligencia.', ref: 'Proverbios 9:10', theme: 'temor' },
+    { text: 'Venid a mí todos los que estáis trabajados y cargados, y yo os haré descansar.', ref: 'Mateo 11:28', theme: 'descanso' },
+    { text: 'De manera que si alguno está en Cristo, nueva criatura es; las cosas viejas pasaron; he aquí todas son hechas nuevas.', ref: '2 Corintios 5:17', theme: 'renovación' }
 ];
 
 function loadVerse() {
@@ -52,7 +61,7 @@ function shareVerse() {
     const text = document.getElementById('verse-text')?.textContent || '';
     const ref = document.getElementById('verse-ref')?.textContent || '';
     const message = `${text} ${ref}`;
-    
+
     if (navigator.share) {
         navigator.share({
             title: 'Versículo del día - Jóvenes en Cristo',
@@ -67,6 +76,42 @@ function shareVerse() {
     } else {
         copyVerse();
     }
+}
+
+function addToFavorites() {
+    const verseText = document.getElementById('verse-text')?.textContent || '';
+    const verseRef = document.getElementById('verse-ref')?.textContent || '';
+    const verseTheme = document.getElementById('verse-theme')?.textContent || '';
+
+    if (!verseText || !verseRef) {
+        showNotification('No hay versículo para agregar a favoritos', '⚠️');
+        return;
+    }
+
+    // Obtener favoritos existentes
+    let favorites = JSON.parse(localStorage.getItem('favoriteVerses') || '[]');
+
+    // Crear objeto del versículo
+    const verse = {
+        text: verseText,
+        ref: verseRef,
+        theme: verseTheme,
+        dateAdded: new Date().toISOString()
+    };
+
+    // Verificar si ya está en favoritos
+    const isAlreadyFavorite = favorites.some(fav => fav.text === verse.text && fav.ref === verse.ref);
+
+    if (isAlreadyFavorite) {
+        showNotification('Este versículo ya está en tus favoritos ❤️', 'ℹ️');
+        return;
+    }
+
+    // Agregar a favoritos
+    favorites.push(verse);
+    localStorage.setItem('favoriteVerses', JSON.stringify(favorites));
+
+    showNotification('Versículo agregado a favoritos ❤️', '✅');
 }
 
 /* ============================ */
@@ -299,9 +344,6 @@ function checkAchievements(streak) {
 /* ⏱️ TEMPORIZADOR DE ORACIÓN */
 /* ============================ */
 
-let prayerTimer = null;
-let prayerSeconds = 0;
-
 function startTimer() {
     if (prayerTimer) {
         showNotification('El temporizador ya está en marcha ⏱️', '⚠️');
@@ -387,9 +429,6 @@ function toggleTheme() {
         mobileThemeIcon.textContent = isDark ? '☀️' : '🌙';
         mobileThemeText.textContent = isDark ? 'Tema Claro' : 'Tema Oscuro';
     }
-
-    // Aplicar tema a elementos específicos
-    applyTheme();
 }
 
 function applyTheme() {
@@ -430,20 +469,13 @@ function updateMobileThemeIcon() {
     }
 }
 
-// Event listener para el botón de tema móvil
-const mobileThemeBtn = document.getElementById('mobile-theme-toggle');
-if (mobileThemeBtn) {
-    mobileThemeBtn.addEventListener('click', function() {
-        toggleTheme();
-        updateMobileThemeIcon();
-    });
-}
+// Event listener para el botón de tema móvil (se configura más abajo en DOMContentLoaded)
 
 function initializeThemeSystem() {
     // Cargar tema guardado
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
-        document.body.classList.add('dark');
+        document.body.classList.add('dark-theme');
         applyTheme();
     }
 
@@ -453,7 +485,7 @@ function initializeThemeSystem() {
     // Actualizar ícono del botón principal
     const themeIcon = document.querySelector('.theme-icon');
     if (themeIcon) {
-        const isDark = document.body.classList.contains('dark');
+        const isDark = document.body.classList.contains('dark-theme');
         themeIcon.textContent = isDark ? '☀️' : '🌙';
     }
 }
@@ -551,6 +583,14 @@ function initializeHomePage() {
     // Cargar versículo del día
     loadVerse();
 
+    // Inicializar sistema de versículos
+    const todayStr = new Date().toDateString();
+    const verseReadToday = localStorage.getItem('verseReadToday');
+    updateVerseStatus(verseReadToday === todayStr);
+
+    // Inicializar sistema de oración
+    initializePrayerSystem();
+
     // Mostrar notificación de bienvenida si es primera vez del día
     showWelcomeNotification();
 }
@@ -579,6 +619,250 @@ function loadQuickStats() {
     document.getElementById('goals-completed').textContent = goalsCompleted;
     document.getElementById('prayer-streak').textContent = prayerStreak;
     document.getElementById('level').textContent = level;
+}
+
+function updateQuickStats() {
+    loadQuickStats();
+}
+
+/* ============================ */
+/* 📖 MARCAR VERSÍCULO COMO LEÍDO */
+/* ============================ */
+
+function markVerseAsRead() {
+    const today = new Date().toDateString();
+    const verseReadToday = localStorage.getItem('verseReadToday');
+
+    if (verseReadToday === today) {
+        showNotification('Ya marcaste este versículo como leído hoy 🙌', '✅');
+        return;
+    }
+
+    // Marcar como leído
+    localStorage.setItem('verseReadToday', today);
+
+    // Actualizar estadísticas
+    let versesRead = parseInt(localStorage.getItem('versesRead') || '0');
+    versesRead++;
+    localStorage.setItem('versesRead', versesRead);
+
+    // Actualizar nivel
+    const goalsCompleted = parseInt(localStorage.getItem('goalsCompleted') || '0');
+    const level = Math.floor((versesRead + goalsCompleted) / 10) + 1;
+    localStorage.setItem('spiritualLevel', level);
+
+    // Actualizar UI
+    updateQuickStats();
+    updateVerseStatus(true);
+
+    // Mostrar notificación
+    showNotification('¡Versículo leído! +1 versículo leído 📖', '✅');
+
+    // Efecto visual
+    const markBtn = document.getElementById('mark-read-btn');
+    if (markBtn) {
+        markBtn.style.transform = 'scale(1.2)';
+        setTimeout(() => markBtn.style.transform = 'scale(1)', 300);
+    }
+}
+
+function updateVerseStatus(read) {
+    const verseStatus = document.getElementById('verse-status');
+    if (!verseStatus) return;
+
+    if (read) {
+        verseStatus.innerHTML = '<span class="status-icon">✅</span><span class="status-text">¡Leído hoy!</span>';
+        verseStatus.style.color = 'var(--accent)';
+    } else {
+        verseStatus.innerHTML = '<span class="status-icon">⏳</span><span class="status-text">Pendiente por leer</span>';
+        verseStatus.style.color = 'var(--text-muted)';
+    }
+}
+
+/* ============================ */
+/* 🙏 SISTEMA DE ORACIÓN DIARIA */
+/* ============================ */
+
+let prayerTimer = null;
+let prayerSeconds = 0;
+
+function initializePrayerSystem() {
+    const today = new Date().toDateString();
+    const prayerDoneToday = localStorage.getItem('prayerDoneToday');
+
+    const startBtn = document.getElementById('start-prayer-btn');
+    const statusEl = document.getElementById('prayer-status');
+
+    if (prayerDoneToday === today) {
+        // Ya oró hoy
+        if (startBtn) {
+            startBtn.innerHTML = '<span class="prayer-icon">✅</span><span class="prayer-text">¡Oración completada!</span>';
+            startBtn.classList.add('completed');
+            startBtn.disabled = true;
+        }
+        if (statusEl) {
+            statusEl.innerHTML = '<span class="status-icon">✅</span><span class="status-text">¡Completado hoy!</span>';
+        }
+    } else {
+        // No ha orado hoy
+        if (startBtn) {
+            startBtn.addEventListener('click', startPrayerSession);
+        }
+    }
+}
+
+function startPrayerSession() {
+    const duration = prompt('¿Cuántos minutos quieres orar?', '10');
+    if (!duration || isNaN(duration) || duration <= 0) return;
+
+    prayerSeconds = duration * 60;
+
+    // Mostrar timer
+    const timerEl = document.getElementById('prayer-timer');
+    const startBtn = document.getElementById('start-prayer-btn');
+    const stopBtn = document.getElementById('stop-prayer-btn');
+
+    if (timerEl) timerEl.style.display = 'block';
+    if (startBtn) {
+        startBtn.style.display = 'none';
+    }
+    if (stopBtn) {
+        stopBtn.addEventListener('click', stopPrayerSession);
+    }
+
+    // Iniciar temporizador
+    prayerTimer = setInterval(() => {
+        prayerSeconds--;
+
+        // Actualizar display
+        const minutes = Math.floor(prayerSeconds / 60);
+        const seconds = prayerSeconds % 60;
+
+        const minutesEl = document.getElementById('timer-minutes');
+        const secondsEl = document.getElementById('timer-seconds');
+
+        if (minutesEl) minutesEl.textContent = minutes.toString().padStart(2, '0');
+        if (secondsEl) secondsEl.textContent = seconds.toString().padStart(2, '0');
+
+        // Cuando termine
+        if (prayerSeconds <= 0) {
+            completePrayerSession(duration);
+        }
+    }, 1000);
+
+    showNotification(`⏱️ Sesión de oración iniciada: ${duration} minutos`, '🙏');
+}
+
+function stopPrayerSession() {
+    if (prayerTimer) {
+        clearInterval(prayerTimer);
+        prayerTimer = null;
+
+        // Ocultar timer y mostrar botón de inicio
+        const timerEl = document.getElementById('prayer-timer');
+        const startBtn = document.getElementById('start-prayer-btn');
+
+        if (timerEl) timerEl.style.display = 'none';
+        if (startBtn) startBtn.style.display = 'block';
+
+        showNotification('Sesión de oración detenida ⏹️', '⏹️');
+    }
+}
+
+function completePrayerSession(duration) {
+    clearInterval(prayerTimer);
+    prayerTimer = null;
+
+    const today = new Date().toDateString();
+
+    // Marcar como completado hoy
+    localStorage.setItem('prayerDoneToday', today);
+
+    // Actualizar racha de oración
+    updatePrayerStreak();
+
+    // Actualizar estadísticas
+    let prayerTime = parseInt(localStorage.getItem('prayerTime') || '0');
+    prayerTime += parseInt(duration);
+    localStorage.setItem('prayerTime', prayerTime);
+
+    // Actualizar experiencia
+    const currentExp = parseInt(localStorage.getItem('experience') || '0');
+    localStorage.setItem('experience', currentExp + 5);
+
+    // Actualizar UI
+    const timerEl = document.getElementById('prayer-timer');
+    const startBtn = document.getElementById('start-prayer-btn');
+    const statusEl = document.getElementById('prayer-status');
+
+    if (timerEl) timerEl.style.display = 'none';
+    if (startBtn) {
+        startBtn.innerHTML = '<span class="prayer-icon">✅</span><span class="prayer-text">¡Oración completada!</span>';
+        startBtn.classList.add('completed');
+        startBtn.disabled = true;
+        startBtn.style.display = 'block';
+    }
+    if (statusEl) {
+        statusEl.innerHTML = '<span class="status-icon">✅</span><span class="status-text">¡Completado hoy!</span>';
+    }
+
+    // Actualizar estadísticas rápidas
+    updateQuickStats();
+
+    // Mostrar notificación
+    showNotification(`¡Sesión de oración completada! ${duration} minutos dedicados a Dios 🙏`, '🎉');
+}
+
+function updatePrayerStreak() {
+    const today = new Date().toDateString();
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+
+    let prayerStreakData = JSON.parse(localStorage.getItem('prayerStreakData') || '{}');
+    let streak = prayerStreakData.streak || 0;
+    const lastDay = prayerStreakData.lastDay;
+
+    // Verificar si es día consecutivo
+    if (lastDay === yesterday || !lastDay) {
+        streak++;
+    } else if (lastDay !== today) {
+        // Resetear racha si no es consecutivo
+        streak = 1;
+    }
+
+    prayerStreakData = {
+        streak: streak,
+        lastDay: today
+    };
+
+    localStorage.setItem('prayerStreakData', JSON.stringify(prayerStreakData));
+    localStorage.setItem('prayerStreak', streak);
+}
+
+/* ============================ */
+/* 🎯 ACTUALIZACIÓN DINÁMICA DE METAS */
+/* ============================ */
+
+function updateGoalsCompleted() {
+    let goalsCompleted = 0;
+    ['bronze', 'silver', 'gold'].forEach(level => {
+        for (let i = 1; i <= 5; i++) {
+            if (localStorage.getItem(`${level}${i}`) === 'true') {
+                goalsCompleted++;
+            }
+        }
+    });
+
+    localStorage.setItem('goalsCompleted', goalsCompleted);
+
+    // Actualizar nivel espiritual
+    const versesRead = parseInt(localStorage.getItem('versesRead') || '0');
+    const level = Math.floor((versesRead + goalsCompleted) / 10) + 1;
+    localStorage.setItem('spiritualLevel', level);
+
+    // Actualizar UI
+    updateQuickStats();
+
+    return goalsCompleted;
 }
 
 function checkDailyCheckin() {
@@ -689,6 +973,13 @@ document.addEventListener('DOMContentLoaded', function() {
         initializeHomePage();
     }
 
+    // Escuchar cambios en localStorage para actualizar metas en tiempo real
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'goalsCompleted' || e.key.startsWith('bronze') || e.key.startsWith('silver') || e.key.startsWith('gold')) {
+            updateQuickStats();
+        }
+    });
+
     // Mostrar notificación de demo después de 2 segundos (solo para testing)
     setTimeout(() => {
         if (window.location.pathname.includes('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/')) {
@@ -728,7 +1019,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Tema móvil
         if (mobileThemeBtn) {
-            mobileThemeBtn.addEventListener('click', function() {
+            mobileThemeBtn.addEventListener('pointerdown', function(e) {
+                e.stopPropagation();
                 toggleTheme();
                 updateMobileThemeIcon();
             });
@@ -758,7 +1050,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Cargar tema guardado
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
-        document.body.classList.add('dark');
+        document.body.classList.add('dark-theme');
         applyTheme();
     }
 
@@ -777,7 +1069,7 @@ function updateMobileThemeIcon() {
     const mobileThemeText = document.querySelector('.mobile-theme-text');
 
     if (mobileThemeIcon && mobileThemeText) {
-        const isDark = document.body.classList.contains('dark');
+        const isDark = document.body.classList.contains('dark-theme');
         mobileThemeIcon.textContent = isDark ? '☀️' : '🌙';
         mobileThemeText.textContent = isDark ? 'Tema Claro' : 'Tema Oscuro';
     }
@@ -790,9 +1082,9 @@ function toggleTheme() {
     const mobileThemeIcon = document.querySelector('.mobile-theme-icon');
     const mobileThemeText = document.querySelector('.mobile-theme-text');
 
-    body.classList.toggle('dark');
+    body.classList.toggle('dark-theme');
 
-    const isDark = body.classList.contains('dark');
+    const isDark = body.classList.contains('dark-theme');
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
 
     if (themeIcon) {
@@ -809,7 +1101,7 @@ function toggleTheme() {
 }
 
 function applyTheme() {
-    const isDark = document.body.classList.contains('dark');
+    const isDark = document.body.classList.contains('dark-theme');
 
     // Actualizar colores CSS variables si es necesario
     if (isDark) {
@@ -1052,6 +1344,7 @@ registerServiceWorker();
 window.loadVerse = loadVerse;
 window.copyVerse = copyVerse;
 window.shareVerse = shareVerse;
+window.addToFavorites = addToFavorites;
 window.completeDay = completeDay;
 window.toggleTheme = toggleTheme;
 window.startTimer = startTimer;

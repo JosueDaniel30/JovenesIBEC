@@ -120,7 +120,7 @@
       <p>Versículos que te inspiran</p>
     </div>
 
-    <div class="tool-card" onclick="startQuiz()">
+    <div class="tool-card" onclick="startQuizGame()">
       <div class="tool-icon">🧠</div>
       <h3>Quiz Bíblico</h3>
       <p>Pon a prueba tu conocimiento</p>
@@ -332,7 +332,7 @@
     <h2>🧠 Quiz Bíblico</h2>
     <div id="quiz-content">
       <p>¿Listo para el desafío? Responde preguntas sobre la Biblia y gana puntos!</p>
-      <button onclick="startQuizGame()" class="btn-plus">Comenzar Quiz</button>
+      <<button onclick="startQuizGame()" class="btn-plus">Comenzar Quiz</button>
     </div>
   </section>
 
@@ -347,6 +347,11 @@
         // Inicializar funcionalidades específicas si existen
         if (typeof initBibliaFunctions === 'function') {
             initBibliaFunctions();
+        }
+
+        // Inicializar la sección de libros
+        if (typeof mostrarTestamento === 'function') {
+            mostrarTestamento('AT');
         }
     });
 </script>

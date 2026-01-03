@@ -154,12 +154,12 @@ function applySettings() {
     if (settings.autoDark) {
         const hour = new Date().getHours();
         const shouldBeDark = hour < 6 || hour > 18;
-        if (shouldBeDark && !document.body.classList.contains('dark')) {
-            document.body.classList.add('dark');
+        if (shouldBeDark && !document.body.classList.contains('dark-theme')) {
+            document.body.classList.add('dark-theme');
             localStorage.setItem('theme', 'dark');
             document.querySelector('.theme-icon').textContent = '☀️';
-        } else if (!shouldBeDark && document.body.classList.contains('dark')) {
-            document.body.classList.remove('dark');
+        } else if (!shouldBeDark && document.body.classList.contains('dark-theme')) {
+            document.body.classList.remove('dark-theme');
             localStorage.setItem('theme', 'light');
             document.querySelector('.theme-icon').textContent = '🌙';
         }
@@ -171,27 +171,87 @@ function loadFavorites() {
     const favoritesList = document.getElementById('favorites-list');
 
     if (favorites.length === 0) {
-        favoritesList.innerHTML = '<p class="empty-state">No tienes versículos favoritos aún. ¡Agrega algunos desde la página de la Biblia!</p>';
+        favoritesList.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">📖</div>
+                <h3>No tienes versículos favoritos aún</h3>
+                <p>¡Agrega algunos desde la página de la Biblia para tenerlos siempre a mano!</p>
+                <a href="biblia.html" class="btn-plus">Ir a la Biblia</a>
+            </div>
+        `;
         return;
     }
 
-    const favoritesHTML = favorites.map((fav, index) => `
-        <div class="favorite-item">
-            <blockquote class="favorite-verse">"${fav.text}"</blockquote>
-            <cite class="favorite-ref">${fav.ref}</cite>
-            <div class="favorite-date">${new Date(fav.date).toLocaleDateString()}</div>
-            <button onclick="removeFavorite(${index})" class="btn-secondary">🗑️</button>
-        </div>
-    `).join('');
+    const favoritesHTML = favorites.map((fav, index) => {
+        const dateAdded = new Date(fav.dateAdded).toLocaleDateString('es-ES', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+
+        return `
+            <div class="favorite-card" data-index="${index}">
+                <div class="favorite-header">
+                    <div class="favorite-theme">${fav.theme.toUpperCase()}</div>
+                    <div class="favorite-actions">
+                        <button onclick="shareFavorite(${index})" class="btn-icon" title="Compartir">📤</button>
+                        <button onclick="removeFavorite(${index})" class="btn-icon btn-danger" title="Eliminar">🗑️</button>
+                    </div>
+                </div>
+                <div class="favorite-content">
+                    <blockquote class="favorite-text">"${fav.text}"</blockquote>
+                    <cite class="favorite-ref">${fav.ref}</cite>
+                </div>
+                <div class="favorite-footer">
+                    <small class="favorite-date">Agregado: ${dateAdded}</small>
+                </div>
+            </div>
+        `;
+    }).join('');
 
     favoritesList.innerHTML = favoritesHTML;
 }
 
 function removeFavorite(index) {
     let favorites = JSON.parse(localStorage.getItem('favoriteVerses') || '[]');
-    favorites.splice(index, 1);
-    localStorage.setItem('favoriteVerses', JSON.stringify(favorites));
-    loadFavorites();
+    if (index >= 0 && index < favorites.length) {
+        const removed = favorites.splice(index, 1)[0];
+        localStorage.setItem('favoriteVerses', JSON.stringify(favorites));
+        showNotification(`Versículo "${removed.ref}" eliminado de favoritos`, '🗑️');
+        loadFavorites();
+    }
+}
+
+function shareFavorite(index) {
+    const favorites = JSON.parse(localStorage.getItem('favoriteVerses') || '[]');
+    if (index >= 0 && index < favorites.length) {
+        const fav = favorites[index];
+        const message = `"${fav.text}" - ${fav.ref}`;
+
+        if (navigator.share) {
+            navigator.share({
+                title: 'Versículo Favorito - Jóvenes en Cristo',
+                text: message,
+                url: window.location.href
+            }).then(() => {
+                showNotification('Versículo compartido con éxito 🚀', '✅');
+            }).catch(err => {
+                console.error('Error al compartir:', err);
+                copyToClipboard(message);
+            });
+        } else {
+            copyToClipboard(message);
+        }
+    }
+}
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        showNotification('Versículo copiado al portapapeles 📋', '✅');
+    }).catch(err => {
+        console.error('Error al copiar:', err);
+        showNotification('Error al copiar el versículo', '❌');
+    });
 }
 
 // Exponer funciones globales
@@ -271,6 +331,7 @@ document.addEventListener('DOMContentLoaded', function() {
     displayProfile();
     updateStats();
     loadProfilePic();
+    loadFavorites();
     document.getElementById('edit-profile-btn').addEventListener('click', toggleEditSection);
     document.getElementById('cancel-edit-btn').addEventListener('click', cancelEdit);
     document.getElementById('edit-pic-btn').addEventListener('click', changeProfilePic);

@@ -103,8 +103,8 @@
       <button id="edit-pic-btn" class="btn-secondary">Cambiar Foto</button>
     </div>
     <div class="profile-info">
-      <h2 id="user-name-display">👤 Usuario Joven</h2>
-      <p id="user-details">Edad: 20 años | Rol: Estudiante</p>
+      <h2 id="user-name-display"></h2>
+      <p id="user-details"></p>
       <button id="edit-profile-btn" class="btn-plus">Editar Perfil</button>
     </div>
   </section>
@@ -129,31 +129,77 @@
   <section class="stats-grid">
     <div class="stat-card stat-lecturas">
       <h3>📖 Lecturas</h3>
-      <p id="lecturas-count">12 completadas</p>
+      <p id="lecturas-count"></p>
     </div>
 
     <div class="stat-card stat-metas">
       <h3>🎯 Metas</h3>
-      <p id="metas-count">5 activas</p>
+      <p id="metas-count"></p>
     </div>
 
     <div class="stat-card stat-constancia">
       <h3>🔥 Constancia</h3>
-      <p id="streak-count">7 días seguidos</p>
+      <p id="streak-count"></p>
     </div>
 
     <div class="stat-card stat-logros">
       <h3>🏆 Logros</h3>
-      <p id="logros-count">3 obtenidos</p>
+      <p id="logros-count"></p>
+    </div>
+  </section>
+
+  <section class="card-premium">
+    <h2>🏅 Sistema de Insignias</h2>
+    <div id="badges-grid" class="badges-grid">
+      <div class="badge-item" id="badge-bronze">
+        <div class="badge-icon">🥉</div>
+        <h4>Principiante</h4>
+        <p>Completa tu primer nivel bronce</p>
+        <span class="badge-status locked">Bloqueado</span>
+      </div>
+      <div class="badge-item" id="badge-silver">
+        <div class="badge-icon">🥈</div>
+        <h4>Avanzado</h4>
+        <p>Completa tu primer nivel plata</p>
+        <span class="badge-status locked">Bloqueado</span>
+      </div>
+      <div class="badge-item" id="badge-gold">
+        <div class="badge-icon">🥇</div>
+        <h4>Maestro</h4>
+        <p>Completa tu primer nivel oro</p>
+        <span class="badge-status locked">Bloqueado</span>
+      </div>
+      <div class="badge-item" id="badge-streak">
+        <div class="badge-icon">🔥</div>
+        <h4>Constante</h4>
+        <p>Mantén una racha de 30 días</p>
+        <span class="badge-status locked">Bloqueado</span>
+      </div>
+      <div class="badge-item" id="badge-reader">
+        <div class="badge-icon">📚</div>
+        <h4>Lector Ávido</h4>
+        <p>Lee 100 versículos</p>
+        <span class="badge-status locked">Bloqueado</span>
+      </div>
+      <div class="badge-item" id="badge-disciple">
+        <div class="badge-icon">👨‍🏫</div>
+        <h4>Discípulo</h4>
+        <p>Discipula a 3 personas</p>
+        <span class="badge-status locked">Bloqueado</span>
+      </div>
     </div>
   </section>
 
   <section class="card-premium">
     <h2>🌟 Logros Recientes</h2>
-    <div class="achievements">
-      <div class="achievement">📚 Primer versículo memorizado</div>
-      <div class="achievement">🔥 7 días de racha</div>
-      <div class="achievement">🙏 Primera oración compartida</div>
+    <div id="achievements-grid" class="achievements">
+    </div>
+  </section>
+
+  <section class="card-premium">
+    <h2>❤️ Versículos Favoritos</h2>
+    <div id="favorites-list" class="verses-list">
+      <!-- Los versículos favoritos se cargarán aquí -->
     </div>
   </section>
 

@@ -1,116 +1,45 @@
 // Service Worker para Jóvenes con Cristo PWA
-const CACHE_NAME = 'jovenes-app-v1.0.0';
-const STATIC_CACHE = 'jovenes-static-v1.0.0';
-const DYNAMIC_CACHE = 'jovenes-dynamic-v1.0.0';
+// VERSIÓN CORREGIDA PARA GITHUB PAGES
+const CACHE_NAME = 'jovenes-app-v1.2';
+const STATIC_CACHE = 'jovenes-static-v1.2';
+const BIBLE_CACHE = 'bible-cache-v1';
 
 // Recursos a cachear inicialmente
 const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/biblia.html',
-  '/metas.html',
-  '/perfil.html',
-  '/login.html',
-  '/styles.css',
-  '/notificacion.css',
-  '/script.js',
-  '/biblia.js',
-  '/metas.js',
-  '/profile.js',
-  '/login.js',
-  '/logojov.png',
-  '/manifest.json'
-];
-
-// Recursos de la Biblia (versículos offline)
-const BIBLE_ASSETS = [
-  '/biblia/genesis.json',
-  '/biblia/exodo.json',
-  '/biblia/levitico.json',
-  '/biblia/numeros.json',
-  '/biblia/deuteronomio.json',
-  '/biblia/josue.json',
-  '/biblia/jueces.json',
-  '/biblia/rut.json',
-  '/biblia/1samuel.json',
-  '/biblia/2samuel.json',
-  '/biblia/1reyes.json',
-  '/biblia/2reyes.json',
-  '/biblia/1cronicas.json',
-  '/biblia/2cronicas.json',
-  '/biblia/esdras.json',
-  '/biblia/nehemias.json',
-  '/biblia/ester.json',
-  '/biblia/job.json',
-  '/biblia/salmos.json',
-  '/biblia/proverbios.json',
-  '/biblia/ecclesiastes.json',
-  '/biblia/cantares.json',
-  '/biblia/isaías.json',
-  '/biblia/jeremias.json',
-  '/biblia/lamentaciones.json',
-  '/biblia/ezequiel.json',
-  '/biblia/daniel.json',
-  '/biblia/oseas.json',
-  '/biblia/joel.json',
-  '/biblia/amos.json',
-  '/biblia/abdias.json',
-  '/biblia/jonas.json',
-  '/biblia/miqueas.json',
-  '/biblia/nahum.json',
-  '/biblia/habacuc.json',
-  '/biblia/sofonías.json',
-  '/biblia/hageo.json',
-  '/biblia/zacarias.json',
-  '/biblia/malaquias.json',
-  '/biblia/mateo.json',
-  '/biblia/marcos.json',
-  '/biblia/lucas.json',
-  '/biblia/juan.json',
-  '/biblia/hechos.json',
-  '/biblia/romanos.json',
-  '/biblia/1corintios.json',
-  '/biblia/2corintios.json',
-  '/biblia/galatas.json',
-  '/biblia/efesios.json',
-  '/biblia/filipenses.json',
-  '/biblia/colosenses.json',
-  '/biblia/1tesalonicenses.json',
-  '/biblia/2tesalonicenses.json',
-  '/biblia/1timoteo.json',
-  '/biblia/2timoteo.json',
-  '/biblia/tito.json',
-  '/biblia/filemon.json',
-  '/biblia/hebreos.json',
-  '/biblia/santiago.json',
-  '/biblia/1pedro.json',
-  '/biblia/2pedro.json',
-  '/biblia/1juan.json',
-  '/biblia/2juan.json',
-  '/biblia/3juan.json',
-  '/biblia/judas.json',
-  '/biblia/apocalipsis.json'
+  '/JovenesIBEC/',
+  '/JovenesIBEC/index.html',
+  '/JovenesIBEC/biblia.html',
+  '/JovenesIBEC/metas.html',
+  '/JovenesIBEC/perfil.html',
+  '/JovenesIBEC/login.html',
+  '/JovenesIBEC/styles.css',
+  '/JovenesIBEC/notificacion.css',
+  '/JovenesIBEC/script.js',
+  '/JovenesIBEC/biblia.js',
+  '/JovenesIBEC/1960.js',
+  '/JovenesIBEC/metas.js',
+  '/JovenesIBEC/profile.js',
+  '/JovenesIBEC/login.js',
+  '/JovenesIBEC/logojov.png',
+  '/JovenesIBEC/manifest.json',
+  '/JovenesIBEC/biblia/Genesis/'
 ];
 
 // Instalación del Service Worker
 self.addEventListener('install', event => {
-  console.log('Service Worker: Instalando...');
+  console.log('Service Worker: Instalando v1.2...');
   event.waitUntil(
-    Promise.all([
-      caches.open(STATIC_CACHE).then(cache => {
-        console.log('Cacheando recursos estáticos...');
-        return cache.addAll(STATIC_ASSETS);
-      }),
-      caches.open('bible-cache-v1').then(cache => {
-        console.log('Cacheando recursos de la Biblia...');
-        return cache.addAll(BIBLE_ASSETS.filter(asset => {
-          // Solo cachear si el archivo existe
-          return fetch(asset, { method: 'HEAD' }).then(response => response.ok).catch(() => false);
-        }));
-      })
-    ]).then(() => {
+    caches.open(STATIC_CACHE).then(cache => {
+      console.log('Cacheando recursos estáticos...');
+      return cache.addAll(STATIC_ASSETS.map(url => {
+        // Manejar rutas relativas para GitHub Pages
+        return new Request(url, { mode: 'no-cors' });
+      }));
+    }).then(() => {
       console.log('Service Worker: Instalación completada');
       return self.skipWaiting();
+    }).catch(error => {
+      console.error('Error en instalación:', error);
     })
   );
 });
@@ -122,7 +51,7 @@ self.addEventListener('activate', event => {
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
-          if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE && cacheName !== 'bible-cache-v1') {
+          if (![STATIC_CACHE, BIBLE_CACHE].includes(cacheName)) {
             console.log('Eliminando cache antiguo:', cacheName);
             return caches.delete(cacheName);
           }
@@ -135,46 +64,65 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Estrategia de cache: Cache First para recursos estáticos, Network First para dinámicos
+// Estrategia de cache mejorada
 self.addEventListener('fetch', event => {
   const { request } = event;
   const url = new URL(request.url);
-
-  // Ignorar requests que no son GET
+  
+  // Solo manejar GET requests
   if (request.method !== 'GET') return;
-
-  // Ignorar requests de Chrome extension
+  
+  // Ignorar chrome-extension
   if (url.protocol === 'chrome-extension:') return;
-
-  // Estrategia para recursos de la Biblia
-  if (url.pathname.startsWith('/biblia/') && url.pathname.endsWith('.json')) {
+  
+  // Para archivos JSON de la Biblia
+  if (url.pathname.includes('/biblia/') && url.pathname.endsWith('.json')) {
     event.respondWith(
-      caches.match(request).then(cachedResponse => {
-        if (cachedResponse) {
-          return cachedResponse;
-        }
-        return fetch(request).then(response => {
-          if (response.ok) {
-            const responseClone = response.clone();
-            caches.open('bible-cache-v1').then(cache => {
-              cache.put(request, responseClone);
+      caches.open(BIBLE_CACHE).then(cache => {
+        return cache.match(request).then(cachedResponse => {
+          // Si está en caché y es válido, usarlo
+          if (cachedResponse) {
+            // Verificar si la respuesta está actualizada
+            return fetch(request).then(networkResponse => {
+              // Actualizar caché
+              if (networkResponse.ok) {
+                cache.put(request, networkResponse.clone());
+              }
+              return networkResponse;
+            }).catch(() => {
+              // Si falla la red, usar caché
+              return cachedResponse;
             });
           }
-          return response;
+          
+          // Si no está en caché, obtener de la red
+          return fetch(request).then(response => {
+            if (response.ok) {
+              cache.put(request, response.clone());
+            }
+            return response;
+          }).catch(error => {
+            console.error('Error al cargar JSON:', error);
+            return new Response(
+              JSON.stringify({ error: 'No se pudo cargar el capítulo' }),
+              { 
+                status: 503,
+                headers: { 'Content-Type': 'application/json' }
+              }
+            );
+          });
         });
       })
     );
     return;
   }
-
-  // Estrategia Cache First para recursos estáticos
-  if (STATIC_ASSETS.includes(url.pathname) || url.pathname.match(/\.(css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2)$/)) {
+  
+  // Para recursos estáticos (Cache First)
+  if (STATIC_ASSETS.some(asset => url.pathname.endsWith(asset.split('/').pop())) ||
+      url.pathname.match(/\.(css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2)$/)) {
     event.respondWith(
       caches.match(request).then(cachedResponse => {
-        if (cachedResponse) {
-          return cachedResponse;
-        }
-        return fetch(request).then(response => {
+        return cachedResponse || fetch(request).then(response => {
           if (response.ok) {
             const responseClone = response.clone();
             caches.open(STATIC_CACHE).then(cache => {
@@ -187,94 +135,81 @@ self.addEventListener('fetch', event => {
     );
     return;
   }
-
-  // Estrategia Network First para páginas HTML y API calls
-  event.respondWith(
-    fetch(request).then(response => {
-      if (response.ok) {
-        const responseClone = response.clone();
-        caches.open(DYNAMIC_CACHE).then(cache => {
-          cache.put(request, responseClone);
-        });
-      }
-      return response;
-    }).catch(() => {
-      // Fallback al cache si no hay conexión
-      return caches.match(request).then(cachedResponse => {
-        if (cachedResponse) {
-          return cachedResponse;
+  
+  // Para páginas HTML (Network First)
+  if (request.headers.get('Accept')?.includes('text/html') ||
+      url.pathname.match(/\.html$/)) {
+    event.respondWith(
+      fetch(request).then(response => {
+        if (response.ok) {
+          const responseClone = response.clone();
+          caches.open(STATIC_CACHE).then(cache => {
+            cache.put(request, responseClone);
+          });
         }
-        // Página offline por defecto
-        if (request.destination === 'document') {
-          return caches.match('/index.html');
-        }
-        return new Response('Offline content not available', {
-          status: 503,
-          statusText: 'Service Unavailable'
+        return response;
+      }).catch(() => {
+        return caches.match(request).then(cachedResponse => {
+          return cachedResponse || caches.match('/JovenesIBEC/index.html');
         });
-      });
-    })
-  );
+      })
+    );
+    return;
+  }
+  
+  // Para otras peticiones
+  event.respondWith(fetch(request));
 });
 
-// Manejo de mensajes desde el cliente
+// Manejo de mensajes
 self.addEventListener('message', event => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
 });
 
-// Sincronización en segundo plano (Background Sync)
+// Background Sync
 self.addEventListener('sync', event => {
-  console.log('Background sync triggered:', event.tag);
-
-  if (event.tag === 'background-sync') {
-    event.waitUntil(doBackgroundSync());
-  }
-});
-
-async function doBackgroundSync() {
-  try {
-    // Aquí puedes implementar sincronización de datos offline
-    // Por ejemplo, enviar datos locales al servidor cuando se recupere la conexión
-    console.log('Realizando sincronización en segundo plano...');
-
-    // Simular sincronización
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    console.log('Sincronización completada');
-  } catch (error) {
-    console.error('Error en sincronización:', error);
-  }
-}
-
-// Notificaciones push (si se implementan en el futuro)
-self.addEventListener('push', event => {
-  if (event.data) {
-    const data = event.data.json();
-    const options = {
-      body: data.body,
-      icon: '/logojov.png',
-      badge: '/logojov.png',
-      vibrate: [100, 50, 100],
-      data: {
-        dateOfArrival: Date.now(),
-        primaryKey: 1
-      }
-    };
-
+  console.log('Background sync:', event.tag);
+  
+  if (event.tag === 'sync-biblia') {
     event.waitUntil(
-      self.registration.showNotification(data.title, options)
+      caches.open(BIBLE_CACHE).then(cache => {
+        return cache.keys().then(requests => {
+          console.log('Recursos bíblicos en caché:', requests.length);
+        });
+      })
     );
   }
 });
 
-// Manejo de clicks en notificaciones
-self.addEventListener('notificationclick', event => {
-  console.log('Notification click received.');
-  event.notification.close();
+// Notificaciones Push (opcional)
+self.addEventListener('push', event => {
+  if (event.data) {
+    try {
+      const data = event.data.json();
+      const options = {
+        body: data.body || 'Nuevo versículo disponible',
+        icon: '/JovenesIBEC/logojov.png',
+        badge: '/JovenesIBEC/logojov.png',
+        vibrate: [100, 50, 100]
+      };
+      
+      event.waitUntil(
+        self.registration.showNotification(data.title || 'Jóvenes con Cristo', options)
+      );
+    } catch (e) {
+      console.error('Error en push notification:', e);
+    }
+  }
+});
 
+// Clic en notificación
+self.addEventListener('notificationclick', event => {
+  console.log('Notificación clickeada');
+  event.notification.close();
+  
   event.waitUntil(
-    clients.openWindow('/index.html')
+    clients.openWindow('/JovenesIBEC/')
   );
 });

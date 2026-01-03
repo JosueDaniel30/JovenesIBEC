@@ -118,7 +118,7 @@ const quizQuestions = [
     },
     {
         question: "¿Cuál fue la ciudad donde Jonás fue enviado a predicar?",
-        options: ["Jerusalén", "Nínive", "Babilonia", "Nínive"],
+        options: ["Jerusalén", "Nínive", "Babilonia", "Tiro"],
         correct: 1,
         category: "Profetas",
         testament: "AT"
@@ -321,29 +321,47 @@ function mostrarTestamento(tipo) {
 mostrarTestamento("AT");
 
 // ============================
+// Función para mapear nombres de libros a nombres de carpetas
+// ============================
+function getFolderName(book) {
+    // Remover underscores de libros que empiezan con números
+    return book.replace(/_/g, '');
+}
+
+// ============================
 // Abrir libro (capítulos)
 // ============================
 async function openBook(book) {
     try {
-        const res = await fetch(`biblia/${book}/1.json`);
+        const folderName = getFolderName(book);
+        const fileName = `${book.toLowerCase()}_1.json`;
+        const res = await fetch(`biblia/${folderName}/${fileName}`);
         if (!res.ok) throw "No existe";
 
         showChapter(book, 1, await res.json());
     } catch {
-        notify("Libro aún no disponible", "⚠️");
+        notify("Error cargando el capítulo", "⚠️");
     }
 }
 
 // ============================
 // Mostrar capítulo
 // ============================
-function showChapter(book, chapter, verses) {
+function showChapter(book, chapter, verses, fullBookData = null) {
     const modal = document.createElement("div");
     modal.className = "modal";
+
+    let navButtons = `
+        <div class="chapter-nav">
+            <button onclick="navigateChapter('${book}', ${chapter - 1})" ${chapter <= 1 ? 'disabled' : ''}>← Anterior</button>
+            <button onclick="navigateChapter('${book}', ${chapter + 1})">Siguiente →</button>
+        </div>
+    `;
 
     modal.innerHTML = `
         <div class="modal-box">
             <h2>${book.replaceAll("_"," ")} ${chapter}</h2>
+            ${navButtons}
             <div class="chapter-text">
                 ${verses.map(v => `<p><sup>${v[0]}</sup> ${v[1]}</p>`).join("")}
             </div>
@@ -352,6 +370,27 @@ function showChapter(book, chapter, verses) {
     `;
 
     document.body.appendChild(modal);
+}
+
+// ============================
+// Navegar entre capítulos
+// ============================
+async function navigateChapter(book, chapter) {
+    if (chapter < 1) return; // No permitir capítulos menores a 1
+
+    try {
+        const folderName = getFolderName(book);
+        const fileName = `${book.toLowerCase()}_${chapter}.json`;
+        const res = await fetch(`biblia/${folderName}/${fileName}`);
+        if (!res.ok) throw "No existe";
+
+        // Cerrar modal actual
+        document.querySelector('.modal').remove();
+        // Mostrar nuevo capítulo
+        showChapter(book, chapter, await res.json());
+    } catch {
+        notify("Capítulo no encontrado", "⚠️");
+    }
 }
 
 // ============================
@@ -393,6 +432,15 @@ function notify(msg, icon) {
 
 // Iniciar quiz
 function startQuizGame() {
+    // Ocultar otras secciones
+    document.getElementById('search-section').style.display = 'none';
+    document.getElementById('favorites-section').style.display = 'none';
+    document.getElementById('verse-section').style.display = 'none';
+    document.getElementById('books-section').style.display = 'none';
+
+    // Mostrar sección del quiz
+    document.getElementById('quiz-section').style.display = 'block';
+
     // Mostrar configuración del quiz
     showQuizSetup();
 }
@@ -821,4 +869,75 @@ function shuffleArray(array) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
     }
+}
+
+// ============================
+// Mostrar Favoritos
+// ============================
+function showFavorites() {
+    // Ocultar otras secciones
+    document.getElementById('search-section').style.display = 'none';
+    document.getElementById('quiz-section').style.display = 'none';
+    document.getElementById('verse-section').style.display = 'none';
+    document.getElementById('books-section').style.display = 'none';
+
+    // Mostrar sección de favoritos
+    document.getElementById('favorites-section').style.display = 'block';
+
+    // Cargar favoritos
+    loadFavorites();
+}
+
+// Cargar y mostrar favoritos
+function loadFavorites() {
+    const favoritesList = document.getElementById('favorites-list');
+    const favs = JSON.parse(localStorage.getItem("favorites") || "[]");
+
+    if (favs.length === 0) {
+        favoritesList.innerHTML = '<p class="empty-state">No tienes versículos favoritos aún. ¡Agrega algunos!</p>';
+        return;
+    }
+
+    favoritesList.innerHTML = favs.map((fav, index) => `
+        <div class="verse-card">
+            <div class="verse-content">
+                <blockquote>"${fav.text}"</blockquote>
+                <cite>${fav.ref}</cite>
+            </div>
+            <div class="verse-actions">
+                <button onclick="shareFavorite('${fav.text}', '${fav.ref}')" class="btn-icon">📤</button>
+                <button onclick="removeFavorite(${index})" class="btn-icon">🗑️</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Compartir favorito
+function shareFavorite(text, ref) {
+    const message = `${text} ${ref}`;
+    navigator.clipboard.writeText(message);
+    notify("Copiado 📋", "✅");
+}
+
+// Remover favorito
+function removeFavorite(index) {
+    let favs = JSON.parse(localStorage.getItem("favorites") || "[]");
+    favs.splice(index, 1);
+    localStorage.setItem("favorites", JSON.stringify(favs));
+    loadFavorites();
+    notify("Versículo removido de favoritos", "🗑️");
+}
+
+// ============================
+// Mostrar Búsqueda
+// ============================
+function showSearch() {
+    // Ocultar otras secciones
+    document.getElementById('favorites-section').style.display = 'none';
+    document.getElementById('quiz-section').style.display = 'none';
+    document.getElementById('verse-section').style.display = 'none';
+    document.getElementById('books-section').style.display = 'none';
+
+    // Mostrar sección de búsqueda
+    document.getElementById('search-section').style.display = 'block';
 }
