@@ -279,6 +279,110 @@ a:hover {
   font-weight: bold;
 }
 
+/* =====================================
+   ESTILOS PARA VERSÍCULO DEL DÍA
+   ===================================== */
+
+#daily-verse-text {
+  font-size: 1.4rem;
+  line-height: 1.7;
+  font-style: italic;
+  color: var(--text-main);
+  margin: 0;
+  padding: 1.5rem 2rem;
+  position: relative;
+  text-align: center;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
+}
+
+#daily-verse-text::before {
+  content: '"';
+  font-size: 4rem;
+  color: var(--primary);
+  position: absolute;
+  left: -0.5rem;
+  top: -1rem;
+  opacity: 0.2;
+  font-family: serif;
+}
+
+#daily-verse-text::after {
+  content: '"';
+  font-size: 4rem;
+  color: var(--primary);
+  position: absolute;
+  right: -0.5rem;
+  bottom: -2rem;
+  opacity: 0.2;
+  font-family: serif;
+}
+
+#daily-verse-ref {
+  display: block;
+  text-align: center;
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-top: 1rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+#daily-verse-ref:hover {
+  color: var(--accent);
+  transform: scale(1.05);
+}
+
+/* Responsive para versículo del día */
+@media (max-width: 768px) {
+  #daily-verse-text {
+    font-size: 1.2rem;
+    padding: 1rem 1.5rem;
+    line-height: 1.6;
+  }
+
+  #daily-verse-text::before,
+  #daily-verse-text::after {
+    font-size: 3rem;
+  }
+
+  #daily-verse-ref {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  #daily-verse-text {
+    font-size: 1.1rem;
+    padding: 0.75rem 1rem;
+  }
+
+  #daily-verse-text::before,
+  #daily-verse-text::after {
+    font-size: 2.5rem;
+    top: -0.5rem;
+    bottom: -1rem;
+  }
+
+  #daily-verse-ref {
+    font-size: 0.95rem;
+  }
+}
+
+/* Modo oscuro para versículo del día */
+body.dark-theme #daily-verse-text {
+  color: var(--text-main);
+}
+
+body.dark-theme #daily-verse-text::before,
+body.dark-theme #daily-verse-text::after {
+  color: var(--primary);
+  opacity: 0.3;
+}
+
 .empty-state {
   text-align: center;
   color: var(--text-muted);

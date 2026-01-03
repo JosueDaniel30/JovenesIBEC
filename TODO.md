@@ -7,9 +7,9 @@
 
 ## Tasks
 - [x] Add safety checks in `mostrarTestamento` function in 1960.js to ensure `btn` is a valid HTMLElement before accessing `classList`.
-- [ ] Fix Service Worker path in biblia.html to use `/JovenesIBEC/sw.js`.
+- [x] Fix Service Worker path in biblia.html to use `/JovenesIBEC/sw.js`.
 - [x] Modify `obtenerCapitulo` in 1960.js to parse JSON with single quotes by using `response.text()` and replacing quotes.
-- [ ] Test the fixes by running the app and checking console logs.
+- [x] Test the fixes by running the app and checking console logs.
 
 ## Followup Steps
 - Verify that mostrarTestamento works without errors.

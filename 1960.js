@@ -468,41 +468,72 @@ function mostrarTestamento(testamento) {
     console.log('🔽 Cambiando a testamento:', testamento);
 
     const booksGrid = document.getElementById('books-grid');
-    if (!booksGrid) return;
+    if (!booksGrid) {
+        console.error('❌ booksGrid no encontrado');
+        return;
+    }
 
-    const libros = biblia.obtenerLibrosPorTestamento(testamento);
+    let libros = [];
+    if (testamento === 'ALL') {
+        // Mostrar todos los libros de ambos testamentos
+        libros = biblia.libros;
+    } else {
+        libros = biblia.obtenerLibrosPorTestamento(testamento);
+    }
 
-    // Botones
+    if (!libros || libros.length === 0) {
+        console.error('❌ No se encontraron libros para el testamento:', testamento);
+        return;
+    }
+
+    // Botones - con validación más robusta
     const buttons = document.querySelectorAll('.tab-btn');
-    if (buttons && buttons.length) {
+    if (buttons && buttons.length > 0) {
         buttons.forEach(btn => {
-            if (!btn || !btn.classList) return;
-            btn.classList.remove('active');
+            // Validar que btn existe y es un HTMLElement con classList
+            if (!btn || typeof btn.classList === 'undefined') {
+                console.warn('⚠️ Botón inválido encontrado:', btn);
+                return;
+            }
 
-            const texto = btn.textContent || '';
-            if (
-                (testamento === 'AT' && texto.includes('Antiguo')) ||
-                (testamento === 'NT' && texto.includes('Nuevo'))
-            ) {
-                btn.classList.add('active');
+            try {
+                btn.classList.remove('active');
+
+                const texto = btn.textContent || btn.innerText || '';
+                if (
+                    (testamento === 'ALL' && texto.includes('Todos')) ||
+                    (testamento === 'AT' && texto.includes('Antiguo')) ||
+                    (testamento === 'NT' && texto.includes('Nuevo'))
+                ) {
+                    btn.classList.add('active');
+                }
+            } catch (error) {
+                console.error('❌ Error manipulando clases del botón:', error);
             }
         });
+    } else {
+        console.warn('⚠️ No se encontraron botones .tab-btn');
     }
 
     // Render libros
     let html = '';
     libros.forEach(libro => {
+        if (!libro || !libro.nombre) {
+            console.warn('⚠️ Libro inválido:', libro);
+            return;
+        }
+
         html += `
             <div class="book-card" onclick="abrirLibro('${libro.nombre.replace(/'/g, "\\'")}')">
                 <div class="book-icon">📖</div>
                 <h3>${libro.nombre}</h3>
-                <p>${libro.cap} capítulos</p>
+                <p>${libro.cap || 0} capítulos</p>
             </div>
         `;
     });
 
     booksGrid.innerHTML = html;
-    console.log('✅ Testamento cargado correctamente:', testamento);
+    console.log('✅ Testamento cargado correctamente:', testamento, '- Libros:', libros.length);
 }
 
 

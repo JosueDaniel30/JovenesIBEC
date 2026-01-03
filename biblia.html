@@ -143,7 +143,8 @@
     <section class="books-section">
       <h2>📚 Libros de la Biblia</h2>
       <div class="testament-tabs">
-          <button class="tab-btn active" onclick="mostrarTestamento('AT')">Antiguo Testamento</button>
+          <button class="tab-btn active" onclick="mostrarTestamento('ALL')">Todos los libros</button>
+          <button class="tab-btn" onclick="mostrarTestamento('AT')">Antiguo Testamento</button>
           <button class="tab-btn" onclick="mostrarTestamento('NT')">Nuevo Testamento</button>
       </div>
       <div id="books-grid" class="books-grid">
@@ -350,7 +351,7 @@
 
         // Inicializar la sección de libros
         if (typeof mostrarTestamento === 'function') {
-            mostrarTestamento('AT');
+            mostrarTestamento('ALL');
         }
     });
 </script>
@@ -361,11 +362,15 @@
         window.addEventListener('load', function() {
             // Detectar entorno y registrar el service worker apropiado
             const currentHost = window.location.hostname;
-            let swPath = '/sw.js'; // Default para localhost
+            const currentPath = window.location.pathname;
+            let swPath = '/sw.js'; // Default
 
-            if (currentHost.includes('github.io')) {
-                swPath = '/JovenesIBEC/sw.js'; // Para GitHub Pages
+            // Para GitHub Pages o localhost con path /JovenesIBEC
+            if (currentHost.includes('github.io') || currentPath.includes('/JovenesIBEC')) {
+                swPath = '/JovenesIBEC/sw.js';
             }
+
+            console.log('🔧 Registrando SW en:', swPath, '- Host:', currentHost, '- Path:', currentPath);
 
             navigator.serviceWorker.register(swPath)
                 .then(function(registration) {
