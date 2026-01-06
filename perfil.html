@@ -1,260 +1,962 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
-  <title>Perfil | App Jóvenes</title>
+  <title>Mi Perfil | Jóvenes con Cristo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Aplicación para jóvenes cristianos - metas espirituales, biblia y crecimiento personal">
-  <meta name="theme-color" content="#4f46e5">
+  <meta name="description" content="Tu perfil espiritual - Estadísticas, logros y crecimiento personal">
+  <meta name="theme-color" content="#10b981">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="logojov.png">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="notificacion.css">
-</head>
-<body>
-
-<header class="top-nav">
-  <div class="nav-container">
-    <div class="logo-section">
-      <h1 class="logo">
-        <img src="logojov.png" alt="Logo Jovenes" class="logo-icon">
-        <span class="logo-text">Jovenes con Cristo</span>
-      </h1>
-    </div>
-
-    <nav class="nav-menu">
-      <a class="nav-link" href="index.html" data-tooltip="Inicio">
-        <span class="nav-icon">🏠</span>
-        <span class="nav-text">Inicio</span>
-        <span class="nav-glow"></span>
-      </a>
-
-      <a class="nav-link active" href="perfil.html" data-tooltip="Mi Perfil">
-        <span class="nav-icon">👤</span>
-        <span class="nav-text">Perfil</span>
-        <span class="nav-glow"></span>
-      </a>
-
-      <a class="nav-link" href="biblia.html" data-tooltip="La Biblia">
-        <span class="nav-icon">📖</span>
-        <span class="nav-text">Biblia</span>
-        <span class="nav-glow"></span>
-      </a>
-
-      <a class="nav-link" href="metas.html" data-tooltip="Mis Metas">
-        <span class="nav-icon">🎯</span>
-        <span class="nav-text">Metas</span>
-        <span class="nav-glow"></span>
-      </a>
-
-      <div class="nav-divider"></div>
-
-      <button id="theme-toggle" class="theme-btn" data-tooltip="Cambiar Tema">
-        <span class="theme-icon">🌙</span>
-        <span class="theme-glow"></span>
-      </button>
-    </nav>
-
-    <button class="mobile-menu-toggle" id="mobile-menu-btn">
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-    </button>
-  </div>
-
-  <!-- Menú móvil -->
-  <div class="mobile-menu" id="mobile-menu">
-    <div class="mobile-menu-header">
-      <h3>Menú</h3>
-      <button class="mobile-menu-close" id="mobile-menu-close">✕</button>
-    </div>
-    <nav class="mobile-nav">
-      <a class="mobile-nav-link" href="index.html">
-        <span class="mobile-nav-icon">🏠</span>
-        <span class="mobile-nav-text">Inicio</span>
-      </a>
-      <a class="mobile-nav-link active" href="perfil.html">
-        <span class="mobile-nav-icon">👤</span>
-        <span class="mobile-nav-text">Perfil</span>
-      </a>
-      <a class="mobile-nav-link" href="biblia.html">
-        <span class="mobile-nav-icon">📖</span>
-        <span class="mobile-nav-text">Biblia</span>
-      </a>
-      <a class="mobile-nav-link" href="metas.html">
-        <span class="mobile-nav-icon">🎯</span>
-        <span class="mobile-nav-text">Metas</span>
-      </a>
-      <div class="mobile-nav-divider"></div>
-      <button id="mobile-theme-toggle" class="mobile-theme-btn">
-        <span class="mobile-theme-icon">🌙</span>
-        <span class="mobile-theme-text">Tema Oscuro</span>
-      </button>
-    </nav>
-  </div>
-</header>
-
-<main class="container">
-
-  <section class="card-premium profile-header">
-    <div class="profile-avatar">
-      <img id="profile-pic" src="https://via.placeholder.com/100" alt="Foto de perfil" />
-      <input type="file" id="profile-pic-input" accept="image/*" style="display: none;">
-      <button id="edit-pic-btn" class="btn-secondary">Cambiar Foto</button>
-    </div>
-    <div class="profile-info">
-      <h2 id="user-name-display"></h2>
-      <p id="user-details"></p>
-      <button id="edit-profile-btn" class="btn-plus">Editar Perfil</button>
-    </div>
-  </section>
-
-  <section id="edit-section" class="card-premium" style="display: none;">
-    <h2>✏️ Editar Perfil</h2>
-    <form id="profile-form">
-      <label for="user-name">Nombre:</label>
-      <input type="text" id="user-name" placeholder="Tu nombre">
-
-      <label for="user-birthdate">Fecha de Nacimiento:</label>
-      <input type="date" id="user-birthdate">
-
-      <label for="user-church">Iglesia:</label>
-      <input type="text" id="user-church" placeholder="Nombre de tu iglesia">
-
-      <button type="button" onclick="saveProfile()" class="btn-plus">Guardar</button>
-      <button type="button" id="cancel-edit-btn" class="btn-secondary">Cancelar</button>
-    </form>
-  </section>
-
-  <section class="stats-grid">
-    <div class="stat-card stat-lecturas">
-      <h3>📖 Lecturas</h3>
-      <p id="lecturas-count"></p>
-    </div>
-
-    <div class="stat-card stat-metas">
-      <h3>🎯 Metas</h3>
-      <p id="metas-count"></p>
-    </div>
-
-    <div class="stat-card stat-constancia">
-      <h3>🔥 Constancia</h3>
-      <p id="streak-count"></p>
-    </div>
-
-    <div class="stat-card stat-logros">
-      <h3>🏆 Logros</h3>
-      <p id="logros-count"></p>
-    </div>
-  </section>
-
-  <section class="card-premium">
-    <h2>🏅 Sistema de Insignias</h2>
-    <div id="badges-grid" class="badges-grid">
-      <div class="badge-item" id="badge-bronze">
-        <div class="badge-icon">🥉</div>
-        <h4>Principiante</h4>
-        <p>Completa tu primer nivel bronce</p>
-        <span class="badge-status locked">Bloqueado</span>
-      </div>
-      <div class="badge-item" id="badge-silver">
-        <div class="badge-icon">🥈</div>
-        <h4>Avanzado</h4>
-        <p>Completa tu primer nivel plata</p>
-        <span class="badge-status locked">Bloqueado</span>
-      </div>
-      <div class="badge-item" id="badge-gold">
-        <div class="badge-icon">🥇</div>
-        <h4>Maestro</h4>
-        <p>Completa tu primer nivel oro</p>
-        <span class="badge-status locked">Bloqueado</span>
-      </div>
-      <div class="badge-item" id="badge-streak">
-        <div class="badge-icon">🔥</div>
-        <h4>Constante</h4>
-        <p>Mantén una racha de 30 días</p>
-        <span class="badge-status locked">Bloqueado</span>
-      </div>
-      <div class="badge-item" id="badge-reader">
-        <div class="badge-icon">📚</div>
-        <h4>Lector Ávido</h4>
-        <p>Lee 100 versículos</p>
-        <span class="badge-status locked">Bloqueado</span>
-      </div>
-      <div class="badge-item" id="badge-disciple">
-        <div class="badge-icon">👨‍🏫</div>
-        <h4>Discípulo</h4>
-        <p>Discipula a 3 personas</p>
-        <span class="badge-status locked">Bloqueado</span>
-      </div>
-    </div>
-  </section>
-
-  <section class="card-premium">
-    <h2>🌟 Logros Recientes</h2>
-    <div id="achievements-grid" class="achievements">
-    </div>
-  </section>
-
-  <section class="card-premium">
-    <h2>❤️ Versículos Favoritos</h2>
-    <div id="favorites-list" class="verses-list">
-      <!-- Los versículos favoritos se cargarán aquí -->
-    </div>
-  </section>
-
-</main>
-
-<script src="script.js"></script>
-<script src="profile.js"></script>
-
-<!-- PWA Service Worker Registration -->
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/sw.js')
-        .then(function(registration) {
-          console.log('Service Worker registrado con éxito:', registration.scope);
-
-          // Escuchar por actualizaciones del service worker
-          registration.addEventListener('updatefound', function() {
-            const newWorker = registration.installing;
-            newWorker.addEventListener('statechange', function() {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                // Nueva versión disponible
-                if (confirm('Hay una nueva versión disponible. ¿Quieres actualizar?')) {
-                  newWorker.postMessage({ type: 'SKIP_WAITING' });
-                  window.location.reload();
-                }
-              }
-            });
-          });
-        })
-        .catch(function(error) {
-          console.log('Error al registrar el Service Worker:', error);
-        });
-    });
-
-    // Escuchar cambios en el service worker
-    navigator.serviceWorker.addEventListener('controllerchange', function() {
-      window.location.reload();
-    });
-  }
-
-  // Detectar si estamos en modo standalone (PWA instalada)
-  if (window.matchMedia('(display-mode: standalone)').matches ||
-      window.navigator.standalone === true) {
-    console.log('Ejecutándose en modo PWA');
-    // Aquí puedes agregar lógica específica para cuando la app está instalada
-  }
-
-  // Solicitar permisos para notificaciones (opcional)
-  if ('Notification' in window && navigator.serviceWorker) {
-    if (Notification.permission === 'default') {
-      // Puedes mostrar un botón para solicitar permisos más tarde
-      console.log('Notificaciones disponibles pero no solicitadas aún');
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Configuración personalizada -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: { DEFAULT: '#4f46e5', light: '#818cf8', dark: '#3730a3' },
+            secondary: { DEFAULT: '#10b981', light: '#34d399', dark: '#059669' },
+            accent: { DEFAULT: '#f59e0b', light: '#fbbf24', dark: '#d97706' }
+          },
+          fontFamily: {
+            'sans': ['Inter', 'system-ui', 'sans-serif'],
+            'serif': ['Merriweather', 'serif'],
+            'display': ['Poppins', 'sans-serif']
+          }
+        }
+      }
     }
-  }
-</script>
+  </script>
+  
+  <!-- Iconos de Lucide -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  
+  <style>
+    .circular-progress {
+      --progress: 0;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(#10b981 calc(var(--progress) * 3.6deg), #e2e8f0 0deg);
+    }
+    
+    .circular-progress::before {
+      content: "";
+      position: absolute;
+      height: 100px;
+      width: 100px;
+      background-color: white;
+      border-radius: 50%;
+    }
+    
+    .dark .circular-progress::before {
+      background-color: #1e293b;
+    }
+    
+    .progress-ring {
+      stroke-dasharray: 283;
+      stroke-dashoffset: 283;
+      transition: stroke-dashoffset 0.5s;
+    }
+    
+    .habit-check {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .habit-check.checked {
+      background: linear-gradient(135deg, #10b981, #34d399);
+      color: white;
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+  </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 min-h-screen">
+  
+  <!-- Navegación -->
+  <header class="sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg border-b border-gray-200 dark:border-gray-800 shadow-sm">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center space-x-3 group">
+          <div class="w-10 h-10 bg-gradient-to-br from-primary to-primary-light rounded-xl flex items-center justify-center shadow-md">
+            <span class="text-white text-lg">✝</span>
+          </div>
+          <div>
+            <h1 class="font-display font-bold text-xl bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
+              Jóvenes con Cristo
+            </h1>
+            <p class="text-xs text-gray-500 dark:text-gray-400">Tu camino espiritual</p>
+          </div>
+        </a>
+
+        <!-- Navegación desktop -->
+        <nav class="hidden md:flex items-center space-x-1">
+          <a href="index.html" class="flex items-center space-x-2 px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            <span class="text-lg">🏠</span>
+            <span>Inicio</span>
+          </a>
+          <a href="perfil.html" class="flex items-center space-x-2 px-4 py-2 rounded-xl bg-secondary/10 text-secondary font-semibold">
+            <span class="text-lg">👤</span>
+            <span>Perfil</span>
+          </a>
+          <a href="biblia.html" class="flex items-center space-x-2 px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            <span class="text-lg">📖</span>
+            <span>Biblia</span>
+          </a>
+          <a href="metas.html" class="flex items-center space-x-2 px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            <span class="text-lg">🎯</span>
+            <span>Metas</span>
+          </a>
+        </nav>
+
+        <!-- Acciones -->
+        <div class="flex items-center space-x-3">
+          <button id="theme-toggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            <span class="text-lg dark:hidden">🌙</span>
+            <span class="text-lg hidden dark:inline">☀️</span>
+          </button>
+          <button class="md:hidden p-2" id="mobile-menu-btn">
+            <div class="w-6 h-0.5 bg-gray-600 dark:bg-gray-400 mb-1.5"></div>
+            <div class="w-6 h-0.5 bg-gray-600 dark:bg-gray-400 mb-1.5"></div>
+            <div class="w-6 h-0.5 bg-gray-600 dark:bg-gray-400"></div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Menú móvil (igual que index.html) -->
+  <div id="mobile-menu" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/50" id="mobile-menu-backdrop"></div>
+    <div class="absolute inset-y-0 right-0 w-80 bg-white dark:bg-gray-900 shadow-xl transform transition-transform duration-300 translate-x-full">
+      <div class="p-6 h-full flex flex-col">
+        <div class="flex justify-between items-center mb-8">
+          <h3 class="text-xl font-bold">Menú</h3>
+          <button id="mobile-menu-close" class="p-2 text-2xl">×</button>
+        </div>
+        <nav class="space-y-2 flex-1">
+          <a href="index.html" class="flex items-center space-x-4 p-4 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800">
+            <span class="text-2xl">🏠</span>
+            <div>
+              <div class="font-semibold">Inicio</div>
+              <div class="text-sm text-gray-500">Página principal</div>
+            </div>
+          </a>
+          <a href="perfil.html" class="flex items-center space-x-4 p-4 rounded-xl bg-secondary/10 text-secondary">
+            <span class="text-2xl">👤</span>
+            <div>
+              <div class="font-semibold">Perfil</div>
+              <div class="text-sm text-secondary/70">Tu progreso</div>
+            </div>
+          </a>
+          <a href="biblia.html" class="flex items-center space-x-4 p-4 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800">
+            <span class="text-2xl">📖</span>
+            <div>
+              <div class="font-semibold">Biblia</div>
+              <div class="text-sm text-gray-500">Palabra de Dios</div>
+            </div>
+          </a>
+          <a href="metas.html" class="flex items-center space-x-4 p-4 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800">
+            <span class="text-2xl">🎯</span>
+            <div>
+              <div class="font-semibold">Metas</div>
+              <div class="text-sm text-gray-500">Objetivos espirituales</div>
+            </div>
+          </a>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido principal del perfil -->
+  <main class="container mx-auto px-4 py-8">
+    
+    <!-- Header del perfil -->
+    <section class="mb-10">
+      <div class="bg-gradient-to-br from-secondary/10 to-emerald-500/10 rounded-3xl p-6 md:p-8">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+          <!-- Información del usuario -->
+          <div class="flex items-center space-x-6">
+            <div class="relative">
+              <div class="w-28 h-28 md:w-32 md:h-32 bg-gradient-to-br from-secondary to-emerald-500 rounded-2xl flex items-center justify-center shadow-xl">
+                <span id="user-avatar" class="text-4xl">🙏</span>
+              </div>
+              <div class="absolute -bottom-2 -right-2 w-12 h-12 bg-accent rounded-full flex items-center justify-center shadow-lg border-4 border-white dark:border-gray-900">
+                <span id="user-level" class="font-bold text-white">5</span>
+              </div>
+            </div>
+            
+            <div>
+              <h1 id="user-name" class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Cargando...</h1>
+              <p id="user-email" class="text-gray-600 dark:text-gray-300 mb-4">Usuario de Jóvenes con Cristo</p>
+              
+              <div class="flex flex-wrap gap-3">
+                <div class="flex items-center space-x-2 px-3 py-1.5 bg-white dark:bg-gray-800 rounded-full shadow-sm">
+                  <span class="text-lg">🔥</span>
+                  <span>
+                    <span id="streak-days" class="font-semibold">0</span> días
+                  </span>
+                </div>
+                <div class="flex items-center space-x-2 px-3 py-1.5 bg-white dark:bg-gray-800 rounded-full shadow-sm">
+                  <span class="text-lg">⭐</span>
+                  <span>
+                    <span id="user-xp" class="font-semibold">0</span> XP
+                  </span>
+                </div>
+                <div class="flex items-center space-x-2 px-3 py-1.5 bg-white dark:bg-gray-800 rounded-full shadow-sm">
+                  <span class="text-lg">📅</span>
+                  <span id="member-since">Miembro reciente</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Acciones rápidas -->
+          <div class="flex flex-col space-y-3">
+            <button onclick="editProfile()" class="px-5 py-2.5 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border-2 border-secondary text-secondary font-semibold rounded-xl transition-colors flex items-center justify-center space-x-2">
+              <span>✏️</span>
+              <span>Editar perfil</span>
+            </button>
+            <button onclick="shareProfile()" class="px-5 py-2.5 bg-secondary hover:bg-secondary-dark text-white font-semibold rounded-xl transition-colors flex items-center justify-center space-x-2">
+              <span>📤</span>
+              <span>Compartir logros</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Progreso general -->
+    <section class="mb-10">
+      <h2 class="text-2xl font-bold mb-6 flex items-center">
+        <span class="mr-3">📈</span> Tu Progreso Espiritual
+      </h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Versículos leídos -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div class="flex justify-between items-start mb-4">
+            <div>
+              <div class="text-2xl font-bold text-blue-600 dark:text-blue-400" id="total-verses">0</div>
+              <div class="text-gray-600 dark:text-gray-400">Versículos leídos</div>
+            </div>
+            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
+              <span class="text-2xl">📚</span>
+            </div>
+          </div>
+          <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div id="verses-progress" class="bg-blue-500 h-2 rounded-full" style="width: 0%"></div>
+          </div>
+          <div class="text-right text-sm text-gray-500 mt-2">
+            Meta: <span id="verses-goal">100</span>
+          </div>
+        </div>
+        
+        <!-- Días de oración -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div class="flex justify-between items-start mb-4">
+            <div>
+              <div class="text-2xl font-bold text-green-600 dark:text-green-400" id="prayer-days">0</div>
+              <div class="text-gray-600 dark:text-gray-400">Días orando</div>
+            </div>
+            <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center">
+              <span class="text-2xl">🙏</span>
+            </div>
+          </div>
+          <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div id="prayer-progress" class="bg-green-500 h-2 rounded-full" style="width: 0%"></div>
+          </div>
+          <div class="text-right text-sm text-gray-500 mt-2">
+            Récord: <span id="prayer-record">7</span> días
+          </div>
+        </div>
+        
+        <!-- Metas completadas -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div class="flex justify-between items-start mb-4">
+            <div>
+              <div class="text-2xl font-bold text-purple-600 dark:text-purple-400" id="goals-achieved">0</div>
+              <div class="text-gray-600 dark:text-gray-400">Metas logradas</div>
+            </div>
+            <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
+              <span class="text-2xl">🎯</span>
+            </div>
+          </div>
+          <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div id="goals-progress" class="bg-purple-500 h-2 rounded-full" style="width: 0%"></div>
+          </div>
+          <div class="text-right text-sm text-gray-500 mt-2">
+            En progreso: <span id="goals-active">3</span>
+          </div>
+        </div>
+        
+        <!-- Puntos de experiencia -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div class="flex justify-between items-start mb-4">
+            <div>
+              <div class="text-2xl font-bold text-amber-600 dark:text-amber-400" id="total-xp">0</div>
+              <div class="text-gray-600 dark:text-gray-400">Puntos de XP</div>
+            </div>
+            <div class="w-12 h-12 bg-amber-100 dark:bg-amber-900/30 rounded-xl flex items-center justify-center">
+              <span class="text-2xl">⭐</span>
+            </div>
+          </div>
+          <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div id="xp-progress" class="bg-amber-500 h-2 rounded-full" style="width: 0%"></div>
+          </div>
+          <div class="text-right text-sm text-gray-500 mt-2">
+            Siguiente nivel: <span id="xp-next">250</span> XP
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Hábitos y rutina -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+      <!-- Hábitos diarios -->
+      <section>
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-xl font-bold flex items-center">
+            <span class="mr-2">🔄</span> Hábitos Diarios
+          </h3>
+          <span class="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm font-medium">
+            Esta semana
+          </span>
+        </div>
+        
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm">
+          <div class="space-y-4">
+            <!-- Lectura bíblica -->
+            <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center space-x-3">
+                  <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                    <span class="text-blue-600 dark:text-blue-400">📖</span>
+                  </div>
+                  <div>
+                    <div class="font-semibold">Lectura bíblica</div>
+                    <div class="text-sm text-gray-500">5 minutos diarios</div>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="font-bold" id="bible-streak">0 días</div>
+                  <div class="text-sm text-gray-500">racha actual</div>
+                </div>
+              </div>
+              <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
+                <span>Esta semana</span>
+                <span><span id="bible-week">0</span>/7 días</span>
+              </div>
+              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div id="bible-week-progress" class="bg-blue-500 h-2 rounded-full" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <!-- Oración -->
+            <div class="p-4 bg-green-50 dark:bg-green-900/20 rounded-xl">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center space-x-3">
+                  <div class="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                    <span class="text-green-600 dark:text-green-400">🙏</span>
+                  </div>
+                  <div>
+                    <div class="font-semibold">Tiempo de oración</div>
+                    <div class="text-sm text-gray-500">Momento con Dios</div>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="font-bold" id="prayer-streak">0 días</div>
+                  <div class="text-sm text-gray-500">racha actual</div>
+                </div>
+              </div>
+              <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
+                <span>Esta semana</span>
+                <span><span id="prayer-week">0</span>/7 días</span>
+              </div>
+              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div id="prayer-week-progress" class="bg-green-500 h-2 rounded-full" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <!-- Reflexión -->
+            <div class="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center space-x-3">
+                  <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+                    <span class="text-purple-600 dark:text-purple-400">💭</span>
+                  </div>
+                  <div>
+                    <div class="font-semibold">Reflexión diaria</div>
+                    <div class="text-sm text-gray-500">Meditar en la Palabra</div>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="font-bold" id="reflection-streak">0 días</div>
+                  <div class="text-sm text-gray-500">racha actual</div>
+                </div>
+              </div>
+              <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
+                <span>Esta semana</span>
+                <span><span id="reflection-week">0</span>/7 días</span>
+              </div>
+              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div id="reflection-week-progress" class="bg-purple-500 h-2 rounded-full" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-6 text-center">
+            <button onclick="viewHabitsDetails()" class="px-4 py-2 text-secondary hover:text-secondary-dark font-medium">
+              Ver detalles completos →
+            </button>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Logros y medallas -->
+      <section>
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-xl font-bold flex items-center">
+            <span class="mr-2">🏆</span> Logros Obtenidos
+          </h3>
+          <span class="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm font-medium">
+            <span id="achievements-count">0</span>/12
+          </span>
+        </div>
+        
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm">
+          <div class="grid grid-cols-3 gap-4">
+            <!-- Logro 1 -->
+            <div class="achievement-card text-center p-4">
+              <div class="w-16 h-16 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-3 shadow-md">
+                <span class="text-2xl">🔥</span>
+              </div>
+              <div class="font-semibold text-sm">7 días de racha</div>
+              <div class="text-xs text-gray-500 mt-1">Completado</div>
+            </div>
+            
+            <!-- Logro 2 -->
+            <div class="achievement-card text-center p-4">
+              <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-md">
+                <span class="text-2xl">📖</span>
+              </div>
+              <div class="font-semibold text-sm">100 versículos</div>
+              <div class="text-xs text-gray-500 mt-1">Completado</div>
+            </div>
+            
+            <!-- Logro 3 -->
+            <div class="achievement-card text-center p-4">
+              <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-md">
+                <span class="text-2xl">🙏</span>
+              </div>
+              <div class="font-semibold text-sm">Orador constante</div>
+              <div class="text-xs text-gray-500 mt-1">En progreso</div>
+            </div>
+            
+            <!-- Logro 4 -->
+            <div class="achievement-card text-center p-4 opacity-60">
+              <div class="w-16 h-16 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full flex items-center justify-center mx-auto mb-3">
+                <span class="text-2xl">🎯</span>
+              </div>
+              <div class="font-semibold text-sm">10 metas</div>
+              <div class="text-xs text-gray-500 mt-1">Por desbloquear</div>
+            </div>
+            
+            <!-- Logro 5 -->
+            <div class="achievement-card text-center p-4 opacity-60">
+              <div class="w-16 h-16 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full flex items-center justify-center mx-auto mb-3">
+                <span class="text-2xl">⭐</span>
+              </div>
+              <div class="font-semibold text-sm">Nivel 10</div>
+              <div class="text-xs text-gray-500 mt-1">Por desbloquear</div>
+            </div>
+            
+            <!-- Logro 6 -->
+            <div class="achievement-card text-center p-4 opacity-60">
+              <div class="w-16 h-16 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full flex items-center justify-center mx-auto mb-3">
+                <span class="text-2xl">❤️</span>
+              </div>
+              <div class="font-semibold text-sm">50 favoritos</div>
+              <div class="text-xs text-gray-500 mt-1">Por desbloquear</div>
+            </div>
+          </div>
+          
+          <div class="mt-6 text-center">
+            <button onclick="viewAllAchievements()" class="px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl font-medium transition-colors">
+              Ver todos los logros
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Actividad reciente -->
+    <section class="mb-10">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-xl font-bold flex items-center">
+          <span class="mr-2">📝</span> Actividad Reciente
+        </h3>
+        <button onclick="clearActivity()" class="px-4 py-2 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+          Limpiar historial
+        </button>
+      </div>
+      
+      <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm">
+        <div class="space-y-4">
+          <!-- Actividad 1 -->
+          <div class="activity-item flex items-center space-x-4 p-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-xl transition-colors">
+            <div class="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+              <span class="text-green-600 dark:text-green-400">✅</span>
+            </div>
+            <div class="flex-1">
+              <div class="font-medium">Check-in diario completado</div>
+              <div class="text-sm text-gray-500">Hoy a las 08:30 AM</div>
+            </div>
+            <div class="text-right">
+              <div class="font-semibold">+10 XP</div>
+              <div class="text-sm text-gray-500">Racha: 5 días</div>
+            </div>
+          </div>
+          
+          <!-- Actividad 2 -->
+          <div class="activity-item flex items-center space-x-4 p-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-xl transition-colors">
+            <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+              <span class="text-blue-600 dark:text-blue-400">📖</span>
+            </div>
+            <div class="flex-1">
+              <div class="font-medium">Leíste Salmos 23</div>
+              <div class="text-sm text-gray-500">Ayer a las 19:45</div>
+            </div>
+            <div class="text-right">
+              <div class="font-semibold">+5 XP</div>
+              <div class="text-sm text-gray-500">6 versículos</div>
+            </div>
+          </div>
+          
+          <!-- Actividad 3 -->
+          <div class="activity-item flex items-center space-x-4 p-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-xl transition-colors">
+            <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+              <span class="text-purple-600 dark:text-purple-400">🎯</span>
+            </div>
+            <div class="flex-1">
+              <div class="font-medium">Meta completada: Orar 7 días seguidos</div>
+              <div class="text-sm text-gray-500">2 días atrás</div>
+            </div>
+            <div class="text-right">
+              <div class="font-semibold">+25 XP</div>
+              <div class="text-sm text-gray-500">Medalla desbloqueada</div>
+            </div>
+          </div>
+          
+          <!-- Actividad 4 -->
+          <div class="activity-item flex items-center space-x-4 p-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-xl transition-colors">
+            <div class="w-10 h-10 bg-amber-100 dark:bg-amber-900/30 rounded-lg flex items-center justify-center">
+              <span class="text-amber-600 dark:text-amber-400">⭐</span>
+            </div>
+            <div class="flex-1">
+              <div class="font-medium">Subiste al nivel 5</div>
+              <div class="text-sm text-gray-500">3 días atrás</div>
+            </div>
+            <div class="text-right">
+              <div class="font-semibold">Nivel 5</div>
+              <div class="text-sm text-gray-500">¡Felicidades!</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-6 text-center">
+          <button onclick="loadMoreActivity()" class="px-5 py-2.5 border-2 border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-600 rounded-xl font-medium transition-colors">
+            Cargar más actividad
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Configuración -->
+    <section class="mb-12">
+      <h3 class="text-xl font-bold mb-6 flex items-center">
+        <span class="mr-2">⚙️</span> Configuración
+      </h3>
+      
+      <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Notificaciones -->
+          <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl">
+            <div class="flex items-center justify-between mb-4">
+              <div class="font-semibold">Notificaciones</div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" checked class="sr-only peer">
+                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+              </label>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Recibe recordatorios diarios y actualizaciones de tu progreso.
+            </p>
+          </div>
+          
+          <!-- Tema oscuro -->
+          <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl">
+            <div class="flex items-center justify-between mb-4">
+              <div class="font-semibold">Tema oscuro</div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="dark-mode-toggle" class="sr-only peer">
+                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gray-900"></div>
+              </label>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Cambia entre tema claro y oscuro según tu preferencia.
+            </p>
+          </div>
+          
+          <!-- Recordatorio diario -->
+          <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl">
+            <div class="flex items-center justify-between mb-4">
+              <div class="font-semibold">Recordatorio diario</div>
+              <select class="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-1.5 text-sm">
+                <option>08:00 AM</option>
+                <option selected>09:00 AM</option>
+                <option>10:00 AM</option>
+                <option>07:00 PM</option>
+              </select>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Hora para recordatorios de lectura y oración.
+            </p>
+          </div>
+          
+          <!-- Privacidad -->
+          <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl">
+            <div class="flex items-center justify-between mb-4">
+              <div class="font-semibold">Perfil público</div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" class="sr-only peer">
+                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+              </label>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Permitir que otros vean tu progreso y logros.
+            </p>
+          </div>
+        </div>
+        
+        <div class="mt-8 flex justify-between">
+          <button onclick="exportData()" class="px-5 py-2.5 border-2 border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-600 rounded-xl font-medium transition-colors">
+            Exportar mis datos
+          </button>
+          <button onclick="resetProgress()" class="px-5 py-2.5 border-2 border-red-300 dark:border-red-700 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl font-medium transition-colors">
+            Reiniciar progreso
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-400 py-8">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-6 md:mb-0">
+          <div class="flex items-center space-x-3 mb-2">
+            <div class="w-8 h-8 bg-secondary rounded-lg flex items-center justify-center">
+              <span class="text-white">✝</span>
+            </div>
+            <span class="text-white font-bold">Jóvenes con Cristo</span>
+          </div>
+          <p class="text-sm">Creciendo juntos en la fe</p>
+        </div>
+        <div class="text-center md:text-right">
+          <p class="text-sm">"Creced en la gracia y el conocimiento de nuestro Señor"</p>
+          <p class="text-xs mt-1">2 Pedro 3:18</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+  
+  <!-- Script específico para perfil -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Inicializar Lucide icons
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+      
+      // Cargar datos del usuario
+      loadUserData();
+      
+      // Menú móvil
+      setupMobileMenu();
+      
+      // Configuración de tema
+      setupThemeToggle();
+      
+      // Actualizar progresos
+      updateProgressBars();
+      
+      // Configurar eventos
+      setupEventListeners();
+    });
+    
+    function loadUserData() {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {
+        name: 'Usuario',
+        email: 'usuario@ejemplo.com',
+        joinDate: new Date().toISOString()
+      };
+      
+      const userStats = JSON.parse(localStorage.getItem('userStats')) || {
+        level: 5,
+        xp: 125,
+        streak: 12,
+        totalVerses: 87,
+        prayerDays: 45,
+        goalsAchieved: 6,
+        bibleStreak: 7,
+        prayerStreak: 5,
+        reflectionStreak: 3
+      };
+      
+      // Actualizar información del usuario
+      document.getElementById('user-name').textContent = currentUser.name;
+      document.getElementById('user-email').textContent = currentUser.email || 'Usuario de Jóvenes con Cristo';
+      document.getElementById('user-avatar').textContent = getAvatarEmoji(currentUser.name);
+      document.getElementById('user-level').textContent = userStats.level;
+      
+      // Formatear fecha de ingreso
+      const joinDate = new Date(currentUser.joinDate || Date.now());
+      const options = { year: 'numeric', month: 'long' };
+      document.getElementById('member-since').textContent = `Miembro desde ${joinDate.toLocaleDateString('es-ES', options)}`;
+      
+      // Actualizar estadísticas
+      document.getElementById('streak-days').textContent = userStats.streak;
+      document.getElementById('user-xp').textContent = userStats.xp;
+      document.getElementById('total-verses').textContent = userStats.totalVerses;
+      document.getElementById('prayer-days').textContent = userStats.prayerDays;
+      document.getElementById('goals-achieved').textContent = userStats.goalsAchieved;
+      document.getElementById('total-xp').textContent = userStats.xp;
+      document.getElementById('bible-streak').textContent = `${userStats.bibleStreak} días`;
+      document.getElementById('prayer-streak').textContent = `${userStats.prayerStreak} días`;
+      document.getElementById('reflection-streak').textContent = `${userStats.reflectionStreak} días`;
+      
+      // Calcular logros obtenidos
+      const achievements = calculateAchievements(userStats);
+      document.getElementById('achievements-count').textContent = achievements.obtained;
+    }
+    
+    function getAvatarEmoji(name) {
+      const emojis = ['🙏', '✝️', '⭐', '🔥', '💫', '✨', '🌿', '🕊️'];
+      const hash = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+      return emojis[hash % emojis.length];
+    }
+    
+    function calculateAchievements(stats) {
+      let obtained = 0;
+      const total = 12;
+      
+      if (stats.streak >= 7) obtained++;
+      if (stats.totalVerses >= 100) obtained++;
+      if (stats.prayerDays >= 30) obtained++;
+      if (stats.goalsAchieved >= 5) obtained++;
+      if (stats.level >= 5) obtained++;
+      
+      return { obtained, total };
+    }
+    
+    function updateProgressBars() {
+      const stats = JSON.parse(localStorage.getItem('userStats')) || {};
+      
+      // Versículos (meta: 100)
+      const versesProgress = Math.min((stats.totalVerses || 0) / 100 * 100, 100);
+      document.getElementById('verses-progress').style.width = `${versesProgress}%`;
+      document.getElementById('verses-goal').textContent = 100;
+      
+      // Oración (récord: 30 días)
+      const prayerProgress = Math.min((stats.prayerDays || 0) / 30 * 100, 100);
+      document.getElementById('prayer-progress').style.width = `${prayerProgress}%`;
+      document.getElementById('prayer-record').textContent = 30;
+      
+      // Metas (en progreso: 3)
+      const goalsProgress = Math.min((stats.goalsAchieved || 0) / 10 * 100, 100);
+      document.getElementById('goals-progress').style.width = `${goalsProgress}%`;
+      document.getElementById('goals-active').textContent = 3;
+      
+      // XP (siguiente nivel: 250)
+      const xpProgress = Math.min((stats.xp || 0) / 250 * 100, 100);
+      document.getElementById('xp-progress').style.width = `${xpProgress}%`;
+      document.getElementById('xp-next').textContent = 250;
+      
+      // Hábitos semanales
+      document.getElementById('bible-week').textContent = Math.min(stats.bibleStreak || 0, 7);
+      document.getElementById('bible-week-progress').style.width = `${Math.min((stats.bibleStreak || 0) / 7 * 100, 100)}%`;
+      
+      document.getElementById('prayer-week').textContent = Math.min(stats.prayerStreak || 0, 7);
+      document.getElementById('prayer-week-progress').style.width = `${Math.min((stats.prayerStreak || 0) / 7 * 100, 100)}%`;
+      
+      document.getElementById('reflection-week').textContent = Math.min(stats.reflectionStreak || 0, 7);
+      document.getElementById('reflection-week-progress').style.width = `${Math.min((stats.reflectionStreak || 0) / 7 * 100, 100)}%`;
+    }
+    
+    function setupMobileMenu() {
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenuClose = document.getElementById('mobile-menu-close');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
+      
+      function openMobileMenu() {
+        mobileMenu.classList.remove('hidden');
+        setTimeout(() => {
+          mobileMenu.querySelector('.absolute.right-0').classList.remove('translate-x-full');
+        }, 50);
+      }
+      
+      function closeMobileMenu() {
+        mobileMenu.querySelector('.absolute.right-0').classList.add('translate-x-full');
+        setTimeout(() => {
+          mobileMenu.classList.add('hidden');
+        }, 300);
+      }
+      
+      mobileMenuBtn.addEventListener('click', openMobileMenu);
+      mobileMenuClose.addEventListener('click', closeMobileMenu);
+      if (mobileMenuBackdrop) {
+        mobileMenuBackdrop.addEventListener('click', closeMobileMenu);
+      }
+    }
+    
+    function setupThemeToggle() {
+      const themeToggle = document.getElementById('theme-toggle');
+      const darkModeToggle = document.getElementById('dark-mode-toggle');
+      
+      if (localStorage.getItem('theme') === 'dark' || 
+          (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+        if (darkModeToggle) darkModeToggle.checked = true;
+      }
+      
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          document.documentElement.classList.toggle('dark');
+          localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+          if (darkModeToggle) darkModeToggle.checked = document.documentElement.classList.contains('dark');
+        });
+      }
+      
+      if (darkModeToggle) {
+        darkModeToggle.addEventListener('change', function() {
+          document.documentElement.classList.toggle('dark', this.checked);
+          localStorage.setItem('theme', this.checked ? 'dark' : 'light');
+        });
+      }
+    }
+    
+    function setupEventListeners() {
+      // Evento para compartir perfil
+      const shareBtn = document.querySelector('button[onclick="shareProfile()"]');
+      if (shareBtn) {
+        shareBtn.addEventListener('click', shareProfile);
+      }
+      
+      // Evento para editar perfil
+      const editBtn = document.querySelector('button[onclick="editProfile()"]');
+      if (editBtn) {
+        editBtn.addEventListener('click', editProfile);
+      }
+    }
+    
+    function shareProfile() {
+      const stats = JSON.parse(localStorage.getItem('userStats')) || {};
+      const message = `¡Mira mi progreso espiritual en Jóvenes con Cristo! 🎉\n\n` +
+                     `📖 ${stats.totalVerses || 0} versículos leídos\n` +
+                     `🙏 ${stats.prayerDays || 0} días orando\n` +
+                     `🔥 ${stats.streak || 0} días de racha\n` +
+                     `⭐ Nivel ${stats.level || 1}\n\n` +
+                     `¡Únete a mí en este camino de fe!`;
+      
+      if (navigator.share) {
+        navigator.share({
+          title: 'Mi Progreso Espiritual',
+          text: message,
+          url: window.location.href
+        });
+      } else {
+        navigator.clipboard.writeText(message).then(() => {
+          alert('✅ ¡Perfil copiado al portapapeles! Compártelo con tus amigos.');
+        });
+      }
+    }
+    
+    function editProfile() {
+      const name = prompt('Ingresa tu nombre:', document.getElementById('user-name').textContent);
+      if (name && name.trim()) {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+        currentUser.name = name.trim();
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        document.getElementById('user-name').textContent = name.trim();
+        document.getElementById('user-avatar').textContent = getAvatarEmoji(name.trim());
+        alert('✅ Nombre actualizado correctamente.');
+      }
+    }
+    
+    // Funciones adicionales
+    function viewHabitsDetails() {
+      alert('📊 Aquí verías un detalle completo de tus hábitos y estadísticas semanales.');
+    }
+    
+    function viewAllAchievements() {
+      alert('🏆 Aquí verías todos los logros disponibles y tus progresos.');
+    }
+    
+    function clearActivity() {
+      if (confirm('¿Estás seguro de que quieres limpiar tu historial de actividad?')) {
+        alert('✅ Historial de actividad limpiado.');
+      }
+    }
+    
+    function loadMoreActivity() {
+      alert('📝 Cargando más actividad...');
+    }
+    
+    function exportData() {
+      const userData = {
+        user: JSON.parse(localStorage.getItem('currentUser')),
+        stats: JSON.parse(localStorage.getItem('userStats')),
+        favorites: JSON.parse(localStorage.getItem('favorites') || '[]'),
+        history: JSON.parse(localStorage.getItem('readingHistory') || '[]')
+      };
+      
+      const dataStr = JSON.stringify(userData, null, 2);
+      const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+      
+      const exportFileDefaultName = `jovenes-con-cristo-datos-${new Date().toISOString().split('T')[0]}.json`;
+      
+      const linkElement = document.createElement('a');
+      linkElement.setAttribute('href', dataUri);
+      linkElement.setAttribute('download', exportFileDefaultName);
+      linkElement.click();
+      
+      alert('✅ Tus datos se han exportado correctamente.');
+    }
+    
+    function resetProgress() {
+      if (confirm('⚠️ ¿ESTÁS SEGURO?\n\nEsta acción reiniciará TODO tu progreso:\n• Puntos de experiencia\n• Estadísticas\n• Logros\n• Racha actual\n\nEsta acción NO se puede deshacer.')) {
+        localStorage.removeItem('userStats');
+        localStorage.removeItem('favorites');
+        localStorage.removeItem('readingHistory');
+        alert('✅ Progreso reiniciado. Comienza tu nuevo camino espiritual.');
+        location.reload();
+      }
+    }
+  </script>
 </body>
 </html>

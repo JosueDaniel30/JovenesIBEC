@@ -1,786 +1,1411 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
-  <title>Metas | App Jóvenes</title>
+  <title>Mis Metas | Jóvenes con Cristo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Aplicación para jóvenes cristianos - metas espirituales, biblia y crecimiento personal">
-  <meta name="theme-color" content="#4f46e5">
+  <meta name="description" content="Establece y alcanza tus metas espirituales - Crecimiento personal con propósito">
+  <meta name="theme-color" content="#f59e0b">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="logojov.png">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="notificacion.css">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Configuración personalizada -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: { DEFAULT: '#4f46e5', light: '#818cf8', dark: '#3730a3' },
+            secondary: { DEFAULT: '#10b981', light: '#34d399', dark: '#059669' },
+            accent: { DEFAULT: '#f59e0b', light: '#fbbf24', dark: '#d97706' }
+          },
+          fontFamily: {
+            'sans': ['Inter', 'system-ui', 'sans-serif'],
+            'serif': ['Merriweather', 'serif'],
+            'display': ['Poppins', 'sans-serif']
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'bounce-slow': 'bounce 2s infinite',
+            'progress-load': 'progressLoad 2s ease-out'
+          },
+          keyframes: {
+            progressLoad: {
+              '0%': { width: '0%' },
+              '100%': { width: 'var(--progress)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Font Awesome para iconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    .goal-card {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .goal-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    .progress-ring {
+      stroke-dasharray: 283;
+      stroke-dashoffset: 283;
+      transition: stroke-dashoffset 1s ease-out;
+    }
+    
+    .check-animation {
+      animation: checkPop 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    @keyframes checkPop {
+      0% { transform: scale(0.8); opacity: 0; }
+      70% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    .goal-category-bible {
+      background: linear-gradient(135deg, #4f46e5, #818cf8);
+      color: white;
+    }
+    
+    .goal-category-prayer {
+      background: linear-gradient(135deg, #10b981, #34d399);
+      color: white;
+    }
+    
+    .goal-category-habit {
+      background: linear-gradient(135deg, #f59e0b, #fbbf24);
+      color: white;
+    }
+    
+    .goal-category-community {
+      background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+      color: white;
+    }
+    
+    .sticky-header {
+      position: sticky;
+      top: 64px; /* Ajusta según la altura de tu navbar */
+      z-index: 40;
+      backdrop-filter: blur(8px);
+    }
+  </style>
 </head>
-<body>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 min-h-screen">
+  
+  <!-- Navegación -->
+  <header class="sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg border-b border-gray-200 dark:border-gray-800 shadow-sm">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center space-x-3 group">
+          <div class="w-10 h-10 bg-gradient-to-br from-accent to-accent-light rounded-xl flex items-center justify-center shadow-md">
+            <span class="text-white text-lg">🎯</span>
+          </div>
+          <div>
+            <h1 class="font-display font-bold text-xl bg-gradient-to-r from-accent to-accent-light bg-clip-text text-transparent">
+              Jóvenes con Cristo
+            </h1>
+            <p class="text-xs text-gray-500 dark:text-gray-400">Tu camino espiritual</p>
+          </div>
+        </a>
 
-<header class="top-nav">
-  <div class="nav-container">
-    <div class="logo-section">
-      <h1 class="logo">
-        <img src="logojov.png" alt="Logo Jovenes" class="logo-icon">
-        <span class="logo-text">Jovenes con Cristo</span>
-      </h1>
+        <!-- Navegación desktop -->
+        <nav class="hidden md:flex items-center space-x-1">
+          <a href="index.html" class="flex items-center space-x-2 px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            <span class="text-lg">🏠</span>
+            <span>Inicio</span>
+          </a>
+          <a href="perfil.html" class="flex items-center space-x-2 px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            <span class="text-lg">👤</span>
+            <span>Perfil</span>
+          </a>
+          <a href="biblia.html" class="flex items-center space-x-2 px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            <span class="text-lg">📖</span>
+            <span>Biblia</span>
+          </a>
+          <a href="metas.html" class="flex items-center space-x-2 px-4 py-2 rounded-xl bg-accent/10 text-accent font-semibold">
+            <span class="text-lg">🎯</span>
+            <span>Metas</span>
+          </a>
+        </nav>
+
+        <!-- Acciones -->
+        <div class="flex items-center space-x-3">
+          <button id="theme-toggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            <span class="text-lg dark:hidden">🌙</span>
+            <span class="text-lg hidden dark:inline">☀️</span>
+          </button>
+          <button class="md:hidden p-2" id="mobile-menu-btn">
+            <div class="w-6 h-0.5 bg-gray-600 dark:bg-gray-400 mb-1.5"></div>
+            <div class="w-6 h-0.5 bg-gray-600 dark:bg-gray-400 mb-1.5"></div>
+            <div class="w-6 h-0.5 bg-gray-600 dark:bg-gray-400"></div>
+          </button>
+        </div>
+      </div>
     </div>
-
-    <nav class="nav-menu">
-      <a class="nav-link" href="index.html" data-tooltip="Inicio">
-        <span class="nav-icon">🏠</span>
-        <span class="nav-text">Inicio</span>
-        <span class="nav-glow"></span>
-      </a>
-
-      <a class="nav-link" href="perfil.html" data-tooltip="Mi Perfil">
-        <span class="nav-icon">👤</span>
-        <span class="nav-text">Perfil</span>
-        <span class="nav-glow"></span>
-      </a>
-
-      <a class="nav-link" href="biblia.html" data-tooltip="La Biblia">
-        <span class="nav-icon">📖</span>
-        <span class="nav-text">Biblia</span>
-        <span class="nav-glow"></span>
-      </a>
-
-      <a class="nav-link active" href="metas.html" data-tooltip="Mis Metas">
-        <span class="nav-icon">🎯</span>
-        <span class="nav-text">Metas</span>
-        <span class="nav-glow"></span>
-      </a>
-
-      <div class="nav-divider"></div>
-
-      <button id="theme-toggle" class="theme-btn" data-tooltip="Cambiar Tema">
-        <span class="theme-icon">🌙</span>
-        <span class="theme-glow"></span>
-      </button>
-    </nav>
-
-    <button class="mobile-menu-toggle" id="mobile-menu-btn">
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-    </button>
-  </div>
+  </header>
 
   <!-- Menú móvil -->
-  <div class="mobile-menu" id="mobile-menu">
-    <div class="mobile-menu-header">
-      <h3>Menú</h3>
-      <button class="mobile-menu-close" id="mobile-menu-close">✕</button>
-    </div>
-    <nav class="mobile-nav">
-      <a class="mobile-nav-link" href="index.html">
-        <span class="mobile-nav-icon">🏠</span>
-        <span class="mobile-nav-text">Inicio</span>
-      </a>
-      <a class="mobile-nav-link" href="perfil.html">
-        <span class="mobile-nav-icon">👤</span>
-        <span class="mobile-nav-text">Perfil</span>
-      </a>
-      <a class="mobile-nav-link" href="biblia.html">
-        <span class="mobile-nav-icon">📖</span>
-        <span class="mobile-nav-text">Biblia</span>
-      </a>
-      <a class="mobile-nav-link active" href="metas.html">
-        <span class="mobile-nav-icon">🎯</span>
-        <span class="mobile-nav-text">Metas</span>
-      </a>
-      <div class="mobile-nav-divider"></div>
-      <button id="mobile-theme-toggle" class="mobile-theme-btn">
-        <span class="mobile-theme-icon">🌙</span>
-        <span class="mobile-theme-text">Tema Oscuro</span>
-      </button>
-    </nav>
-  </div>
-</header>
-
-<main class="container">
-
-  <section class="hero-section">
-    <h1 class="page-title">¡Alcanza tus Metas Espirituales!</h1>
-    <p class="hero-subtitle">Cada paso cuenta en tu camino de fe</p>
-  </section>
-
-  <!-- Progreso General -->
-  <section class="card-premium overall-progress">
-    <h2>📊 Tu Progreso General</h2>
-    <div class="progress-circle">
-      <div class="progress-circle-inner">
-        <span id="total-progress">0</span>%
+  <div id="mobile-menu" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/50" id="mobile-menu-backdrop"></div>
+    <div class="absolute inset-y-0 right-0 w-80 bg-white dark:bg-gray-900 shadow-xl transform transition-transform duration-300 translate-x-full">
+      <div class="p-6 h-full flex flex-col">
+        <div class="flex justify-between items-center mb-8">
+          <h3 class="text-xl font-bold">Menú</h3>
+          <button id="mobile-menu-close" class="p-2 text-2xl">×</button>
+        </div>
+        <nav class="space-y-2 flex-1">
+          <a href="index.html" class="flex items-center space-x-4 p-4 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800">
+            <span class="text-2xl">🏠</span>
+            <div>
+              <div class="font-semibold">Inicio</div>
+              <div class="text-sm text-gray-500">Página principal</div>
+            </div>
+          </a>
+          <a href="perfil.html" class="flex items-center space-x-4 p-4 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800">
+            <span class="text-2xl">👤</span>
+            <div>
+              <div class="font-semibold">Perfil</div>
+              <div class="text-sm text-gray-500">Tu progreso</div>
+            </div>
+          </a>
+          <a href="biblia.html" class="flex items-center space-x-4 p-4 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800">
+            <span class="text-2xl">📖</span>
+            <div>
+              <div class="font-semibold">Biblia</div>
+              <div class="text-sm text-gray-500">Palabra de Dios</div>
+            </div>
+          </a>
+          <a href="metas.html" class="flex items-center space-x-4 p-4 rounded-xl bg-accent/10 text-accent">
+            <span class="text-2xl">🎯</span>
+            <div>
+              <div class="font-semibold">Metas</div>
+              <div class="text-sm text-accent/70">Objetivos espirituales</div>
+            </div>
+          </a>
+        </nav>
       </div>
-    </div>
-    <div class="progress-bar">
-      <div id="overall-progress-fill" class="progress-fill"></div>
-    </div>
-    <p class="progress-text">Completa todas las metas para convertirte en un líder espiritual</p>
-  </section>
-
-  <!-- Herramientas -->
-  <section class="tools-grid">
-    <div class="tool-card" onclick="showAddGoalModal()">
-      <div class="tool-icon">➕</div>
-      <h3>Agregar Meta</h3>
-      <p>Crea una meta personalizada</p>
-    </div>
-
-    <div class="tool-card" onclick="showStats()">
-      <div class="tool-icon">📈</div>
-      <h3>Estadísticas</h3>
-      <p>Ve tu progreso detallado</p>
-    </div>
-
-    <div class="tool-card" onclick="shareProgress()">
-      <div class="tool-icon">📤</div>
-      <h3>Compartir</h3>
-      <p>Muestra tus logros</p>
-    </div>
-
-    <div class="tool-card" onclick="resetAllProgress()">
-      <div class="tool-icon">🔄</div>
-      <h3>Reiniciar</h3>
-      <p>Empieza de nuevo</p>
-    </div>
-  </section>
-
-  <!-- Metas por Nivel -->
-  <section class="levels-section">
-    <div class="level-section bronze">
-      <div class="level-header">
-        <button class="level-toggle" aria-expanded="true">
-          <span class="level-icon">🥉</span>
-          <div class="level-info">
-            <h3>Nivel Bronce</h3>
-            <p>Metas verificadas diariamente</p>
-          </div>
-          <span class="level-progress-text" id="bronze-percentage">0%</span>
-          <span class="toggle-icon">▼</span>
-        </button>
-      </div>
-      <div id="bronze-goals" class="goals-grid" data-level="bronze">
-        <div class="goal-item" data-goal-id="bronze1">
-          <div class="goal-checkbox-section">
-            <div class="goal-checkbox-wrapper">
-              <input type="checkbox" id="bronze1">
-              <label for="bronze1" class="goal-checkbox-label">
-                <div class="checkbox-custom">
-                  <div class="checkbox-icon">📖</div>
-                  <div class="checkbox-checkmark">✓</div>
-                </div>
-              </label>
-            </div>
-          </div>
-          <div class="goal-content-section">
-            <div class="goal-header">
-              <div class="goal-title-section">
-                <h4 class="goal-title">Leer un versículo diario</h4>
-                <span class="goal-description">Dedica tiempo a la Palabra de Dios cada día</span>
-              </div>
-              <div class="goal-reward-badge">
-                <span class="reward-points">+5</span>
-                <span class="reward-icon">⭐</span>
-              </div>
-            </div>
-            <div class="goal-progress">
-              <div class="streak-info">
-                <span class="streak-count">0</span> días de racha
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="goal-item" data-goal-id="bronze2">
-          <div class="goal-checkbox-section">
-            <div class="goal-checkbox-wrapper">
-              <input type="checkbox" id="bronze2">
-              <label for="bronze2" class="goal-checkbox-label">
-                <div class="checkbox-custom">
-                  <div class="checkbox-icon">🙏</div>
-                  <div class="checkbox-checkmark">✓</div>
-                </div>
-              </label>
-            </div>
-          </div>
-          <div class="goal-content-section">
-            <div class="goal-header">
-              <div class="goal-title-section">
-                <h4 class="goal-title">Orar por 5 minutos</h4>
-                <span class="goal-description">Conversa con Dios diariamente</span>
-              </div>
-              <div class="goal-reward-badge">
-                <span class="reward-points">+5</span>
-                <span class="reward-icon">🙏</span>
-              </div>
-            </div>
-            <div class="goal-progress">
-              <div class="streak-info">
-                <span class="streak-count">0</span> días de racha
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="goal-item" data-goal-id="bronze3">
-          <div class="goal-checkbox-section">
-            <div class="goal-checkbox-wrapper">
-              <input type="checkbox" id="bronze3">
-              <label for="bronze3" class="goal-checkbox-label">
-                <div class="checkbox-custom">
-                  <div class="checkbox-icon">⛪</div>
-                  <div class="checkbox-checkmark">✓</div>
-                </div>
-              </label>
-            </div>
-          </div>
-          <div class="goal-content-section">
-            <div class="goal-header">
-              <div class="goal-title-section">
-                <h4 class="goal-title">Asistir a un culto semanal</h4>
-                <span class="goal-description">Únete a la comunidad de fe</span>
-              </div>
-              <div class="goal-reward-badge">
-                <span class="reward-points">+10</span>
-                <span class="reward-icon">⛪</span>
-              </div>
-            </div>
-            <div class="goal-progress">
-              <div class="streak-info">
-                <span class="streak-count">0</span> semanas de racha
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="goal-item" data-goal-id="bronze4">
-          <div class="goal-checkbox-section">
-            <div class="goal-checkbox-wrapper">
-              <input type="checkbox" id="bronze4">
-              <label for="bronze4" class="goal-checkbox-label">
-                <div class="checkbox-custom">
-                  <div class="checkbox-icon">💬</div>
-                  <div class="checkbox-checkmark">✓</div>
-                </div>
-              </label>
-            </div>
-          </div>
-          <div class="goal-content-section">
-            <div class="goal-header">
-              <div class="goal-title-section">
-                <h4 class="goal-title">Compartir un versículo</h4>
-                <span class="goal-description">Inspira a otros con la Palabra</span>
-              </div>
-              <div class="goal-reward-badge">
-                <span class="reward-points">+10</span>
-                <span class="reward-icon">💬</span>
-              </div>
-            </div>
-            <div class="goal-progress">
-              <div class="streak-info">
-                <span class="streak-count">0</span> veces compartido
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="goal-item" data-goal-id="bronze5">
-          <div class="goal-checkbox-section">
-            <div class="goal-checkbox-wrapper">
-              <input type="checkbox" id="bronze5">
-              <label for="bronze5" class="goal-checkbox-label">
-                <div class="checkbox-custom">
-                  <div class="checkbox-icon">📝</div>
-                  <div class="checkbox-checkmark">✓</div>
-                </div>
-              </label>
-            </div>
-          </div>
-          <div class="goal-content-section">
-            <div class="goal-header">
-              <div class="goal-title-section">
-                <h4 class="goal-title">Reflexionar sobre tu día</h4>
-                <span class="goal-description">Revisa tu caminar espiritual</span>
-              </div>
-              <div class="goal-reward-badge">
-                <span class="reward-points">+5</span>
-                <span class="reward-icon">📝</span>
-              </div>
-            </div>
-            <div class="goal-progress">
-              <div class="streak-info">
-                <span class="streak-count">0</span> días de racha
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="level-progress">
-        <div id="bronze-progress" class="progress-fill" style="width: 0%"></div>
-      </div>
-      <p class="level-count" id="bronze-count">0/5 completadas</p>
-    </div>
-
-    <div class="level-section silver">
-      <div class="level-header">
-        <button class="level-toggle" aria-expanded="false">
-          <span class="level-icon">🥈</span>
-          <div class="level-info">
-            <h3>Nivel Plata</h3>
-            <p>Metas verificadas semanalmente</p>
-          </div>
-          <span class="level-progress-text" id="silver-percentage">0%</span>
-          <span class="toggle-icon">▶</span>
-        </button>
-      </div>
-      <div id="silver-goals" class="goals-grid" data-level="silver" style="display: none;">
-        <div class="goal-item" data-goal-id="silver1">
-          <div class="goal-checkbox-section">
-            <div class="goal-checkbox-wrapper">
-              <input type="checkbox" id="silver1">
-              <label for="silver1" class="goal-checkbox-label">
-                <div class="checkbox-custom">
-                  <div class="checkbox-icon">🧠</div>
-                  <div class="checkbox-checkmark">✓</div>
-                </div>
-              </label>
-            </div>
-          </div>
-          <div class="goal-content-section">
-            <div class="goal-header">
-              <div class="goal-title-section">
-                <h4 class="goal-title">Memorizar 5 versículos</h4>
-                <span class="goal-description">Graba la Palabra en tu corazón</span>
-              </div>
-              <div class="goal-reward-badge">
-                <span class="reward-points">+15</span>
-                <span class="reward-icon">🧠</span>
-              </div>
-            </div>
-            <div class="goal-progress">
-              <div class="progress-tracker">
-                <div class="progress-bar-mini">
-                  <div class="progress-fill-mini" style="width: 0%"></div>
-                </div>
-                <span class="progress-text">0/5 versículos</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="goal-item" data-goal-id="silver2">
-          <div class="goal-checkbox-section">
-            <div class="goal-checkbox-wrapper">
-              <input type="checkbox" id="silver2">
-              <label for="silver2" class="goal-checkbox-label">
-                <div class="checkbox-custom">
-                  <div class="checkbox-icon">🤝</div>
-                  <div class="checkbox-checkmark">✓</div>
-                </div>
-              </label>
-            </div>
-          </div>
-          <div class="goal-content-section">
-            <div class="goal-header">
-              <div class="goal-title-section">
-                <h4 class="goal-title">Ayudar en un ministerio</h4>
-                <span class="goal-description">Sirve a otros con tus dones</span>
-              </div>
-              <div class="goal-reward-badge">
-                <span class="reward-points">+20</span>
-                <span class="reward-icon">🤝</span>
-              </div>
-            </div>
-            <div class="goal-progress">
-              <div class="streak-info">
-                <span class="streak-count">0</span> semanas de racha
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="goal-item" data-goal-id="silver3">
-          <div class="goal-checkbox-section">
-            <div class="goal-checkbox-wrapper">
-              <input type="checkbox" id="silver3">
-              <label for="silver3" class="goal-checkbox-label">
-                <div class="checkbox-custom">
-                  <div class="checkbox-icon">📚</div>
-                  <div class="checkbox-checkmark">✓</div>
-                </div>
-              </label>
-            </div>
-          </div>
-          <div class="goal-content-section">
-            <div class="goal-header">
-              <div class="goal-title-section">
-                <h4 class="goal-title">Estudiar un libro bíblico</h4>
-                <span class="goal-description">Profundiza en la Escritura</span>
-              </div>
-              <div class="goal-reward-badge">
-                <span class="reward-points">+25</span>
-                <span class="reward-icon">📚</span>
-              </div>
-            </div>
-            <div class="goal-progress">
-              <div class="progress-tracker">
-                <div class="progress-bar-mini">
-                  <div class="progress-fill-mini" style="width: 0%"></div>
-                </div>
-                <span class="progress-text">0/10 capítulos</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="goal-item" data-goal-id="silver4">
-          <div class="goal-checkbox-section">
-            <div class="goal-checkbox-wrapper">
-              <input type="checkbox" id="silver4">
-              <label for="silver4" class="goal-checkbox-label">
-                <div class="checkbox-custom">
-                  <div class="checkbox-icon">🎤</div>
-                  <div class="checkbox-checkmark">✓</div>
-                </div>
-              </label>
-            </div>
-          </div>
-          <div class="goal-content-section">
-            <div class="goal-header">
-              <div class="goal-title-section">
-                <h4 class="goal-title">Compartir tu testimonio</h4>
-                <span class="goal-description">Da esperanza a otros</span>
-              </div>
-              <div class="goal-reward-badge">
-                <span class="reward-points">+20</span>
-                <span class="reward-icon">🎤</span>
-              </div>
-            </div>
-            <div class="goal-progress">
-              <div class="streak-info">
-                <span class="streak-count">0</span> veces compartido
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="goal-item" data-goal-id="silver5">
-          <div class="goal-checkbox-section">
-            <div class="goal-checkbox-wrapper">
-              <input type="checkbox" id="silver5">
-              <label for="silver5" class="goal-checkbox-label">
-                <div class="checkbox-custom">
-                  <div class="checkbox-icon">❤️</div>
-                  <div class="checkbox-checkmark">✓</div>
-                </div>
-              </label>
-            </div>
-          </div>
-          <div class="goal-content-section">
-            <div class="goal-header">
-              <div class="goal-title-section">
-                <h4 class="goal-title">Orar por otros diariamente</h4>
-                <span class="goal-description">Intercede por tu comunidad</span>
-              </div>
-              <div class="goal-reward-badge">
-                <span class="reward-points">+15</span>
-                <span class="reward-icon">❤️</span>
-              </div>
-            </div>
-            <div class="goal-progress">
-              <div class="streak-info">
-                <span class="streak-count">0</span> días de racha
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="level-progress">
-        <div id="silver-progress" class="progress-fill" style="width: 0%"></div>
-      </div>
-      <p class="level-count" id="silver-count">0/5 completadas</p>
-    </div>
-
-    <div class="level-section gold">
-      <div class="level-header">
-        <button class="level-toggle" aria-expanded="false">
-          <span class="level-icon">🥇</span>
-          <div class="level-info">
-            <h3>Nivel Oro</h3>
-            <p>Metas verificadas mensualmente</p>
-          </div>
-          <span class="level-progress-text" id="gold-percentage">0%</span>
-          <span class="toggle-icon">▶</span>
-        </button>
-      </div>
-      <div id="gold-goals" class="goals-grid" data-level="gold" style="display: none;">
-        <div class="goal-item" data-goal-id="gold1">
-          <div class="goal-checkbox-section">
-            <div class="goal-checkbox-wrapper">
-              <input type="checkbox" id="gold1">
-              <label for="gold1" class="goal-checkbox-label">
-                <div class="checkbox-custom">
-                  <div class="checkbox-icon">👨‍🏫</div>
-                  <div class="checkbox-checkmark">✓</div>
-                </div>
-              </label>
-            </div>
-          </div>
-          <div class="goal-content-section">
-            <div class="goal-header">
-              <div class="goal-title-section">
-                <h4 class="goal-title">Discipular a alguien</h4>
-                <span class="goal-description">Guía a otros en su caminar espiritual</span>
-              </div>
-              <div class="goal-reward-badge">
-                <span class="reward-points">+30</span>
-                <span class="reward-icon">👨‍🏫</span>
-              </div>
-            </div>
-            <div class="goal-progress">
-              <div class="progress-tracker">
-                <div class="progress-bar-mini">
-                  <div class="progress-fill-mini" style="width: 0%"></div>
-                </div>
-                <span class="progress-text">0/3 personas</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="goal-item" data-goal-id="gold2">
-          <div class="goal-checkbox-section">
-            <div class="goal-checkbox-wrapper">
-              <input type="checkbox" id="gold2">
-              <label for="gold2" class="goal-checkbox-label">
-                <div class="checkbox-custom">
-                  <div class="checkbox-icon">👥</div>
-                  <div class="checkbox-checkmark">✓</div>
-                </div>
-              </label>
-            </div>
-          </div>
-          <div class="goal-content-section">
-            <div class="goal-header">
-              <div class="goal-title-section">
-                <h4 class="goal-title">Liderar un grupo de estudio</h4>
-                <span class="goal-description">Facilita el aprendizaje colectivo</span>
-              </div>
-              <div class="goal-reward-badge">
-                <span class="reward-points">+35</span>
-                <span class="reward-icon">👥</span>
-              </div>
-            </div>
-            <div class="goal-progress">
-              <div class="streak-info">
-                <span class="streak-count">0</span> semanas liderando
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="goal-item" data-goal-id="gold3">
-          <div class="goal-checkbox-section">
-            <div class="goal-checkbox-wrapper">
-              <input type="checkbox" id="gold3">
-              <label for="gold3" class="goal-checkbox-label">
-                <div class="checkbox-custom">
-                  <div class="checkbox-icon">🎓</div>
-                  <div class="checkbox-checkmark">✓</div>
-                </div>
-              </label>
-            </div>
-          </div>
-          <div class="goal-content-section">
-            <div class="goal-header">
-              <div class="goal-title-section">
-                <h4 class="goal-title">Completar un curso bíblico</h4>
-                <span class="goal-description">Amplía tu conocimiento teológico</span>
-              </div>
-              <div class="goal-reward-badge">
-                <span class="reward-points">+40</span>
-                <span class="reward-icon">🎓</span>
-              </div>
-            </div>
-            <div class="goal-progress">
-              <div class="progress-tracker">
-                <div class="progress-bar-mini">
-                  <div class="progress-fill-mini" style="width: 0%"></div>
-                </div>
-                <span class="progress-text">0/12 lecciones</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="goal-item" data-goal-id="gold4">
-          <div class="goal-checkbox-section">
-            <div class="goal-checkbox-wrapper">
-              <input type="checkbox" id="gold4">
-              <label for="gold4" class="goal-checkbox-label">
-                <div class="checkbox-custom">
-                  <div class="checkbox-icon">⚡</div>
-                  <div class="checkbox-checkmark">✓</div>
-                </div>
-              </label>
-            </div>
-          </div>
-          <div class="goal-content-section">
-            <div class="goal-header">
-              <div class="goal-title-section">
-                <h4 class="goal-title">Servir en múltiples ministerios</h4>
-                <span class="goal-description">Multiplica tu impacto en la iglesia</span>
-              </div>
-              <div class="goal-reward-badge">
-                <span class="reward-points">+35</span>
-                <span class="reward-icon">⚡</span>
-              </div>
-            </div>
-            <div class="goal-progress">
-              <div class="progress-tracker">
-                <div class="progress-bar-mini">
-                  <div class="progress-fill-mini" style="width: 0%"></div>
-                </div>
-                <span class="progress-text">0/3 ministerios</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="goal-item" data-goal-id="gold5">
-          <div class="goal-checkbox-section">
-            <div class="goal-checkbox-wrapper">
-              <input type="checkbox" id="gold5">
-              <label for="gold5" class="goal-checkbox-label">
-                <div class="checkbox-custom">
-                  <div class="checkbox-icon">🌟</div>
-                  <div class="checkbox-checkmark">✓</div>
-                </div>
-              </label>
-            </div>
-          </div>
-          <div class="goal-content-section">
-            <div class="goal-header">
-              <div class="goal-title-section">
-                <h4 class="goal-title">Impactar vidas para Cristo</h4>
-                <span class="goal-description">Sé instrumento de transformación</span>
-              </div>
-              <div class="goal-reward-badge">
-                <span class="reward-points">+50</span>
-                <span class="reward-icon">🌟</span>
-              </div>
-            </div>
-            <div class="goal-progress">
-              <div class="progress-tracker">
-                <div class="progress-bar-mini">
-                  <div class="progress-fill-mini" style="width: 0%"></div>
-                </div>
-                <span class="progress-text">0/5 vidas</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="level-progress">
-        <div id="gold-progress" class="progress-fill" style="width: 0%"></div>
-      </div>
-      <p class="level-count" id="gold-count">0/5 completadas</p>
-    </div>
-  </section>
-
-  <!-- Metas Personalizadas -->
-  <section id="custom-goals-section" class="card-premium">
-    <h2>🎯 Tus Metas Personalizadas</h2>
-    <div id="custom-goals-list" class="goals-grid" data-level="custom">
-      <p class="empty-state">No tienes metas personalizadas aún. ¡Agrega una!</p>
-    </div>
-  </section>
-
-  <!-- Modal para agregar meta -->
-  <div id="add-goal-modal" class="modal" style="display: none;">
-    <div class="modal-content">
-      <h3>Agregar Nueva Meta (Admin)</h3>
-      <form id="add-goal-form">
-        <label for="admin-password">Contraseña de Admin:</label>
-        <input type="password" id="admin-password" placeholder="Ingresa la contraseña de admin" required>
-        <small style="color: var(--text-secondary); display: block; margin-bottom: 1rem;">
-          Solo los administradores pueden agregar nuevas metas.
-        </small>
-
-        <label for="goal-title">Título de la meta:</label>
-        <input type="text" id="goal-title" required>
-
-        <label for="goal-description">Descripción:</label>
-        <textarea id="goal-description" rows="3"></textarea>
-
-        <label for="goal-deadline">Fecha límite:</label>
-        <input type="date" id="goal-deadline">
-
-        <label for="goal-level">Nivel:</label>
-        <select id="goal-level" required>
-          <option value="bronze">🥉 Bronce</option>
-          <option value="silver">🥈 Plata</option>
-          <option value="gold">🥇 Oro</option>
-          <option value="custom">🎯 Personalizada</option>
-        </select>
-
-        <div class="modal-actions">
-          <button type="button" onclick="closeModal()" class="btn-secondary">Cancelar</button>
-          <button type="submit" class="btn-plus">Agregar Meta</button>
-        </div>
-      </form>
     </div>
   </div>
 
-</main>
+  <!-- Contenido principal -->
+  <main class="container mx-auto px-4 py-8">
+    
+    <!-- Header de metas -->
+    <section class="mb-10">
+      <div class="bg-gradient-to-br from-accent/10 to-amber-500/10 rounded-3xl p-8 md:p-10">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+          <div class="flex-1">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+              Tus Metas Espirituales
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-300 mb-6 max-w-3xl">
+              "El que es fiel en lo muy poco, también en lo más es fiel"<br>
+              <span class="text-lg text-gray-500 dark:text-gray-400">- Lucas 16:10</span>
+            </p>
+            <div class="flex flex-wrap gap-3 mb-6">
+              <div class="flex items-center space-x-2 px-4 py-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+                <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                <span>
+                  <span id="goals-completed-count" class="font-bold">0</span> completadas
+                </span>
+              </div>
+              <div class="flex items-center space-x-2 px-4 py-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+                <div class="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+                <span>
+                  <span id="goals-active-count" class="font-bold">0</span> en progreso
+                </span>
+              </div>
+              <div class="flex items-center space-x-2 px-4 py-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+                <div class="w-3 h-3 bg-accent rounded-full animate-pulse"></div>
+                <span>
+                  <span id="goals-total-xp" class="font-bold">0</span> XP ganados
+                </span>
+              </div>
+            </div>
+            <div class="flex flex-wrap gap-3">
+              <button onclick="openNewGoalModal()" class="px-6 py-3.5 bg-accent hover:bg-accent-dark text-white font-semibold rounded-xl transition-colors flex items-center space-x-2 shadow-lg hover:shadow-xl">
+                <span class="text-xl">➕</span>
+                <span>Crear nueva meta</span>
+              </button>
+              <button onclick="showGoalSuggestions()" class="px-6 py-3.5 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border-2 border-accent text-accent font-semibold rounded-xl transition-colors flex items-center space-x-2">
+                <span class="text-xl">💡</span>
+                <span>Ver sugerencias</span>
+              </button>
+            </div>
+          </div>
+          <div class="flex-shrink-0">
+            <div class="relative">
+              <div class="w-48 h-48 md:w-56 md:h-56 bg-gradient-to-br from-accent to-amber-500 rounded-2xl flex items-center justify-center shadow-2xl">
+                <div class="text-center">
+                  <div class="text-6xl mb-4">🏆</div>
+                  <div class="text-white font-bold text-3xl" id="goals-success-rate">0%</div>
+                  <div class="text-white/90">Tasa de éxito</div>
+                </div>
+              </div>
+              <div class="absolute -top-2 -right-2 w-16 h-16 bg-primary rounded-full flex items-center justify-center shadow-lg animate-bounce-slow">
+                <span class="text-2xl text-white">⭐</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<script src="script.js"></script>
-<script src="metas.js"></script>
+    <!-- Resumen rápido -->
+    <section class="mb-10">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Meta del mes -->
+        <div class="bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl p-6 border border-primary/20">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-lg">🎯 Meta del Mes</h3>
+            <span class="px-3 py-1 bg-primary/20 text-primary rounded-full text-xs font-medium">
+              Prioridad
+            </span>
+          </div>
+          <p id="month-goal-title" class="text-gray-800 dark:text-gray-200 font-medium mb-3">Establece tu meta principal</p>
+          <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div id="month-goal-progress" class="bg-primary h-2 rounded-full" style="width: 0%"></div>
+          </div>
+          <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400 mt-2">
+            <span id="month-goal-progress-text">0% completado</span>
+            <span id="month-goal-days">30 días</span>
+          </div>
+        </div>
+        
+        <!-- Mejor racha -->
+        <div class="bg-gradient-to-br from-secondary/10 to-secondary/5 rounded-2xl p-6 border border-secondary/20">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-lg">🔥 Mejor Racha</h3>
+            <span class="text-2xl">🔥</span>
+          </div>
+          <div class="text-3xl font-bold text-secondary mb-1" id="best-streak">0 días</div>
+          <p class="text-gray-600 dark:text-gray-400 text-sm">Manteniendo hábitos espirituales</p>
+          <div class="mt-4 text-xs text-gray-500">
+            Actual: <span id="current-streak" class="font-semibold">0 días</span>
+          </div>
+        </div>
+        
+        <!-- Próxima recompensa -->
+        <div class="bg-gradient-to-br from-purple-500/10 to-purple-500/5 rounded-2xl p-6 border border-purple-500/20">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-lg">🏅 Próxima Recompensa</h3>
+            <span class="text-2xl">⭐</span>
+          </div>
+          <p id="next-reward" class="text-gray-800 dark:text-gray-200 font-medium mb-3">Completa 5 metas</p>
+          <div class="flex items-center space-x-2">
+            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+              <div id="reward-progress" class="bg-purple-500 h-2 rounded-full" style="width: 0%"></div>
+            </div>
+            <span id="reward-progress-text" class="text-sm font-semibold">0/5</span>
+          </div>
+        </div>
+        
+        <!-- Nivel de compromiso -->
+        <div class="bg-gradient-to-br from-gray-900/10 to-gray-900/5 dark:from-gray-100/10 dark:to-gray-100/5 rounded-2xl p-6 border border-gray-300 dark:border-gray-700">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-lg">📊 Tu Compromiso</h3>
+            <span class="text-2xl">💪</span>
+          </div>
+          <div class="text-3xl font-bold text-gray-800 dark:text-gray-200 mb-1" id="commitment-level">Principiante</div>
+          <p class="text-gray-600 dark:text-gray-400 text-sm">Basado en tu consistencia</p>
+          <div class="mt-4">
+            <div class="flex space-x-1">
+              <div class="w-full h-1 bg-gray-300 dark:bg-gray-700 rounded-full overflow-hidden">
+                <div class="h-full bg-accent rounded-full" style="width: 30%"></div>
+              </div>
+              <div class="text-xs text-gray-500">30%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<!-- PWA Service Worker Registration -->
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/sw.js')
-        .then(function(registration) {
-          console.log('Service Worker registrado con éxito:', registration.scope);
+    <!-- Crear nueva meta (formulario sticky) -->
+    <div class="sticky-header mb-8">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xl font-bold flex items-center">
+            <span class="mr-2">✨</span> ¿Qué meta quieres alcanzar?
+          </h3>
+          <button onclick="toggleGoalForm()" id="toggle-form-btn" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+            <span class="text-lg">➕</span>
+          </button>
+        </div>
+        
+        <!-- Formulario (oculto inicialmente) -->
+        <div id="goal-form" class="hidden">
+          <form id="new-goal-form" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium mb-2">Título de la meta</label>
+                <input type="text" id="goal-title" 
+                       class="w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent outline-none transition"
+                       placeholder="Ej: Leer el Nuevo Testamento en 3 meses" required>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium mb-2">Categoría</label>
+                <select id="goal-category" 
+                        class="w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent outline-none transition">
+                  <option value="bible">📖 Estudio Bíblico</option>
+                  <option value="prayer">🙏 Vida de Oración</option>
+                  <option value="habit">🔄 Hábito Espiritual</option>
+                  <option value="community">🤝 Comunidad</option>
+                  <option value="service">🫂 Servicio</option>
+                  <option value="personal">💖 Crecimiento Personal</option>
+                </select>
+              </div>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium mb-2">Descripción</label>
+              <textarea id="goal-description" rows="2"
+                        class="w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent outline-none transition"
+                        placeholder="Describe tu meta y por qué es importante para ti..."></textarea>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-sm font-medium mb-2">Fecha límite</label>
+                <input type="date" id="goal-deadline"
+                       class="w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent outline-none transition">
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium mb-2">Dificultad</label>
+                <select id="goal-difficulty"
+                        class="w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent outline-none transition">
+                  <option value="easy">Fácil (+10 XP)</option>
+                  <option value="medium" selected>Media (+25 XP)</option>
+                  <option value="hard">Difícil (+50 XP)</option>
+                  <option value="expert">Experto (+100 XP)</option>
+                </select>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium mb-2">Recordatorio</label>
+                <select id="goal-reminder"
+                        class="w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent outline-none transition">
+                  <option value="none">Sin recordatorio</option>
+                  <option value="daily">Diario</option>
+                  <option value="weekly" selected>Semanal</option>
+                  <option value="monthly">Mensual</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="flex justify-end space-x-3 pt-4">
+              <button type="button" onclick="toggleGoalForm()" 
+                      class="px-5 py-2.5 border-2 border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-600 rounded-xl font-medium transition-colors">
+                Cancelar
+              </button>
+              <button type="submit" 
+                      class="px-5 py-2.5 bg-accent hover:bg-accent-dark text-white font-semibold rounded-xl transition-colors shadow hover:shadow-lg">
+                Crear Meta
+              </button>
+            </div>
+          </form>
+        </div>
+        
+        <!-- Si no hay formulario, mostrar botón principal -->
+        <div id="form-placeholder" class="text-center py-6">
+          <p class="text-gray-600 dark:text-gray-400 mb-4">
+            Establece metas claras para tu crecimiento espiritual. Cada paso cuenta.
+          </p>
+          <button onclick="toggleGoalForm()" 
+                  class="px-6 py-3 bg-gradient-to-r from-accent to-amber-500 hover:from-accent-dark hover:to-amber-600 text-white font-semibold rounded-xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+            <span class="text-lg mr-2">🎯</span>
+            Comenzar una nueva meta
+          </button>
+        </div>
+      </div>
+    </div>
 
-          // Escuchar por actualizaciones del service worker
-          registration.addEventListener('updatefound', function() {
-            const newWorker = registration.installing;
-            newWorker.addEventListener('statechange', function() {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                // Nueva versión disponible
-                if (confirm('Hay una nueva versión disponible. ¿Quieres actualizar?')) {
-                  newWorker.postMessage({ type: 'SKIP_WAITING' });
-                  window.location.reload();
-                }
-              }
-            });
-          });
-        })
-        .catch(function(error) {
-          console.log('Error al registrar el Service Worker:', error);
+    <!-- Filtros y categorías -->
+    <div class="mb-8">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div class="flex-1">
+          <h3 class="text-xl font-bold mb-4">Tus Metas Activas</h3>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="filterGoals('all')" id="filter-all" 
+                    class="px-4 py-2 bg-accent text-white rounded-xl font-medium transition-colors">
+              Todas
+            </button>
+            <button onclick="filterGoals('bible')" id="filter-bible" 
+                    class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-xl font-medium transition-colors">
+              📖 Biblia
+            </button>
+            <button onclick="filterGoals('prayer')" id="filter-prayer" 
+                    class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-xl font-medium transition-colors">
+              🙏 Oración
+            </button>
+            <button onclick="filterGoals('habit')" id="filter-habit" 
+                    class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-xl font-medium transition-colors">
+              🔄 Hábitos
+            </button>
+            <button onclick="filterGoals('priority')" id="filter-priority" 
+                    class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-xl font-medium transition-colors">
+              ⭐ Prioridad
+            </button>
+          </div>
+        </div>
+        
+        <div class="flex items-center space-x-3">
+          <button onclick="sortGoals('deadline')" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" title="Ordenar por fecha">
+            <span class="text-lg">📅</span>
+          </button>
+          <button onclick="sortGoals('progress')" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" title="Ordenar por progreso">
+            <span class="text-lg">📊</span>
+          </button>
+          <button onclick="viewCompletedGoals()" class="px-4 py-2 bg-secondary/10 hover:bg-secondary/20 text-secondary rounded-xl font-medium transition-colors">
+            <span class="mr-2">✅</span>
+            Completadas
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid de metas activas -->
+    <section class="mb-12" id="active-goals-section">
+      <div id="active-goals-container" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Las metas se cargarán aquí dinámicamente -->
+        <div class="col-span-1 lg:col-span-2 text-center py-12" id="no-goals-message">
+          <div class="w-24 h-24 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6">
+            <span class="text-4xl">🎯</span>
+          </div>
+          <h4 class="text-2xl font-bold mb-3">¡Comienza tu viaje!</h4>
+          <p class="text-gray-600 dark:text-gray-400 max-w-md mx-auto mb-6">
+            Aún no tienes metas activas. Establece tu primera meta espiritual y comienza a crecer hoy.
+          </p>
+          <button onclick="toggleGoalForm()" 
+                  class="px-6 py-3 bg-accent hover:bg-accent-dark text-white font-semibold rounded-xl transition-colors">
+            Crear mi primera meta
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sugerencias de metas -->
+    <section class="mb-12">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-2xl font-bold flex items-center">
+          <span class="mr-3">💡</span> Sugerencias para Ti
+        </h3>
+        <button onclick="loadMoreSuggestions()" class="text-accent hover:text-accent-dark font-medium">
+          Ver más →
+        </button>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Sugerencia 1 -->
+        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl p-6 border border-blue-200 dark:border-blue-800/30">
+          <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mb-4">
+            <span class="text-2xl text-blue-600 dark:text-blue-400">📖</span>
+          </div>
+          <h4 class="font-bold text-lg mb-2">Leer un libro de la Biblia</h4>
+          <p class="text-gray-600 dark:text-gray-400 mb-4">
+            Completa la lectura de un libro completo en un mes.
+          </p>
+          <div class="flex justify-between items-center">
+            <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-sm">
+              +25 XP
+            </span>
+            <button onclick="addSuggestionGoal('bible')" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium">
+              Agregar
+            </button>
+          </div>
+        </div>
+        
+        <!-- Sugerencia 2 -->
+        <div class="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl p-6 border border-green-200 dark:border-green-800/30">
+          <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center mb-4">
+            <span class="text-2xl text-green-600 dark:text-green-400">🙏</span>
+          </div>
+          <h4 class="font-bold text-lg mb-2">7 días de oración</h4>
+          <p class="text-gray-600 dark:text-gray-400 mb-4">
+            Establece un tiempo diario de oración durante una semana.
+          </p>
+          <div class="flex justify-between items-center">
+            <span class="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full text-sm">
+              +15 XP
+            </span>
+            <button onclick="addSuggestionGoal('prayer')" class="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 font-medium">
+              Agregar
+            </button>
+          </div>
+        </div>
+        
+        <!-- Sugerencia 3 -->
+        <div class="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-2xl p-6 border border-amber-200 dark:border-amber-800/30">
+          <div class="w-12 h-12 bg-amber-100 dark:bg-amber-900/30 rounded-xl flex items-center justify-center mb-4">
+            <span class="text-2xl text-amber-600 dark:text-amber-400">🔄</span>
+          </div>
+          <h4 class="font-bold text-lg mb-2">Hábito matutino</h4>
+          <p class="text-gray-600 dark:text-gray-400 mb-4">
+            Comienza cada día con lectura bíblica por 21 días seguidos.
+          </p>
+          <div class="flex justify-between items-center">
+            <span class="px-3 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 rounded-full text-sm">
+              +50 XP
+            </span>
+            <button onclick="addSuggestionGoal('habit')" class="text-amber-600 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 font-medium">
+              Agregar
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Metas completadas (acordeón) -->
+    <section class="mb-12">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+        <button onclick="toggleCompletedGoals()" class="w-full flex items-center justify-between text-left">
+          <div class="flex items-center">
+            <span class="text-2xl mr-3">🏆</span>
+            <div>
+              <h3 class="text-xl font-bold">Metas Completadas</h3>
+              <p class="text-gray-600 dark:text-gray-400 text-sm">
+                <span id="completed-count">0</span> metas alcanzadas - 
+                <span id="completed-xp">0</span> XP ganados
+              </p>
+            </div>
+          </div>
+          <span class="text-2xl" id="completed-arrow">▼</span>
+        </button>
+        
+        <div id="completed-goals-container" class="hidden mt-6">
+          <div id="completed-goals-list" class="space-y-4">
+            <!-- Las metas completadas aparecerán aquí -->
+            <div class="text-center py-8 text-gray-500" id="no-completed-message">
+              <span class="text-4xl mb-4 block">🎯</span>
+              <p>Aún no has completado ninguna meta.</p>
+              <p class="text-sm mt-2">¡Comienza con una meta pequeña y celebra cada victoria!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tips para alcanzar metas -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl p-8">
+        <h3 class="text-2xl font-bold mb-6 text-center">💪 Consejos para Alcanzar tus Metas</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="text-center">
+            <div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span class="text-2xl">1</span>
+            </div>
+            <h4 class="font-bold mb-2">Sé Específico</h4>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">
+              En lugar de "leer más Biblia", propón "leer 1 capítulo diario".
+            </p>
+          </div>
+          
+          <div class="text-center">
+            <div class="w-16 h-16 bg-secondary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span class="text-2xl">2</span>
+            </div>
+            <h4 class="font-bold mb-2">Divide en Pasos</h4>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">
+              Metas grandes se logran con pequeños pasos consistentes.
+            </p>
+          </div>
+          
+          <div class="text-center">
+            <div class="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span class="text-2xl">3</span>
+            </div>
+            <h4 class="font-bold mb-2">Celebra el Progreso</h4>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">
+              Reconoce cada avance, por pequeño que sea.
+            </p>
+          </div>
+          
+          <div class="text-center">
+            <div class="w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span class="text-2xl">4</span>
+            </div>
+            <h4 class="font-bold mb-2">Pide Ayuda</h4>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">
+              Comparte tus metas con un amigo para tener responsabilidad.
+            </p>
+          </div>
+        </div>
+        
+        <div class="text-center mt-8">
+          <p class="text-gray-700 dark:text-gray-300 italic">
+            "Todo lo puedo en Cristo que me fortalece" - Filipenses 4:13
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-400 py-8">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-6 md:mb-0">
+          <div class="flex items-center space-x-3 mb-2">
+            <div class="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
+              <span class="text-white">🎯</span>
+            </div>
+            <span class="text-white font-bold">Metas Espirituales</span>
+          </div>
+          <p class="text-sm">Creciendo con propósito</p>
+        </div>
+        <div class="text-center md:text-right">
+          <p class="text-sm">"Prosigo a la meta, al premio del supremo llamamiento de Dios"</p>
+          <p class="text-xs mt-1">Filipenses 3:14</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+  
+  <!-- Script específico para metas -->
+  <script>
+    // Sistema de gestión de metas
+    class GoalManager {
+      constructor() {
+        this.goals = JSON.parse(localStorage.getItem('spiritualGoals')) || [];
+        this.completedGoals = JSON.parse(localStorage.getItem('completedGoals')) || [];
+        this.nextGoalId = parseInt(localStorage.getItem('nextGoalId')) || 1;
+      }
+      
+      saveGoals() {
+        localStorage.setItem('spiritualGoals', JSON.stringify(this.goals));
+        localStorage.setItem('completedGoals', JSON.stringify(this.completedGoals));
+        localStorage.setItem('nextGoalId', this.nextGoalId.toString());
+        this.updateStats();
+        this.renderGoals();
+      }
+      
+      addGoal(goal) {
+        goal.id = this.nextGoalId++;
+        goal.createdAt = new Date().toISOString();
+        goal.progress = 0;
+        goal.completed = false;
+        goal.streak = 0;
+        goal.lastUpdated = new Date().toISOString();
+        
+        this.goals.push(goal);
+        this.saveGoals();
+        return goal;
+      }
+      
+      updateGoal(id, updates) {
+        const goalIndex = this.goals.findIndex(g => g.id === id);
+        if (goalIndex !== -1) {
+          this.goals[goalIndex] = { ...this.goals[goalIndex], ...updates, lastUpdated: new Date().toISOString() };
+          this.saveGoals();
+        }
+      }
+      
+      deleteGoal(id) {
+        this.goals = this.goals.filter(g => g.id !== id);
+        this.saveGoals();
+      }
+      
+      completeGoal(id) {
+        const goalIndex = this.goals.findIndex(g => g.id === id);
+        if (goalIndex !== -1) {
+          const completedGoal = { ...this.goals[goalIndex] };
+          completedGoal.completedAt = new Date().toISOString();
+          completedGoal.completed = true;
+          
+          // Calcular XP ganado
+          const xpMap = { easy: 10, medium: 25, hard: 50, expert: 100 };
+          completedGoal.xpEarned = xpMap[completedGoal.difficulty] || 25;
+          
+          this.completedGoals.unshift(completedGoal);
+          this.goals.splice(goalIndex, 1);
+          
+          // Actualizar estadísticas globales del usuario
+          this.updateUserStats(completedGoal.xpEarned);
+          
+          this.saveGoals();
+          return completedGoal;
+        }
+        return null;
+      }
+      
+      updateUserStats(xpEarned) {
+        const userStats = JSON.parse(localStorage.getItem('userStats')) || {};
+        userStats.xp = (userStats.xp || 0) + xpEarned;
+        userStats.goalsAchieved = (userStats.goalsAchieved || 0) + 1;
+        userStats.level = Math.floor((userStats.xp || 0) / 100) + 1;
+        localStorage.setItem('userStats', JSON.stringify(userStats));
+      }
+      
+      updateProgress(id, progress) {
+        const goal = this.goals.find(g => g.id === id);
+        if (goal) {
+          goal.progress = Math.min(Math.max(progress, 0), 100);
+          
+          // Si alcanza 100%, completar automáticamente
+          if (goal.progress >= 100 && !goal.completed) {
+            this.completeGoal(id);
+            return 'completed';
+          }
+          
+          this.saveGoals();
+          return 'updated';
+        }
+        return 'not_found';
+      }
+      
+      getCategoryGoals(category) {
+        if (category === 'all') return this.goals;
+        return this.goals.filter(g => g.category === category);
+      }
+      
+      getPriorityGoals() {
+        return this.goals.filter(g => g.priority);
+      }
+      
+      updateStats() {
+        const totalGoals = this.goals.length + this.completedGoals.length;
+        const completedCount = this.completedGoals.length;
+        const successRate = totalGoals > 0 ? Math.round((completedCount / totalGoals) * 100) : 0;
+        const totalXP = this.completedGoals.reduce((sum, goal) => sum + (goal.xpEarned || 0), 0);
+        
+        // Actualizar UI
+        document.getElementById('goals-completed-count').textContent = completedCount;
+        document.getElementById('goals-active-count').textContent = this.goals.length;
+        document.getElementById('goals-total-xp').textContent = totalXP;
+        document.getElementById('goals-success-rate').textContent = `${successRate}%`;
+        document.getElementById('completed-count').textContent = completedCount;
+        document.getElementById('completed-xp').textContent = totalXP;
+        
+        // Actualizar meta del mes
+        this.updateMonthGoal();
+      }
+      
+      updateMonthGoal() {
+        const monthGoal = this.goals.find(g => g.priority) || this.goals[0];
+        if (monthGoal) {
+          document.getElementById('month-goal-title').textContent = monthGoal.title.length > 40 ? 
+            monthGoal.title.substring(0, 40) + '...' : monthGoal.title;
+          document.getElementById('month-goal-progress').style.width = `${monthGoal.progress}%`;
+          document.getElementById('month-goal-progress-text').textContent = `${monthGoal.progress}% completado`;
+          
+          // Calcular días restantes
+          if (monthGoal.deadline) {
+            const deadline = new Date(monthGoal.deadline);
+            const today = new Date();
+            const diffTime = deadline - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            document.getElementById('month-goal-days').textContent = `${Math.max(diffDays, 0)} días`;
+          }
+        }
+      }
+      
+      renderGoals(filter = 'all') {
+        const container = document.getElementById('active-goals-container');
+        const noGoalsMessage = document.getElementById('no-goals-message');
+        
+        let goalsToShow = [];
+        if (filter === 'priority') {
+          goalsToShow = this.getPriorityGoals();
+        } else if (filter === 'all') {
+          goalsToShow = this.goals;
+        } else {
+          goalsToShow = this.getCategoryGoals(filter);
+        }
+        
+        // Actualizar botones de filtro
+        document.querySelectorAll('[onclick^="filterGoals"]').forEach(btn => {
+          btn.classList.remove('bg-accent', 'text-white');
+          btn.classList.add('bg-gray-200', 'dark:bg-gray-700', 'hover:bg-gray-300', 'dark:hover:bg-gray-600');
         });
-    });
-
-    // Escuchar cambios en el service worker
-    navigator.serviceWorker.addEventListener('controllerchange', function() {
-      window.location.reload();
-    });
-  }
-
-  // Detectar si estamos en modo standalone (PWA instalada)
-  if (window.matchMedia('(display-mode: standalone)').matches ||
-      window.navigator.standalone === true) {
-    console.log('Ejecutándose en modo PWA');
-    // Aquí puedes agregar lógica específica para cuando la app está instalada
-  }
-
-  // Solicitar permisos para notificaciones (opcional)
-  if ('Notification' in window && navigator.serviceWorker) {
-    if (Notification.permission === 'default') {
-      // Puedes mostrar un botón para solicitar permisos más tarde
-      console.log('Notificaciones disponibles pero no solicitadas aún');
+        
+        const activeFilterBtn = document.getElementById(`filter-${filter}`);
+        if (activeFilterBtn) {
+          activeFilterBtn.classList.remove('bg-gray-200', 'dark:bg-gray-700', 'hover:bg-gray-300', 'dark:hover:bg-gray-600');
+          activeFilterBtn.classList.add('bg-accent', 'text-white');
+        }
+        
+        if (goalsToShow.length === 0) {
+          container.innerHTML = noGoalsMessage.outerHTML;
+          return;
+        }
+        
+        // Ordenar por fecha límite (más cercana primero)
+        goalsToShow.sort((a, b) => {
+          if (!a.deadline) return 1;
+          if (!b.deadline) return -1;
+          return new Date(a.deadline) - new Date(b.deadline);
+        });
+        
+        container.innerHTML = '';
+        goalsToShow.forEach(goal => {
+          container.appendChild(this.createGoalCard(goal));
+        });
+      }
+      
+      createGoalCard(goal) {
+        const card = document.createElement('div');
+        card.className = 'goal-card bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700';
+        
+        // Calcular días restantes
+        let daysLeft = 'Sin fecha límite';
+        let daysClass = 'text-gray-500';
+        if (goal.deadline) {
+          const deadline = new Date(goal.deadline);
+          const today = new Date();
+          const diffTime = deadline - today;
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          
+          if (diffDays < 0) {
+            daysLeft = 'Vencida';
+            daysClass = 'text-red-500';
+          } else if (diffDays === 0) {
+            daysLeft = 'Hoy';
+            daysClass = 'text-accent';
+          } else if (diffDays === 1) {
+            daysLeft = 'Mañana';
+            daysClass = 'text-accent';
+          } else if (diffDays <= 7) {
+            daysLeft = `${diffDays} días`;
+            daysClass = 'text-amber-500';
+          } else {
+            daysLeft = `${diffDays} días`;
+            daysClass = 'text-gray-500';
+          }
+        }
+        
+        // Icono por categoría
+        const categoryIcons = {
+          bible: '📖',
+          prayer: '🙏',
+          habit: '🔄',
+          community: '🤝',
+          service: '🫂',
+          personal: '💖'
+        };
+        
+        // Color por categoría
+        const categoryColors = {
+          bible: 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400',
+          prayer: 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400',
+          habit: 'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400',
+          community: 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400',
+          service: 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400',
+          personal: 'bg-pink-100 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400'
+        };
+        
+        // Dificultad
+        const difficultyText = {
+          easy: 'Fácil',
+          medium: 'Media',
+          hard: 'Difícil',
+          expert: 'Experto'
+        };
+        
+        const difficultyColors = {
+          easy: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300',
+          medium: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300',
+          hard: 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300',
+          expert: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'
+        };
+        
+        card.innerHTML = `
+          <div class="flex justify-between items-start mb-4">
+            <div class="flex items-center space-x-3">
+              <div class="w-12 h-12 ${categoryColors[goal.category] || 'bg-gray-100 dark:bg-gray-700'} rounded-xl flex items-center justify-center">
+                <span class="text-2xl">${categoryIcons[goal.category] || '🎯'}</span>
+              </div>
+              <div>
+                <h4 class="font-bold text-lg">${goal.title}</h4>
+                <div class="flex flex-wrap gap-2 mt-1">
+                  <span class="px-2 py-1 ${categoryColors[goal.category] || 'bg-gray-100 dark:bg-gray-700'} rounded-lg text-xs">
+                    ${goal.category === 'bible' ? 'Biblia' : 
+                      goal.category === 'prayer' ? 'Oración' : 
+                      goal.category === 'habit' ? 'Hábito' : 
+                      goal.category === 'community' ? 'Comunidad' :
+                      goal.category === 'service' ? 'Servicio' : 'Personal'}
+                  </span>
+                  <span class="px-2 py-1 ${difficultyColors[goal.difficulty] || 'bg-gray-100 dark:bg-gray-700'} rounded-lg text-xs">
+                    ${difficultyText[goal.difficulty] || 'Media'}
+                  </span>
+                  ${goal.priority ? '<span class="px-2 py-1 bg-accent/20 text-accent rounded-lg text-xs">⭐ Prioridad</span>' : ''}
+                </div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="${daysClass} font-semibold">${daysLeft}</div>
+              <div class="text-xs text-gray-500">para completar</div>
+            </div>
+          </div>
+          
+          ${goal.description ? `<p class="text-gray-600 dark:text-gray-400 mb-4">${goal.description}</p>` : ''}
+          
+          <div class="mb-6">
+            <div class="flex justify-between text-sm mb-2">
+              <span>Progreso</span>
+              <span class="font-semibold">${goal.progress}%</span>
+            </div>
+            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
+              <div class="h-3 rounded-full ${goal.progress < 30 ? 'bg-red-500' : goal.progress < 70 ? 'bg-amber-500' : 'bg-green-500'}" 
+                   style="width: ${goal.progress}%; transition: width 0.5s ease-out"></div>
+            </div>
+          </div>
+          
+          <div class="flex justify-between items-center">
+            <div class="flex space-x-2">
+              <button onclick="updateGoalProgress(${goal.id}, ${goal.progress - 10})" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${goal.progress <= 0 ? 'opacity-50 cursor-not-allowed' : ''}" ${goal.progress <= 0 ? 'disabled' : ''}>
+                <span class="text-lg">➖</span>
+              </button>
+              <button onclick="updateGoalProgress(${goal.id}, ${goal.progress + 10})" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${goal.progress >= 100 ? 'opacity-50 cursor-not-allowed' : ''}" ${goal.progress >= 100 ? 'disabled' : ''}>
+                <span class="text-lg">➕</span>
+              </button>
+              <button onclick="completeGoal(${goal.id})" class="px-3 py-1.5 bg-secondary/10 hover:bg-secondary/20 text-secondary rounded-lg text-sm font-medium transition-colors">
+                Completar
+              </button>
+            </div>
+            <div class="flex space-x-2">
+              <button onclick="editGoalModal(${goal.id})" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" title="Editar">
+                <span class="text-lg">✏️</span>
+              </button>
+              <button onclick="deleteGoal(${goal.id})" class="p-2 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 text-red-500 transition-colors" title="Eliminar">
+                <span class="text-lg">🗑️</span>
+              </button>
+            </div>
+          </div>
+        `;
+        
+        return card;
+      }
+      
+      renderCompletedGoals() {
+        const container = document.getElementById('completed-goals-list');
+        const noCompletedMessage = document.getElementById('no-completed-message');
+        
+        if (this.completedGoals.length === 0) {
+          container.innerHTML = noCompletedMessage.outerHTML;
+          return;
+        }
+        
+        container.innerHTML = '';
+        this.completedGoals.slice(0, 5).forEach(goal => {
+          const completedDate = new Date(goal.completedAt).toLocaleDateString('es-ES', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+          });
+          
+          const item = document.createElement('div');
+          item.className = 'flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900/50 rounded-xl';
+          item.innerHTML = `
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                <span class="text-green-600 dark:text-green-400">✅</span>
+              </div>
+              <div>
+                <div class="font-medium">${goal.title}</div>
+                <div class="text-sm text-gray-500">Completado el ${completedDate}</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="font-semibold text-green-600 dark:text-green-400">+${goal.xpEarned || 25} XP</div>
+              <div class="text-xs text-gray-500">${goal.difficulty === 'easy' ? 'Fácil' : 
+                goal.difficulty === 'medium' ? 'Media' : 
+                goal.difficulty === 'hard' ? 'Difícil' : 'Experto'}</div>
+            </div>
+          `;
+          container.appendChild(item);
+        });
+      }
     }
-  }
-</script>
+
+    // Inicializar el gestor de metas
+    let goalManager = new GoalManager();
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Cargar datos iniciales
+      goalManager.updateStats();
+      goalManager.renderGoals('all');
+      goalManager.renderCompletedGoals();
+      
+      // Configurar menú móvil
+      setupMobileMenu();
+      
+      // Configurar tema
+      setupThemeToggle();
+      
+      // Configurar formulario
+      setupGoalForm();
+      
+      // Cargar estadísticas adicionales
+      loadAdditionalStats();
+      
+      // Configurar datos de ejemplo si no hay metas
+      if (goalManager.goals.length === 0 && goalManager.completedGoals.length === 0) {
+        setupExampleGoals();
+      }
+    });
+    
+    function setupMobileMenu() {
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenuClose = document.getElementById('mobile-menu-close');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
+      
+      function openMobileMenu() {
+        mobileMenu.classList.remove('hidden');
+        setTimeout(() => {
+          mobileMenu.querySelector('.absolute.right-0').classList.remove('translate-x-full');
+        }, 50);
+      }
+      
+      function closeMobileMenu() {
+        mobileMenu.querySelector('.absolute.right-0').classList.add('translate-x-full');
+        setTimeout(() => {
+          mobileMenu.classList.add('hidden');
+        }, 300);
+      }
+      
+      if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', openMobileMenu);
+      if (mobileMenuClose) mobileMenuClose.addEventListener('click', closeMobileMenu);
+      if (mobileMenuBackdrop) mobileMenuBackdrop.addEventListener('click', closeMobileMenu);
+    }
+    
+    function setupThemeToggle() {
+      const themeToggle = document.getElementById('theme-toggle');
+      if (localStorage.getItem('theme') === 'dark' || 
+          (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+      
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          document.documentElement.classList.toggle('dark');
+          localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        });
+      }
+    }
+    
+    function setupGoalForm() {
+      const form = document.getElementById('new-goal-form');
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const goal = {
+            title: document.getElementById('goal-title').value,
+            category: document.getElementById('goal-category').value,
+            description: document.getElementById('goal-description').value,
+            deadline: document.getElementById('goal-deadline').value,
+            difficulty: document.getElementById('goal-difficulty').value,
+            reminder: document.getElementById('goal-reminder').value,
+            priority: false // Se puede añadir checkbox para prioridad
+          };
+          
+          goalManager.addGoal(goal);
+          
+          // Resetear formulario
+          form.reset();
+          toggleGoalForm();
+          
+          // Mostrar confirmación
+          showNotification('🎯 ¡Meta creada exitosamente!', 'success');
+        });
+      }
+      
+      // Establecer fecha mínima como hoy
+      const deadlineInput = document.getElementById('goal-deadline');
+      if (deadlineInput) {
+        const today = new Date().toISOString().split('T')[0];
+        deadlineInput.min = today;
+      }
+    }
+    
+    function toggleGoalForm() {
+      const form = document.getElementById('goal-form');
+      const placeholder = document.getElementById('form-placeholder');
+      const toggleBtn = document.getElementById('toggle-form-btn');
+      
+      if (form && placeholder) {
+        if (form.classList.contains('hidden')) {
+          form.classList.remove('hidden');
+          placeholder.classList.add('hidden');
+          if (toggleBtn) toggleBtn.innerHTML = '−';
+          
+          // Enfocar el primer campo
+          const firstInput = document.getElementById('goal-title');
+          if (firstInput) firstInput.focus();
+        } else {
+          form.classList.add('hidden');
+          placeholder.classList.remove('hidden');
+          if (toggleBtn) toggleBtn.innerHTML = '➕';
+        }
+      }
+    }
+    
+    function filterGoals(category) {
+      goalManager.renderGoals(category);
+    }
+    
+    function sortGoals(criteria) {
+      // Implementar lógica de ordenación
+      showNotification(`Ordenando por ${criteria === 'deadline' ? 'fecha límite' : 'progreso'}`, 'info');
+    }
+    
+    function viewCompletedGoals() {
+      toggleCompletedGoals();
+    }
+    
+    function toggleCompletedGoals() {
+      const container = document.getElementById('completed-goals-container');
+      const arrow = document.getElementById('completed-arrow');
+      
+      if (container.classList.contains('hidden')) {
+        container.classList.remove('hidden');
+        if (arrow) arrow.textContent = '▲';
+      } else {
+        container.classList.add('hidden');
+        if (arrow) arrow.textContent = '▼';
+      }
+    }
+    
+    function updateGoalProgress(id, newProgress) {
+      const result = goalManager.updateProgress(id, newProgress);
+      
+      if (result === 'completed') {
+        showNotification('🏆 ¡Meta completada! ¡Felicidades!', 'success');
+        
+        // Animación especial
+        const completedEvent = new CustomEvent('goalCompleted', { detail: { id } });
+        document.dispatchEvent(completedEvent);
+      } else if (result === 'updated') {
+        showNotification('📈 Progreso actualizado', 'info');
+      }
+    }
+    
+    function completeGoal(id) {
+      const completedGoal = goalManager.completeGoal(id);
+      if (completedGoal) {
+        showNotification(`🎉 ¡Meta "${completedGoal.title}" completada! Ganaste ${completedGoal.xpEarned} XP`, 'success');
+        
+        // Animación de celebración
+        celebrateGoalCompletion();
+      }
+    }
+    
+    function deleteGoal(id) {
+      if (confirm('¿Estás seguro de que quieres eliminar esta meta? Esta acción no se puede deshacer.')) {
+        goalManager.deleteGoal(id);
+        showNotification('🗑️ Meta eliminada', 'info');
+      }
+    }
+    
+    function editGoalModal(id) {
+      const goal = goalManager.goals.find(g => g.id === id);
+      if (goal) {
+        // Rellenar formulario con datos de la meta
+        document.getElementById('goal-title').value = goal.title;
+        document.getElementById('goal-category').value = goal.category;
+        document.getElementById('goal-description').value = goal.description || '';
+        document.getElementById('goal-deadline').value = goal.deadline || '';
+        document.getElementById('goal-difficulty').value = goal.difficulty;
+        document.getElementById('goal-reminder').value = goal.reminder || 'weekly';
+        
+        // Mostrar formulario
+        toggleGoalForm();
+        
+        // Cambiar el botón de submit para actualizar
+        const form = document.getElementById('new-goal-form');
+        const submitBtn = form.querySelector('button[type="submit"]');
+        
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Actualizar Meta';
+        
+        // Guardar el evento original y removerlo
+        const originalSubmit = form.onsubmit;
+        form.onsubmit = null;
+        
+        form.addEventListener('submit', function updateHandler(e) {
+          e.preventDefault();
+          
+          const updatedGoal = {
+            title: document.getElementById('goal-title').value,
+            category: document.getElementById('goal-category').value,
+            description: document.getElementById('goal-description').value,
+            deadline: document.getElementById('goal-deadline').value,
+            difficulty: document.getElementById('goal-difficulty').value,
+            reminder: document.getElementById('goal-reminder').value
+          };
+          
+          goalManager.updateGoal(id, updatedGoal);
+          showNotification('✏️ Meta actualizada', 'success');
+          
+          // Restaurar formulario original
+          form.reset();
+          toggleGoalForm();
+          submitBtn.textContent = originalText;
+          form.removeEventListener('submit', updateHandler);
+          if (originalSubmit) form.onsubmit = originalSubmit;
+        }, { once: true });
+      }
+    }
+    
+    function addSuggestionGoal(type) {
+      const suggestions = {
+        bible: {
+          title: 'Leer el Evangelio de Juan',
+          category: 'bible',
+          description: 'Completar la lectura del Evangelio de Juan en 30 días',
+          difficulty: 'medium',
+          deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+        },
+        prayer: {
+          title: '7 días de oración constante',
+          category: 'prayer',
+          description: 'Dedicar 10 minutos diarios a la oración durante una semana',
+          difficulty: 'easy',
+          deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+        },
+        habit: {
+          title: 'Hábito matutino de 21 días',
+          category: 'habit',
+          description: 'Leer un versículo y orar cada mañana por 21 días consecutivos',
+          difficulty: 'hard',
+          deadline: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+        }
+      };
+      
+      if (suggestions[type]) {
+        goalManager.addGoal(suggestions[type]);
+        showNotification(`✅ Meta sugerida agregada: "${suggestions[type].title}"`, 'success');
+      }
+    }
+    
+    function showGoalSuggestions() {
+      // Implementar modal o desplegable con más sugerencias
+      showNotification('💡 Mostrando más sugerencias de metas...', 'info');
+    }
+    
+    function loadMoreSuggestions() {
+      showGoalSuggestions();
+    }
+    
+    function openNewGoalModal() {
+      toggleGoalForm();
+    }
+    
+    function loadAdditionalStats() {
+      // Cargar racha actual y mejor racha
+      const userStats = JSON.parse(localStorage.getItem('userStats')) || {};
+      document.getElementById('current-streak').textContent = `${userStats.streak || 0} días`;
+      document.getElementById('best-streak').textContent = `${userStats.bestStreak || userStats.streak || 0} días`;
+      
+      // Calcular nivel de compromiso
+      const commitment = calculateCommitmentLevel(userStats);
+      document.getElementById('commitment-level').textContent = commitment.level;
+      
+      // Actualizar próxima recompensa
+      const goalsAchieved = userStats.goalsAchieved || 0;
+      const nextMilestone = Math.ceil((goalsAchieved + 1) / 5) * 5;
+      const progress = (goalsAchieved % 5) * 20;
+      
+      document.getElementById('next-reward').textContent = `Completar ${nextMilestone} metas`;
+      document.getElementById('reward-progress').style.width = `${progress}%`;
+      document.getElementById('reward-progress-text').textContent = `${goalsAchieved % 5 || 0}/5`;
+    }
+    
+    function calculateCommitmentLevel(stats) {
+      const score = (stats.streak || 0) * 2 + (stats.goalsAchieved || 0) * 5 + (stats.totalVerses || 0) * 0.1;
+      
+      if (score < 20) return { level: 'Principiante', percent: 20 };
+      if (score < 50) return { level: 'Comprometido', percent: 45 };
+      if (score < 100) return { level: 'Dedicado', percent: 70 };
+      return { level: 'Ejemplar', percent: 95 };
+    }
+    
+    function setupExampleGoals() {
+      // Solo agregar metas de ejemplo si el usuario está nuevo
+      const hasInteracted = localStorage.getItem('hasInteractedWithGoals');
+      if (!hasInteracted) {
+        const exampleGoals = [
+          {
+            title: 'Leer Salmos durante una semana',
+            category: 'bible',
+            description: 'Leer un capítulo de Salmos cada día por 7 días',
+            difficulty: 'easy',
+            deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+            progress: 30,
+            priority: true
+          },
+          {
+            title: 'Memorizar Filipenses 4:13',
+            category: 'personal',
+            description: 'Memorizar y meditar en este versículo durante una semana',
+            difficulty: 'medium',
+            deadline: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+            progress: 10
+          }
+        ];
+        
+        exampleGoals.forEach(goal => goalManager.addGoal(goal));
+        localStorage.setItem('hasInteractedWithGoals', 'true');
+      }
+    }
+    
+    function celebrateGoalCompletion() {
+      // Efecto visual simple para celebrar
+      const celebration = document.createElement('div');
+      celebration.className = 'fixed inset-0 z-50 pointer-events-none flex items-center justify-center';
+      celebration.innerHTML = `
+        <div class="text-6xl animate-ping">🎉</div>
+      `;
+      document.body.appendChild(celebration);
+      
+      setTimeout(() => {
+        celebration.remove();
+      }, 1000);
+    }
+    
+    function showNotification(message, type = 'info') {
+      // Crear notificación
+      const notification = document.createElement('div');
+      notification.className = `fixed top-4 right-4 z-50 px-6 py-4 rounded-xl shadow-lg transform transition-all duration-300 translate-x-0 opacity-100 ${
+        type === 'success' ? 'bg-green-500 text-white' :
+        type === 'error' ? 'bg-red-500 text-white' :
+        'bg-accent text-white'
+      }`;
+      notification.textContent = message;
+      
+      document.body.appendChild(notification);
+      
+      // Auto-eliminar después de 3 segundos
+      setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        notification.style.opacity = '0';
+        setTimeout(() => notification.remove(), 300);
+      }, 3000);
+    }
+    
+    // Evento para celebrar metas completadas
+    document.addEventListener('goalCompleted', function(e) {
+      celebrateGoalCompletion();
+    });
+  </script>
 </body>
 </html>

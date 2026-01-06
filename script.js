@@ -905,19 +905,31 @@ document.addEventListener('DOMContentLoaded', function() {
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
     const mobileMenuClose = document.getElementById('mobile-menu-close');
+    const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
 
     if (mobileMenuBtn && mobileMenu) {
         // Toggle menú móvil
         mobileMenuBtn.addEventListener('click', function() {
-            mobileMenu.classList.toggle('open');
-            document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+            const isActive = mobileMenu.classList.contains('active');
+            mobileMenu.classList.toggle('active');
+            mobileMenuBtn.classList.toggle('active');
+            if (mobileMenuOverlay) {
+                mobileMenuOverlay.classList.toggle('active');
+            }
+            document.body.style.overflow = isActive ? '' : 'hidden';
         });
 
         // Cerrar menú móvil
         if (mobileMenuClose) {
             mobileMenuClose.addEventListener('click', function() {
-                mobileMenu.classList.remove('open');
-                document.body.style.overflow = '';
+                closeMobileMenu();
+            });
+        }
+
+        // Cerrar menú al hacer clic en el overlay
+        if (mobileMenuOverlay) {
+            mobileMenuOverlay.addEventListener('click', function() {
+                closeMobileMenu();
             });
         }
 
@@ -925,17 +937,25 @@ document.addEventListener('DOMContentLoaded', function() {
         const mobileLinks = mobileMenu.querySelectorAll('a');
         mobileLinks.forEach(link => {
             link.addEventListener('click', function() {
-                mobileMenu.classList.remove('open');
-                document.body.style.overflow = '';
+                closeMobileMenu();
             });
         });
     }
 
-    // Cerrar menú móvil al hacer clic fuera
-    document.addEventListener('click', function(e) {
-        if (mobileMenu && !mobileMenu.contains(e.target) && e.target !== mobileMenuBtn && !mobileMenuBtn.contains(e.target)) {
-            mobileMenu.classList.remove('open');
-            document.body.style.overflow = '';
+    // Función para cerrar el menú móvil
+    function closeMobileMenu() {
+        mobileMenu.classList.remove('active');
+        mobileMenuBtn.classList.remove('active');
+        if (mobileMenuOverlay) {
+            mobileMenuOverlay.classList.remove('active');
+        }
+        document.body.style.overflow = '';
+    }
+
+    // Cerrar menú móvil al presionar Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
+            closeMobileMenu();
         }
     });
 

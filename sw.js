@@ -1,8 +1,8 @@
 // Service Worker para Jóvenes con Cristo PWA
 // VERSIÓN CORREGIDA PARA GITHUB PAGES
-const CACHE_NAME = 'jovenes-app-v1.8';  // Cambia la versión
-const STATIC_CACHE = 'jovenes-static-v1.8';
-const BIBLE_CACHE = 'bible-cache-v1.5';
+const CACHE_NAME = 'jovenes-app-v1.9';  // Cambia la versión
+const STATIC_CACHE = 'jovenes-static-v1.9';
+const BIBLE_CACHE = 'bible-cache-v1.6';
 
 // Recursos a cachear inicialmente
 const STATIC_ASSETS = [
