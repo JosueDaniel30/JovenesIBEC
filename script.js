@@ -1135,58 +1135,67 @@ checkDevice();
 /* 🔧 REGISTRO DEL SERVICE WORKER (PWA) */
 /* ============================ */
 
-function registerServiceWorker() {
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-            const swPath = window.location.href.includes('/JovenesIBEC/') 
-                ? '/JovenesIBEC/sw.js' 
-                : '/sw.js';
-            navigator.serviceWorker.register(swPath)
-                .then(function(registration) {
-                    console.log('Service Worker registrado exitosamente:', registration.scope);
-
-                    // Verificar si hay una nueva versión disponible
-                    registration.addEventListener('updatefound', function() {
-                        const newWorker = registration.installing;
-                        newWorker.addEventListener('statechange', function() {
-                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                // Nueva versión disponible
-                                showUpdateNotification();
-                            }
-                        });
-                    });
-
-                    // Manejar mensajes del service worker
-                    navigator.serviceWorker.addEventListener('message', function(event) {
-                        if (event.data && event.data.type === 'UPDATE_AVAILABLE') {
-                            showUpdateNotification();
-                        }
-                    });
-                })
-                .catch(function(error) {
-                    console.log('Error al registrar el Service Worker:', error);
-                });
-        });
-    } else {
-        console.log('Service Workers no soportados en este navegador');
+// Función para mostrar notificaciones adaptada a Tailwind
+function showNotification(message, type = 'info', title = '', duration = 3000) {
+    // Iconos para cada tipo
+    const icons = {
+        success: '✅',
+        error: '❌',
+        warning: '⚠️',
+        info: 'ℹ️'
+    };
+    
+    // Títulos por defecto
+    const defaultTitles = {
+        success: 'Éxito',
+        error: 'Error',
+        warning: 'Advertencia',
+        info: 'Información'
+    };
+    
+    // Si no se proporciona título, usar el predeterminado
+    if (!title) {
+        title = defaultTitles[type] || 'Notificación';
     }
+    
+    // Crear elemento de notificación
+    const notification = document.createElement('div');
+    notification.className = `notification-tailwind notification-${type}`;
+    notification.innerHTML = `
+        <div class="notification-icon">${icons[type] || 'ℹ️'}</div>
+        <div class="notification-content">
+            <div class="notification-title">${title}</div>
+            <div class="notification-message text-gray-600 dark:text-gray-300">${message}</div>
+        </div>
+        <button class="notification-close" onclick="this.parentElement.remove()">×</button>
+    `;
+    
+    // Añadir al cuerpo
+    document.body.appendChild(notification);
+    
+    // Auto-eliminar después de la duración
+    if (duration > 0) {
+        setTimeout(() => {
+            if (notification.parentElement) {
+                notification.classList.add('hiding');
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.remove();
+                    }
+                }, 300);
+            }
+        }, duration);
+    }
+    
+    return notification;
 }
 
-function showUpdateNotification() {
-    showNotification(
-        '¡Nueva versión disponible! Haz clic aquí para actualizar 🔄',
-        '⬆️'
-    );
-
-    // Agregar funcionalidad al hacer clic en la notificación
-    const notification = document.querySelector('.notification');
-    if (notification) {
-        notification.style.cursor = 'pointer';
-        notification.addEventListener('click', function() {
-            window.location.reload();
-        });
-    }
+// Función de notificación simple (para compatibilidad con código existente)
+function showSimpleNotification(message, type = 'success') {
+    return showNotification(message, type, '', 3000);
 }
+
+
 
 // Registrar service worker al cargar la página
 registerServiceWorker();

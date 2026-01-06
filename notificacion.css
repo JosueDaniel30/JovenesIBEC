@@ -1,22 +1,6 @@
+/* notificacion.css - Adaptado para Tailwind CSS en Jóvenes IBEC */
 
-/* Estilos para modales de libro */
-.book-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: var(--white);
-    border-radius: var(--border-radius-xl);
-    box-shadow: var(--shadow-xl);
-    z-index: 10000;
-    width: 90%;
-    max-width: 600px;
-    max-height: 80vh;
-    overflow-y: auto;
-    animation: modalFadeIn 0.3s ease;
-    border: 1px solid var(--gray-200);
-}
-
+/* Animaciones base (compatibles con Tailwind) */
 @keyframes modalFadeIn {
     from {
         opacity: 0;
@@ -28,230 +12,11 @@
     }
 }
 
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--spacing-xl);
-    border-bottom: 1px solid var(--gray-200);
-    background: linear-gradient(135deg, var(--duo-blue), var(--duo-purple));
-    color: var(--white);
-    border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
-}
-
-.modal-header h2 {
-    margin: 0;
-    color: var(--white);
-    font-size: var(--font-size-xl);
-    font-weight: 800;
-}
-
-.modal-header button {
-    background: none;
-    border: none;
-    color: var(--white);
-    font-size: var(--font-size-xl);
-    cursor: pointer;
-    width: 2.5rem;
-    height: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--border-radius-full);
-    transition: background-color var(--transition-fast);
-}
-
-.modal-header button:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.modal-content {
-    padding: var(--spacing-xl);
-}
-
-.chapters-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: var(--spacing-md);
-    margin-top: var(--spacing-lg);
-}
-
-.chapter-btn {
-    padding: var(--spacing-md);
-    background: var(--white);
-    border: 2px solid var(--gray-300);
-    border-radius: var(--border-radius-lg);
-    cursor: pointer;
-    transition: all var(--transition-fast);
-    text-align: center;
-    font-weight: 600;
-    color: var(--text-primary);
-}
-
-.chapter-btn:hover {
-    background: var(--duo-green);
-    color: var(--white);
-    border-color: var(--duo-green);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-}
-
-/* Canvas-style Modal Overlay */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    z-index: 9999;
-    animation: fadeIn 0.3s ease;
-}
-
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
 }
 
-/* Estilos para búsqueda vacía */
-.empty-search {
-    text-align: center;
-    padding: var(--spacing-2xl);
-    color: var(--text-secondary);
-}
-
-.empty-icon {
-    font-size: 4rem;
-    margin-bottom: var(--spacing-md);
-    opacity: 0.5;
-    color: var(--text-tertiary);
-}
-
-.empty-search h3 {
-    margin-bottom: var(--spacing-sm);
-    color: var(--text-primary);
-    font-size: var(--font-size-xl);
-    font-weight: 700;
-}
-
-/* Contador de resultados */
-.results-count {
-    font-size: var(--font-size-base);
-    font-weight: 500;
-    color: var(--text-secondary);
-    margin-left: var(--spacing-sm);
-}
-
-/* Elementos de lectura */
-.reading-item {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-md);
-    padding: var(--spacing-md);
-    background: rgba(88, 204, 2, 0.1);
-    border-radius: var(--border-radius-lg);
-    margin-bottom: var(--spacing-sm);
-    border: 1px solid rgba(88, 204, 2, 0.2);
-    transition: all var(--transition-fast);
-}
-
-.reading-item:hover {
-    background: rgba(88, 204, 2, 0.15);
-    transform: translateX(2px);
-}
-
-.reading-icon {
-    font-size: var(--font-size-lg);
-    color: var(--duo-green);
-}
-
-.reading-text {
-    font-weight: 600;
-    color: var(--text-primary);
-}
-
-/* Notificaciones del sistema */
-.notification {
-    position: fixed;
-    top: var(--spacing-lg);
-    right: var(--spacing-lg);
-    background: transparent;
-    border-radius: var(--border-radius-xl);
-    box-shadow: var(--shadow-xl);
-    padding: var(--spacing-lg);
-    display: flex;
-    align-items: flex-start;
-    gap: var(--spacing-md);
-    z-index: 1000;
-    max-width: 400px;
-    border: 1px solid var(--gray-200);
-    animation: none;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    position: relative;
-}
-
-.notification::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: transparent;
-    border-radius: inherit;
-    animation: slide-in-right 0.3s ease-out;
-    z-index: -1;
-}
-
-.notification-icon {
-    font-size: var(--font-size-xl);
-    color: var(--duo-green);
-    flex-shrink: 0;
-}
-
-.notification-content {
-    flex: 1;
-}
-
-.notification-title {
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: var(--spacing-xs);
-    font-size: var(--font-size-base);
-}
-
-.notification-message {
-    color: var(--text-secondary);
-    line-height: 1.5;
-    font-size: var(--font-size-sm);
-}
-
-.notification-close {
-    background: none;
-    border: none;
-    color: var(--text-tertiary);
-    cursor: pointer;
-    padding: var(--spacing-xs);
-    border-radius: var(--border-radius-sm);
-    transition: all var(--transition-fast);
-    font-size: var(--font-size-lg);
-}
-
-.notification-close:hover {
-    background-color: var(--gray-100);
-    color: var(--text-secondary);
-}
-
-/* Variantes de notificación */
-.notification.success .notification-icon { color: var(--duo-green); }
-.notification.error .notification-icon { color: var(--duo-red); }
-.notification.warning .notification-icon { color: var(--duo-yellow); }
-.notification.info .notification-icon { color: var(--duo-blue); }
-
-/* Animación para notificaciones */
 @keyframes slide-in-right {
     from {
         opacity: 0;
@@ -261,4 +26,220 @@
         opacity: 1;
         transform: translateX(0);
     }
+}
+
+@keyframes slide-out-right {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
+/* Estilos para modales (compatibles con tu biblia.html) */
+.book-modal {
+    animation: modalFadeIn 0.3s ease;
+    border: 1px solid #e5e7eb;
+}
+
+.book-modal.dark {
+    border-color: #374151;
+}
+
+/* Overlay para modales */
+.modal-overlay {
+    animation: fadeIn 0.3s ease;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+/* NOTIFICACIONES ADAPTADAS PARA TAILWIND */
+/* Esta es la clase base que usarás con Tailwind */
+.notification-tailwind {
+    position: fixed;
+    top: 1.25rem; /* 20px - compatible con p-5 de Tailwind */
+    right: 1.25rem;
+    border-radius: 0.75rem; /* rounded-xl */
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem; /* gap-3 */
+    z-index: 1000;
+    max-width: 400px;
+    border: 1px solid #e5e7eb;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    animation: slide-in-right 0.3s ease-out;
+    padding: 1.25rem; /* p-5 */
+}
+
+/* Versión oscura */
+.dark .notification-tailwind {
+    border-color: #374151;
+    background: rgba(31, 41, 55, 0.95); /* bg-gray-800 con opacidad */
+}
+
+/* Para remover notificación */
+.notification-tailwind.hiding {
+    animation: slide-out-right 0.3s ease-out;
+}
+
+/* Contenedor del contenido */
+.notification-content {
+    flex: 1;
+}
+
+/* Título de la notificación */
+.notification-title {
+    font-weight: 700;
+    margin-bottom: 0.25rem; /* mb-1 */
+    font-size: 1rem; /* text-base */
+}
+
+/* Mensaje de la notificación */
+.notification-message {
+    line-height: 1.5;
+    font-size: 0.875rem; /* text-sm */
+}
+
+/* Botón para cerrar */
+.notification-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem; /* p-1 */
+    border-radius: 0.375rem; /* rounded */
+    transition: all 0.2s ease;
+    font-size: 1.125rem; /* text-lg */
+    color: #9ca3af; /* text-gray-400 */
+}
+
+.notification-close:hover {
+    background-color: #f3f4f6; /* bg-gray-100 */
+    color: #6b7280; /* text-gray-500 */
+}
+
+.dark .notification-close {
+    color: #6b7280;
+}
+
+.dark .notification-close:hover {
+    background-color: #374151; /* dark:bg-gray-700 */
+    color: #d1d5db; /* dark:text-gray-300 */
+}
+
+/* Variantes de notificación - Usando los colores de tu tailwind.config.js */
+.notification-success {
+    background: rgba(16, 185, 129, 0.1); /* bg-secondary/10 */
+    border-color: rgba(16, 185, 129, 0.2); /* border-secondary/20 */
+}
+
+.notification-success .notification-title {
+    color: #059669; /* text-green-700 - para mejor contraste */
+}
+
+.dark .notification-success .notification-title {
+    color: #34d399; /* dark:text-green-400 */
+}
+
+.notification-error {
+    background: rgba(239, 68, 68, 0.1); /* bg-red-500/10 */
+    border-color: rgba(239, 68, 68, 0.2); /* border-red-500/20 */
+}
+
+.notification-error .notification-title {
+    color: #dc2626; /* text-red-700 */
+}
+
+.dark .notification-error .notification-title {
+    color: #f87171; /* dark:text-red-400 */
+}
+
+.notification-warning {
+    background: rgba(245, 158, 11, 0.1); /* bg-accent/10 */
+    border-color: rgba(245, 158, 11, 0.2); /* border-accent/20 */
+}
+
+.notification-warning .notification-title {
+    color: #d97706; /* text-amber-700 */
+}
+
+.dark .notification-warning .notification-title {
+    color: #fbbf24; /* dark:text-amber-400 */
+}
+
+.notification-info {
+    background: rgba(79, 70, 229, 0.1); /* bg-primary/10 */
+    border-color: rgba(79, 70, 229, 0.2); /* border-primary/20 */
+}
+
+.notification-info .notification-title {
+    color: #4f46e5; /* text-primary */
+}
+
+.dark .notification-info .notification-title {
+    color: #818cf8; /* dark:text-primary-light */
+}
+
+/* Iconos para cada tipo de notificación */
+.notification-icon {
+    font-size: 1.25rem; /* text-xl */
+    flex-shrink: 0;
+    margin-top: 0.125rem; /* Para alineación vertical */
+}
+
+.notification-success .notification-icon { color: #10b981; } /* text-secondary */
+.notification-error .notification-icon { color: #ef4444; } /* text-red-500 */
+.notification-warning .notification-icon { color: #f59e0b; } /* text-accent */
+.notification-info .notification-icon { color: #4f46e5; } /* text-primary */
+
+/* Para el canvas-style modal overlay (ya existe en tu biblia.html) */
+.modal-overlay {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.dark .modal-overlay {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+/* Estilos para grids de capítulos (compatibles con tu biblia.html) */
+.chapters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem; /* gap-3 */
+    margin-top: 1rem; /* mt-4 */
+}
+
+.chapter-btn {
+    padding: 0.75rem; /* p-3 */
+    background: white;
+    border: 2px solid #d1d5db; /* border-gray-300 */
+    border-radius: 0.5rem; /* rounded-lg */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    font-weight: 600;
+    color: #111827; /* text-gray-900 */
+}
+
+.chapter-btn:hover {
+    background: #10b981; /* bg-secondary */
+    color: white;
+    border-color: #10b981;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.dark .chapter-btn {
+    background: #1f2937; /* dark:bg-gray-800 */
+    border-color: #4b5563; /* dark:border-gray-600 */
+    color: #f9fafb; /* dark:text-gray-100 */
+}
+
+.dark .chapter-btn:hover {
+    background: #059669; /* dark:bg-secondary-dark */
+    border-color: #059669;
 }
