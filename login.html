@@ -1,124 +1,133 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8">
-  <title>Login | App Jóvenes</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Aplicación para jóvenes cristianos - metas espirituales, biblia y crecimiento personal">
-  <meta name="theme-color" content="#4f46e5">
-  <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="logojov.png">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="notificacion.css">
+  <meta charset="UTF-8" />
+  <title>Autenticación | Jóvenes con Cristo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="theme-color" content="#4f46e5" />
+
+  <!-- PWA basics -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="logojov.png" />
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#4f46e5'
+          }
+        }
+      }
+    }
+  </script>
+
+  
 </head>
-<body>
+<body class="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center px-4">
 
-<header class="top-nav">
-  <div class="nav-container">
-    <div class="logo-section">
-      <h1 class="logo">
-        <img src="logojov.png" alt="Logo Jovenes" class="logo-icon">
-        <span class="logo-text">Jovenes con Cristo</span>
-      </h1>
+  <main class="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 sm:p-8">
+
+    <!-- Logo -->
+    <div class="text-center mb-6">
+      <div class="mx-auto w-16 h-16 bg-primary rounded-2xl flex items-center justify-center text-white text-3xl">✝</div>
+      <h1 class="mt-4 text-2xl font-bold text-gray-800 dark:text-white">Bienvenido</h1>
+      <p class="text-gray-500 text-sm">Inicia sesión para continuar</p>
     </div>
-  </div>
-</header>
 
-<main class="container">
-
-  <section class="login-section">
-    <div class="login-container">
-      <div class="login-tabs">
-        <button id="login-tab" class="tab active">Iniciar Sesión</button>
-        <button id="register-tab" class="tab">Registrarse</button>
-      </div>
-
-      <div id="login-form" class="form-container active">
-        <h2>👋 Bienvenido de vuelta</h2>
-        <form id="loginForm">
-          <div class="form-group">
-            <label for="login-username">Nombre de Usuario:</label>
-            <input type="text" id="login-username" required>
-          </div>
-
-          <div class="form-group">
-            <label for="login-password">Contraseña:</label>
-            <input type="password" id="login-password" required>
-          </div>
-
-          <button type="submit" class="btn-plus">Iniciar Sesión</button>
-        </form>
-      </div>
-
-      <div id="register-form" class="form-container">
-        <h2>✨ Únete a nosotros</h2>
-        <form id="registerForm">
-          <div class="form-group">
-            <label for="register-name">Nombre Completo:</label>
-            <input type="text" id="register-name" required>
-          </div>
-
-          <div class="form-group">
-            <label for="register-username">Nombre de Usuario:</label>
-            <input type="text" id="register-username" required>
-          </div>
-
-          <div class="form-group">
-            <label for="register-password">Contraseña:</label>
-            <input type="password" id="register-password" required>
-          </div>
-
-          <div class="form-group">
-            <label for="register-birthdate">Fecha de Nacimiento:</label>
-            <input type="date" id="register-birthdate">
-          </div>
-
-          <div class="form-group">
-            <label for="register-church">Iglesia:</label>
-            <input type="text" id="register-church" placeholder="Nombre de tu iglesia">
-          </div>
-
-          <button type="submit" class="btn-plus">Registrarse</button>
-        </form>
-      </div>
+    <!-- Tabs -->
+    <div class="flex mb-6 rounded-xl overflow-hidden border dark:border-gray-700">
+      <button id="tab-login" class="flex-1 py-2 text-sm font-medium bg-primary text-white">Entrar</button>
+      <button id="tab-register" class="flex-1 py-2 text-sm font-medium bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">Registro</button>
     </div>
-  </section>
 
-</main>
+    <!-- Login -->
+    <form id="login" class="space-y-4">
+      <input
+        type="text"
+        placeholder="Usuario"
+        class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 
+               bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200
+               focus:outline-none focus:ring-2 focus:ring-primary"
+        required
+      />
 
-<script src="script.js"></script>
-<script src="login.js"></script>
+      <input
+        type="password"
+        placeholder="Contraseña"
+        class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 
+               bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200
+               focus:outline-none focus:ring-2 focus:ring-primary"
+        required
+      />
 
-<!-- PWA Service Worker Registration -->
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/sw.js')
-        .then(function(registration) {
-          console.log('Service Worker registrado con éxito:', registration.scope);
+      <button
+        class="w-full py-3 rounded-xl font-semibold text-white 
+               bg-primary hover:bg-indigo-600 transition active:scale-95">
+        Iniciar sesión
+      </button>
+    </form>
 
-          // Escuchar por actualizaciones del service worker
-          registration.addEventListener('updatefound', function() {
-            const newWorker = registration.installing;
-            newWorker.addEventListener('statechange', function() {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                // Nueva versión disponible
-                if (confirm('Hay una nueva versión disponible. ¿Quieres actualizar?')) {
-                  newWorker.postMessage({ type: 'SKIP_WAITING' });
-                  window.location.reload();
-                }
-              }
-            });
-          });
-        })
-        .catch(function(error) {
-          console.log('Error al registrar el Service Worker:', error);
-        });
-    });
+    <!-- Register -->
 
-    // Escuchar cambios en el service worker
-    navigator.serviceWorker.addEventListener('controllerchange', function() {
-      window.location.reload();
-    });
-  }
+    <form id="register" class="space-y-4 hidden">
+      <input
+        type="text"
+        placeholder="Usuario"
+        class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 
+               bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200
+               focus:outline-none focus:ring-2 focus:ring-primary"
+        required
+      />
 
+      <input
+        type="password"
+        placeholder="Contraseña"
+        class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 
+               bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200
+               focus:outline-none focus:ring-2 focus:ring-primary"
+        required
+      />
+
+      <button
+        class="w-full py-3 rounded-xl font-semibold text-white 
+               bg-primary hover:bg-indigo-600 transition active:scale-95">
+        Crear usuario
+      </button>
+    </form>
+
+    <!-- Footer -->
+    <p class="mt-6 text-xs text-center text-gray-500">Diseño optimizado para móviles y web</p>
+  </main>
+
+  <script>
+    const login = document.getElementById('login');
+    const register = document.getElementById('register');
+    const tabLogin = document.getElementById('tab-login');
+    const tabRegister = document.getElementById('tab-register');
+
+    tabLogin.onclick = () => {
+      login.classList.remove('hidden');
+      register.classList.add('hidden');
+      tabLogin.classList.add('bg-primary','text-white');
+      tabRegister.classList.remove('bg-primary','text-white');
+      tabRegister.classList.add('bg-gray-200','dark:bg-gray-700');
+    }
+
+    tabRegister.onclick = () => {
+      register.classList.remove('hidden');
+      login.classList.add('hidden');
+      tabRegister.classList.add('bg-primary','text-white');
+      tabLogin.classList.remove('bg-primary','text-white');
+      tabLogin.classList.add('bg-gray-200','dark:bg-gray-700');
+    }
+  </script>
+</body>
+</html>
