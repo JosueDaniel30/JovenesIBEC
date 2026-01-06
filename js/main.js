@@ -1,3 +1,8 @@
+import './core/app.js';
+import './bible/bible-ui.js';
+import './profile/profile-ui.js';
+import './goals/goals-ui.js';
+
 /* ============================ */
 /* 📖 SISTEMA DE VERSÍCULOS MEJORADO */
 /* ============================ */

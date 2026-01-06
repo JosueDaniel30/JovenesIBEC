@@ -1155,3 +1155,5 @@ window.quickSearch = quickSearch;
 window.realizarBusquedaAvanzada = realizarBusquedaAvanzada;
 window.mostrarSugerencias = mostrarSugerencias;
 window.ocultarSugerencias = ocultarSugerencias;
+
+

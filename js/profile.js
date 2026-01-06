@@ -374,3 +374,8 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('edit-pic-btn').addEventListener('click', changeProfilePic);
     document.getElementById('profile-pic-input').addEventListener('change', handleProfilePicChange);
 });
+
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  localStorage.removeItem('session');
+  location.replace('login.html');
+});

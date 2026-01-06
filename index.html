@@ -556,5 +556,12 @@
       document.getElementById('streak-count').textContent = stats.streak || 0;
     });
   </script>
+  <script type="module">
+  import { protectPage } from './js/app.js';
+  protectPage();
+</script>
+
+<script type="module" src="./js/main.js"></script>
+
 </body>
 </html>
