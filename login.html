@@ -37,7 +37,9 @@
 
     <!-- Logo -->
     <div class="text-center mb-6">
-      <div class="mx-auto w-16 h-16 bg-primary rounded-2xl flex items-center justify-center text-white text-3xl">✝</div>
+      <div class="mx-auto w-16 h-16 bg-primary rounded-2xl flex items-center justify-center text-white text-3xl">
+        <img src="logojov.png" alt="Logo Jovenes" class="logo-icon">
+      </div>
       <h1 class="mt-4 text-2xl font-bold text-gray-800 dark:text-white">Bienvenido</h1>
       <p class="text-gray-500 text-sm">Inicia sesión para continuar</p>
     </div>
@@ -59,14 +61,29 @@
         required
       />
 
-      <input
-        type="password"
-        placeholder="Contraseña"
-        class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 
-               bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200
-               focus:outline-none focus:ring-2 focus:ring-primary"
-        required
-      />
+      <div class="relative">
+        <input
+          id="login-password"
+          type="password"
+          placeholder="Contraseña"
+          class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 
+                 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200
+                 focus:outline-none focus:ring-2 focus:ring-primary pr-10"
+          required
+        />
+        <button
+          type="button"
+          id="toggle-login-password"
+          class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400"
+        >
+          <i class="far fa-eye"></i>
+        </button>
+      </div>
+
+      <!-- Forgot password link -->
+      <div class="text-right">
+        <a href="#" id="forgot-password-link" class="text-sm text-primary hover:underline">¿Olvidaste tu contraseña?</a>
+      </div>
 
       <button
         class="w-full py-3 rounded-xl font-semibold text-white 
@@ -76,7 +93,6 @@
     </form>
 
     <!-- Register -->
-
     <form id="register" class="space-y-4 hidden">
       <input
         type="text"
@@ -87,9 +103,44 @@
         required
       />
 
+      <div class="relative">
+        <input
+          id="register-password"
+          type="password"
+          placeholder="Contraseña"
+          class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 
+                 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200
+                 focus:outline-none focus:ring-2 focus:ring-primary pr-10"
+          required
+        />
+        <button
+          type="button"
+          id="toggle-register-password"
+          class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400"
+        >
+          <i class="far fa-eye"></i>
+        </button>
+      </div>
+
+      <button
+        class="w-full py-3 rounded-xl font-semibold text-white 
+               bg-primary hover:bg-indigo-600 transition active:scale-95">
+        Crear usuario
+      </button>
+    </form>
+
+    <!-- Forgot Password Form -->
+    <form id="forgot-password" class="space-y-4 hidden">
+      <div class="text-center mb-4">
+        <h2 class="text-xl font-bold text-gray-800 dark:text-white">Recuperar Contraseña</h2>
+        <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">
+          Ingresa tu usuario o correo y te enviaremos instrucciones para restablecer tu contraseña.
+        </p>
+      </div>
+
       <input
-        type="password"
-        placeholder="Contraseña"
+        type="text"
+        placeholder="Usuario o correo electrónico"
         class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 
                bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200
                focus:outline-none focus:ring-2 focus:ring-primary"
@@ -97,9 +148,18 @@
       />
 
       <button
+        type="button"
+        id="back-to-login"
+        class="w-full py-3 rounded-xl font-semibold text-gray-700 dark:text-gray-300 
+               bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition active:scale-95">
+        Volver al inicio de sesión
+      </button>
+
+      <button
+        type="submit"
         class="w-full py-3 rounded-xl font-semibold text-white 
                bg-primary hover:bg-indigo-600 transition active:scale-95">
-        Crear usuario
+        Enviar instrucciones
       </button>
     </form>
 
@@ -110,24 +170,98 @@
   <script>
     const login = document.getElementById('login');
     const register = document.getElementById('register');
+    const forgotPassword = document.getElementById('forgot-password');
     const tabLogin = document.getElementById('tab-login');
     const tabRegister = document.getElementById('tab-register');
+    const forgotPasswordLink = document.getElementById('forgot-password-link');
+    const backToLogin = document.getElementById('back-to-login');
+    
+    // Password toggle elements
+    const toggleLoginPassword = document.getElementById('toggle-login-password');
+    const toggleRegisterPassword = document.getElementById('toggle-register-password');
+    const loginPasswordInput = document.getElementById('login-password');
+    const registerPasswordInput = document.getElementById('register-password');
 
-    tabLogin.onclick = () => {
+    // Function to show login form
+    function showLoginForm() {
       login.classList.remove('hidden');
       register.classList.add('hidden');
-      tabLogin.classList.add('bg-primary','text-white');
-      tabRegister.classList.remove('bg-primary','text-white');
-      tabRegister.classList.add('bg-gray-200','dark:bg-gray-700');
+      forgotPassword.classList.add('hidden');
+      tabLogin.classList.add('bg-primary', 'text-white');
+      tabLogin.classList.remove('bg-gray-200', 'dark:bg-gray-700');
+      tabRegister.classList.remove('bg-primary', 'text-white');
+      tabRegister.classList.add('bg-gray-200', 'dark:bg-gray-700');
     }
 
-    tabRegister.onclick = () => {
+    // Function to show register form
+    function showRegisterForm() {
       register.classList.remove('hidden');
       login.classList.add('hidden');
-      tabRegister.classList.add('bg-primary','text-white');
-      tabLogin.classList.remove('bg-primary','text-white');
-      tabLogin.classList.add('bg-gray-200','dark:bg-gray-700');
+      forgotPassword.classList.add('hidden');
+      tabRegister.classList.add('bg-primary', 'text-white');
+      tabRegister.classList.remove('bg-gray-200', 'dark:bg-gray-700');
+      tabLogin.classList.remove('bg-primary', 'text-white');
+      tabLogin.classList.add('bg-gray-200', 'dark:bg-gray-700');
     }
+
+    // Function to show forgot password form
+    function showForgotPasswordForm() {
+      forgotPassword.classList.remove('hidden');
+      login.classList.add('hidden');
+      register.classList.add('hidden');
+      tabLogin.classList.remove('bg-primary', 'text-white', 'bg-gray-200', 'dark:bg-gray-700');
+      tabRegister.classList.remove('bg-primary', 'text-white', 'bg-gray-200', 'dark:bg-gray-700');
+      tabLogin.classList.add('bg-gray-200', 'dark:bg-gray-700');
+      tabRegister.classList.add('bg-gray-200', 'dark:bg-gray-700');
+    }
+
+    // Tab click events
+    tabLogin.onclick = showLoginForm;
+    tabRegister.onclick = showRegisterForm;
+
+    // Forgot password link event
+    forgotPasswordLink.onclick = (e) => {
+      e.preventDefault();
+      showForgotPasswordForm();
+    };
+
+    // Back to login event
+    backToLogin.onclick = showLoginForm;
+
+    // Toggle password visibility for login
+    toggleLoginPassword.onclick = () => {
+      const type = loginPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      loginPasswordInput.setAttribute('type', type);
+      toggleLoginPassword.innerHTML = type === 'password' ? '<i class="far fa-eye"></i>' : '<i class="far fa-eye-slash"></i>';
+    };
+
+    // Toggle password visibility for register
+    toggleRegisterPassword.onclick = () => {
+      const type = registerPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      registerPasswordInput.setAttribute('type', type);
+      toggleRegisterPassword.innerHTML = type === 'password' ? '<i class="far fa-eye"></i>' : '<i class="far fa-eye-slash"></i>';
+    };
+
+    // Form submission handlers
+    login.onsubmit = (e) => {
+      e.preventDefault();
+      // Add your login logic here
+      alert('Inicio de sesión exitoso (simulado)');
+    };
+
+    register.onsubmit = (e) => {
+      e.preventDefault();
+      // Add your registration logic here
+      alert('Registro exitoso (simulado)');
+      showLoginForm();
+    };
+
+    forgotPassword.onsubmit = (e) => {
+      e.preventDefault();
+      // Add your password recovery logic here
+      alert('Instrucciones enviadas a tu correo (simulado)');
+      showLoginForm();
+    };
   </script>
 </body>
 </html>

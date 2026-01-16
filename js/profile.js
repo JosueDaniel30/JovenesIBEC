@@ -266,15 +266,26 @@ window.loadFavorites = loadFavorites;
 window.removeFavorite = removeFavorite;
 
 // Funciones específicas para perfil.html
+function getAvatarEmoji(name) {
+    const emojis = ['🙏', '✝️', '📖', '❤️', '🌟', '🕊️', '💫', '🌈'];
+    const index = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % emojis.length;
+    return emojis[index];
+}
+
 function displayProfile() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
     const name = currentUser.name || 'Usuario Joven';
     const birthdate = currentUser.birthdate ? new Date(currentUser.birthdate) : null;
     const age = birthdate ? new Date().getFullYear() - birthdate.getFullYear() : 20;
     const church = currentUser.church || 'Jóvenes en Cristo';
+    const joinDate = currentUser.joinDate ? new Date(currentUser.joinDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' }) : 'Reciente';
+    const level = Math.floor((JSON.parse(localStorage.getItem('userStats') || '{}').xp || 0) / 100) + 1;
 
-    document.getElementById('user-name-display').textContent = `👤 ${name}`;
-    document.getElementById('user-details').textContent = `Edad: ${age} años | Iglesia: ${church}`;
+    document.getElementById('user-avatar').textContent = getAvatarEmoji(name);
+    document.getElementById('user-level').textContent = level;
+    document.getElementById('user-name-display').textContent = name;
+    document.getElementById('user-details').textContent = `${age} años • ${church}`;
+    document.getElementById('member-since').textContent = `Miembro desde ${joinDate}`;
 }
 
 function toggleEditSection() {
@@ -291,15 +302,51 @@ function cancelEdit() {
 }
 
 function updateStats() {
-    const streak = JSON.parse(localStorage.getItem('streakData') || '{}').streak || 0;
-    const versesRead = parseInt(localStorage.getItem('versesRead') || '12');
-    const goalsActive = parseInt(localStorage.getItem('goalsActive') || '5');
-    const achievements = parseInt(localStorage.getItem('achievements') || '3');
+    const userStats = JSON.parse(localStorage.getItem('userStats') || '{}');
+    const streak = userStats.streak || 0;
+    const versesRead = userStats.versesRead || 0;
+    const prayerDays = userStats.prayerDays || 0;
+    const goalsAchieved = userStats.goalsAchieved || 0;
+    const totalXp = userStats.xp || 0;
+    const goalsActive = userStats.goalsActive || 0;
+    const versesGoal = userStats.versesGoal || 100;
+    const prayerRecord = userStats.prayerRecord || 7;
+    const xpNext = (Math.floor(totalXp / 100) + 1) * 100 - totalXp;
 
-    document.getElementById('streak-count').textContent = `${streak} días seguidos`;
-    document.getElementById('lecturas-count').textContent = `${versesRead} completadas`;
-    document.getElementById('metas-count').textContent = `${goalsActive} activas`;
-    document.getElementById('logros-count').textContent = `${achievements} obtenidos`;
+    document.getElementById('streak-days').textContent = streak;
+    document.getElementById('user-xp').textContent = totalXp;
+    document.getElementById('total-verses').textContent = versesRead;
+    document.getElementById('prayer-days').textContent = prayerDays;
+    document.getElementById('goals-achieved').textContent = goalsAchieved;
+    document.getElementById('total-xp').textContent = totalXp;
+    document.getElementById('verses-goal').textContent = versesGoal;
+    document.getElementById('prayer-record').textContent = prayerRecord;
+    document.getElementById('goals-active').textContent = goalsActive;
+    document.getElementById('xp-next').textContent = xpNext;
+
+    updateProgressBars();
+}
+
+function updateProgressBars() {
+    const userStats = JSON.parse(localStorage.getItem('userStats') || '{}');
+    const versesRead = userStats.versesRead || 0;
+    const prayerDays = userStats.prayerDays || 0;
+    const goalsAchieved = userStats.goalsAchieved || 0;
+    const totalXp = userStats.xp || 0;
+    const versesGoal = userStats.versesGoal || 100;
+    const prayerRecord = userStats.prayerRecord || 7;
+    const goalsActive = userStats.goalsActive || 0;
+    const xpNext = (Math.floor(totalXp / 100) + 1) * 100 - totalXp;
+
+    const versesProgress = (versesRead / versesGoal) * 100;
+    const prayerProgress = (prayerDays / prayerRecord) * 100;
+    const goalsProgress = goalsActive > 0 ? (goalsAchieved / goalsActive) * 100 : 0;
+    const xpProgress = (totalXp % 100);
+
+    document.getElementById('verses-progress').style.width = `${Math.min(versesProgress, 100)}%`;
+    document.getElementById('prayer-progress').style.width = `${Math.min(prayerProgress, 100)}%`;
+    document.getElementById('goals-progress').style.width = `${Math.min(goalsProgress, 100)}%`;
+    document.getElementById('xp-progress').style.width = `${xpProgress}%`;
 }
 
 function changeProfilePic() {

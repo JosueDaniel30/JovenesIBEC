@@ -57,7 +57,7 @@
         <!-- Logo -->
         <a href="index.html" class="flex items-center space-x-3 group">
           <div class="w-10 h-10 bg-gradient-to-br from-primary to-primary-light rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-            <span class="text-white text-lg">✝</span>
+            <img src="logojov.png" alt="Logo Jovenes" class="logo-icon">
           </div>
           <div>
             <h1 class="font-display font-bold text-xl bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
@@ -493,75 +493,7 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="script.js"></script>
-  <script src="1960.js"></script>
-  
-  <!-- Scripts para esta página -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Actualizar fecha
-      const now = new Date();
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      document.getElementById('current-date').textContent = now.toLocaleDateString('es-ES', options);
-      
-      // Menú móvil
-      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-      const mobileMenuClose = document.getElementById('mobile-menu-close');
-      const mobileMenu = document.getElementById('mobile-menu');
-      const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
-      
-      function openMobileMenu() {
-        mobileMenu.classList.remove('hidden');
-        setTimeout(() => {
-          mobileMenu.querySelector('.absolute.right-0').classList.remove('translate-x-full');
-        }, 50);
-      }
-      
-      function closeMobileMenu() {
-        mobileMenu.querySelector('.absolute.right-0').classList.add('translate-x-full');
-        setTimeout(() => {
-          mobileMenu.classList.add('hidden');
-        }, 300);
-      }
-      
-      mobileMenuBtn.addEventListener('click', openMobileMenu);
-      mobileMenuClose.addEventListener('click', closeMobileMenu);
-      mobileMenuBackdrop.addEventListener('click', closeMobileMenu);
-      
-      // Tema oscuro/claro
-      const themeToggle = document.getElementById('theme-toggle');
-      if (localStorage.getItem('theme') === 'dark' || 
-          (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-      }
-      
-      themeToggle.addEventListener('click', () => {
-        document.documentElement.classList.toggle('dark');
-        localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-      });
-      
-      // Actualizar nombre de usuario
-      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-      const welcomeTitle = document.getElementById('welcome-title');
-      if (currentUser && currentUser.name) {
-        welcomeTitle.textContent = `¡Hola, ${currentUser.name}! 👋`;
-      }
-      
-      // Cargar estadísticas
-      const stats = JSON.parse(localStorage.getItem('userStats') || '{}');
-      document.getElementById('verses-read').textContent = stats.versesRead || 0;
-      document.getElementById('goals-completed').textContent = stats.goalsCompleted || 0;
-      document.getElementById('prayer-streak').textContent = stats.prayerStreak || 0;
-      document.getElementById('level').textContent = stats.level || 1;
-      document.getElementById('streak-count').textContent = stats.streak || 0;
-    });
-  </script>
-  <script type="module">
-  import { protectPage } from './js/app.js';
-  protectPage();
-</script>
-
-<script type="module" src="./js/main.js"></script>
+  <script src="index.js"></script>
 
 </body>
 </html>

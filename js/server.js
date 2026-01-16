@@ -3,10 +3,12 @@ const fs = require('fs');
 const path = require('path');
 
 const server = http.createServer((req, res) => {
-    let filePath = path.join(__dirname, req.url === '/' ? 'biblia.html' : req.url);
+    // Serve files from the parent directory (where biblia.html is located)
+    let filePath = path.join(__dirname, '..', req.url === '/' ? 'biblia.html' : req.url);
 
     // Security: prevent directory traversal
-    if (!filePath.startsWith(__dirname)) {
+    const rootDir = path.join(__dirname, '..');
+    if (!filePath.startsWith(rootDir)) {
         res.writeHead(403);
         res.end('Forbidden');
         return;

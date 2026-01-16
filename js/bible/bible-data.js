@@ -1022,6 +1022,45 @@ if (!document.querySelector('#custom-notification-styles')) {
     document.head.appendChild(style);
 }
 
+// Funciones adicionales para compatibilidad con biblia.html
+function irAVersiculo() {
+    const ref = document.getElementById('daily-verse-ref')?.textContent;
+    if (ref) {
+        buscarPorReferencia(ref);
+    }
+}
+
+function marcarComoLeido() {
+    if (!biblia.libroActual || !biblia.capituloActual) return;
+
+    const stats = JSON.parse(localStorage.getItem('bibleStats') || '{}');
+    const libro = biblia.libroActual;
+    const capitulo = biblia.capituloActual;
+
+    if (!stats[libro]) {
+        stats[libro] = { readChapters: [] };
+    }
+
+    if (!stats[libro].readChapters) {
+        stats[libro].readChapters = [];
+    }
+
+    if (!stats[libro].readChapters.includes(capitulo)) {
+        stats[libro].readChapters.push(capitulo);
+        localStorage.setItem('bibleStats', JSON.stringify(stats));
+        showNotification(`Capítulo ${capitulo} marcado como leído`, '✅');
+        loadStats(); // Actualizar estadísticas
+    } else {
+        showNotification('Capítulo ya marcado como leído', 'ℹ️');
+    }
+}
+
+function marcarVersiculoFavorito() {
+    // Esta función ya existe como marcarVersiculo
+    // Solo mostrar un mensaje para que el usuario sepa cómo usarla
+    showNotification('Haz clic en ⭐ en cualquier versículo para marcarlo como favorito', 'ℹ️');
+}
+
 // Exportar funciones al ámbito global
 window.mostrarSeccion = mostrarSeccion;
 window.mostrarTestamento = mostrarTestamento;
@@ -1033,6 +1072,9 @@ window.shareVerse = shareVerse;
 window.marcarVersiculo = marcarVersiculo;
 window.loadRandomVerse = cargarVersiculoDelDia;
 window.showNotification = showNotification;
+window.irAVersiculo = irAVersiculo;
+window.marcarComoLeido = marcarComoLeido;
+window.marcarVersiculoFavorito = marcarVersiculoFavorito;
 
 // Funciones para compatibilidad
 function showSearch() {
@@ -1155,5 +1197,135 @@ window.quickSearch = quickSearch;
 window.realizarBusquedaAvanzada = realizarBusquedaAvanzada;
 window.mostrarSugerencias = mostrarSugerencias;
 window.ocultarSugerencias = ocultarSugerencias;
+
+// Funciones adicionales para compatibilidad con biblia.html
+function loadStats() {
+    const stats = JSON.parse(localStorage.getItem('bibleStats') || '{}');
+
+    // Versículos leídos
+    const versesRead = Object.values(stats).reduce((total, book) => {
+        return total + (book.versesRead || 0);
+    }, 0);
+    const versesReadEl = document.getElementById('verses-read');
+    if (versesReadEl) versesReadEl.textContent = versesRead.toLocaleString();
+
+    const statsVersesEl = document.getElementById('stats-verses');
+    if (statsVersesEl) statsVersesEl.textContent = versesRead.toLocaleString();
+
+    // Favoritos
+    const favorites = JSON.parse(localStorage.getItem('versiculosFavoritos') || '[]');
+    const favoritesCountEl = document.getElementById('favorites-count');
+    if (favoritesCountEl) favoritesCountEl.textContent = favorites.length;
+
+    // Días leyendo
+    const readingDays = Object.keys(JSON.parse(localStorage.getItem('readingDays') || '{}')).length;
+    const readingDaysEl = document.getElementById('reading-days');
+    if (readingDaysEl) readingDaysEl.textContent = readingDays;
+
+    // Libros completados
+    const booksCompleted = Object.values(stats).filter(book => book.completed).length;
+    const booksCompletedEl = document.getElementById('books-completed');
+    if (booksCompletedEl) booksCompletedEl.textContent = booksCompleted;
+
+    // Calcular progreso
+    const totalVerses = 31102; // Total aproximado de versículos en la Biblia
+    const progress = Math.min(Math.round((versesRead / totalVerses) * 100), 100);
+    const readingProgressEl = document.getElementById('reading-progress');
+    if (readingProgressEl) readingProgressEl.textContent = `${progress}%`;
+
+    const progressBarEl = document.getElementById('progress-bar');
+    if (progressBarEl) progressBarEl.style.width = `${progress}%`;
+}
+
+function setupEventListeners() {
+    // Buscar al presionar Enter
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                realizarBusquedaAvanzada();
+            }
+        });
+    }
+
+    // Cambiar capítulo al cambiar el input
+    const chapterInput = document.getElementById('modal-chapter-input');
+    if (chapterInput) {
+        chapterInput.addEventListener('change', function() {
+            const valor = parseInt(this.value);
+            const libro = biblia.libros.find(l => l.nombre === biblia.libroActual);
+            if (valor && libro && valor >= 1 && valor <= libro.cap) {
+                cargarCapitulo(biblia.libroActual, valor);
+            } else {
+                this.value = biblia.capituloActual;
+            }
+        });
+    }
+}
+
+function marcarCapituloComoLeido(libro, capitulo) {
+    const stats = JSON.parse(localStorage.getItem('bibleStats') || '{}');
+
+    if (!stats[libro]) {
+        stats[libro] = { readChapters: [], versesRead: 0 };
+    }
+
+    if (!stats[libro].readChapters) {
+        stats[libro].readChapters = [];
+    }
+
+    // Añadir capítulo si no está ya marcado
+    if (!stats[libro].readChapters.includes(capitulo)) {
+        stats[libro].readChapters.push(capitulo);
+        stats[libro].versesRead = (stats[libro].versesRead || 0) + 1;
+
+        // Marcar día de lectura
+        const today = new Date().toISOString().split('T')[0];
+        const readingDays = JSON.parse(localStorage.getItem('readingDays') || '{}');
+        readingDays[today] = true;
+        localStorage.setItem('readingDays', JSON.stringify(readingDays));
+    }
+
+    localStorage.setItem('bibleStats', JSON.stringify(stats));
+}
+
+function cerrarLector() {
+    const modal = document.getElementById('reading-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+}
+
+function compartirVersiculo(libro, capitulo, versiculo, texto) {
+    const shareText = `"${texto}"\n\n${libro} ${capitulo}:${versiculo}\n\nVia Biblia RVR1960 - Jóvenes con Cristo`;
+
+    if (navigator.share) {
+        navigator.share({
+            title: 'Versículo Bíblico',
+            text: shareText,
+            url: window.location.href
+        });
+    } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(shareText);
+        showNotification('Versículo copiado al portapapeles', 'success');
+    } else {
+        // Fallback para navegadores antiguos
+        const textArea = document.createElement('textarea');
+        textArea.value = shareText;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showNotification('Versículo copiado al portapapeles', 'success');
+    }
+}
+
+// Exportar funciones adicionales
+window.loadStats = loadStats;
+window.setupEventListeners = setupEventListeners;
+window.marcarCapituloComoLeido = marcarCapituloComoLeido;
+window.cerrarLector = cerrarLector;
+window.compartirVersiculo = compartirVersiculo;
 
 

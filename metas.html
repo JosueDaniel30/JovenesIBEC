@@ -110,7 +110,7 @@
         <!-- Logo -->
         <a href="index.html" class="flex items-center space-x-3 group">
           <div class="w-10 h-10 bg-gradient-to-br from-accent to-accent-light rounded-xl flex items-center justify-center shadow-md">
-            <span class="text-white text-lg">🎯</span>
+            <img src="logojov.png" alt="Logo Jovenes" class="logo-icon">
           </div>
           <div>
             <h1 class="font-display font-bold text-xl bg-gradient-to-r from-accent to-accent-light bg-clip-text text-transparent">
@@ -1406,6 +1406,26 @@
     document.addEventListener('goalCompleted', function(e) {
       celebrateGoalCompletion();
     });
+
+    function showNotification(message, type = 'info') {
+      // Crear notificación
+      const notification = document.createElement('div');
+      notification.className = `fixed top-4 right-4 z-50 px-6 py-4 rounded-xl shadow-lg transform transition-all duration-300 translate-x-0 opacity-100 ${
+        type === 'success' ? 'bg-green-500 text-white' :
+        type === 'error' ? 'bg-red-500 text-white' :
+        'bg-accent text-white'
+      }`;
+      notification.textContent = message;
+      
+      document.body.appendChild(notification);
+      
+      // Auto-eliminar después de 3 segundos
+      setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        notification.style.opacity = '0';
+        setTimeout(() => notification.remove(), 300);
+      }, 3000);
+    }
   </script>
   <script type="module">
   import { protectPage } from './js/app.js';

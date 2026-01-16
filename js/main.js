@@ -32,15 +32,15 @@ const verses = [
 function loadVerse() {
     const randomIndex = Math.floor(Math.random() * verses.length);
     const verse = verses[randomIndex];
-    
-    const verseTextEl = document.getElementById('verse-text');
-    const verseRefEl = document.getElementById('verse-ref');
+
+    const verseTextEl = document.getElementById('daily-verse-text');
+    const verseRefEl = document.getElementById('daily-verse-ref');
     const verseThemeEl = document.getElementById('verse-theme');
-    
+
     if (verseTextEl) verseTextEl.textContent = `"${verse.text}"`;
     if (verseRefEl) verseRefEl.textContent = verse.ref;
     if (verseThemeEl) verseThemeEl.textContent = verse.theme.toUpperCase();
-    
+
     // Guardar versículo del día
     const today = new Date().toDateString();
     localStorage.setItem('dailyVerse', JSON.stringify({
@@ -50,10 +50,10 @@ function loadVerse() {
 }
 
 function copyVerse() {
-    const text = document.getElementById('verse-text')?.textContent || '';
-    const ref = document.getElementById('verse-ref')?.textContent || '';
+    const text = document.getElementById('daily-verse-text')?.textContent || '';
+    const ref = document.getElementById('daily-verse-ref')?.textContent || '';
     const message = `${text} ${ref}`;
-    
+
     navigator.clipboard.writeText(message).then(() => {
         showNotification('Versículo copiado al portapapeles 📋', '✅');
     }).catch(err => {
@@ -63,8 +63,8 @@ function copyVerse() {
 }
 
 function shareVerse() {
-    const text = document.getElementById('verse-text')?.textContent || '';
-    const ref = document.getElementById('verse-ref')?.textContent || '';
+    const text = document.getElementById('daily-verse-text')?.textContent || '';
+    const ref = document.getElementById('daily-verse-ref')?.textContent || '';
     const message = `${text} ${ref}`;
 
     if (navigator.share) {
@@ -84,8 +84,8 @@ function shareVerse() {
 }
 
 function addToFavorites() {
-    const verseText = document.getElementById('verse-text')?.textContent || '';
-    const verseRef = document.getElementById('verse-ref')?.textContent || '';
+    const verseText = document.getElementById('daily-verse-text')?.textContent || '';
+    const verseRef = document.getElementById('daily-verse-ref')?.textContent || '';
     const verseTheme = document.getElementById('verse-theme')?.textContent || '';
 
     if (!verseText || !verseRef) {
@@ -1089,34 +1089,7 @@ function showPersonalizedGreeting() {
     tryShowNotification();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Cargar versículo
-    loadVerse();
 
-    // Inicializar sistemas
-    initializeStreakSystem();
-
-    // Actualizar estadísticas
-    updateHomeStats();
-
-    // Configurar eventos
-    const refreshVerseBtn = document.getElementById('refresh-verse');
-    if (refreshVerseBtn) {
-        refreshVerseBtn.addEventListener('click', loadVerse);
-    }
-
-    const completeDevotionalBtn = document.getElementById('complete-devotional');
-    if (completeDevotionalBtn) {
-        completeDevotionalBtn.addEventListener('click', startDevotional);
-    }
-
-    // Efecto de entrada suave
-    document.body.style.opacity = '0';
-    document.body.style.transition = 'opacity 0.5s ease';
-    setTimeout(() => {
-        document.body.style.opacity = '1';
-    }, 100);
-});
 
 /* ============================ */
 /* 📱 DETECCIÓN DE DISPOSITIVO */
@@ -1140,68 +1113,6 @@ checkDevice();
 /* 🔧 REGISTRO DEL SERVICE WORKER (PWA) */
 /* ============================ */
 
-// Función para mostrar notificaciones adaptada a Tailwind
-function showNotification(message, type = 'info', title = '', duration = 3000) {
-    // Iconos para cada tipo
-    const icons = {
-        success: '✅',
-        error: '❌',
-        warning: '⚠️',
-        info: 'ℹ️'
-    };
-    
-    // Títulos por defecto
-    const defaultTitles = {
-        success: 'Éxito',
-        error: 'Error',
-        warning: 'Advertencia',
-        info: 'Información'
-    };
-    
-    // Si no se proporciona título, usar el predeterminado
-    if (!title) {
-        title = defaultTitles[type] || 'Notificación';
-    }
-    
-    // Crear elemento de notificación
-    const notification = document.createElement('div');
-    notification.className = `notification-tailwind notification-${type}`;
-    notification.innerHTML = `
-        <div class="notification-icon">${icons[type] || 'ℹ️'}</div>
-        <div class="notification-content">
-            <div class="notification-title">${title}</div>
-            <div class="notification-message text-gray-600 dark:text-gray-300">${message}</div>
-        </div>
-        <button class="notification-close" onclick="this.parentElement.remove()">×</button>
-    `;
-    
-    // Añadir al cuerpo
-    document.body.appendChild(notification);
-    
-    // Auto-eliminar después de la duración
-    if (duration > 0) {
-        setTimeout(() => {
-            if (notification.parentElement) {
-                notification.classList.add('hiding');
-                setTimeout(() => {
-                    if (notification.parentElement) {
-                        notification.remove();
-                    }
-                }, 300);
-            }
-        }, duration);
-    }
-    
-    return notification;
-}
-
-// Función de notificación simple (para compatibilidad con código existente)
-function showSimpleNotification(message, type = 'success') {
-    return showNotification(message, type, '', 3000);
-}
-
-
-
 // Registrar service worker al cargar la página
 registerServiceWorker();
 
@@ -1220,3 +1131,5 @@ window.startDevotional = startDevotional;
 window.setReminder = setReminder;
 window.showNotification = showNotification;
 window.showPersonalizedGreeting = showPersonalizedGreeting;
+window.cargarVersiculoDelDia = loadVerse;
+window.markVerseAsRead = markVerseAsRead;

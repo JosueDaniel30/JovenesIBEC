@@ -87,7 +87,7 @@
         <!-- Logo -->
         <a href="index.html" class="flex items-center space-x-3 group">
           <div class="w-10 h-10 bg-gradient-to-br from-primary to-primary-light rounded-xl flex items-center justify-center shadow-md">
-            <span class="text-white text-lg">✝</span>
+            <img src="logojov.png" alt="Logo Jovenes" class="logo-icon">
           </div>
           <div>
             <h1 class="font-display font-bold text-xl bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
@@ -195,8 +195,8 @@
             </div>
             
             <div>
-              <h1 id="user-name" class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Cargando...</h1>
-              <p id="user-email" class="text-gray-600 dark:text-gray-300 mb-4">Usuario de Jóvenes con Cristo</p>
+              <h1 id="user-name-display" class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Cargando...</h1>
+              <p id="user-details" class="text-gray-600 dark:text-gray-300 mb-4">Usuario de Jóvenes con Cristo</p>
               
               <div class="flex flex-wrap gap-3">
                 <div class="flex items-center space-x-2 px-3 py-1.5 bg-white dark:bg-gray-800 rounded-full shadow-sm">
@@ -221,7 +221,7 @@
           
           <!-- Acciones rápidas -->
           <div class="flex flex-col space-y-3">
-            <button onclick="editProfile()" class="px-5 py-2.5 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border-2 border-secondary text-secondary font-semibold rounded-xl transition-colors flex items-center justify-center space-x-2">
+            <button id="edit-profile-btn" class="px-5 py-2.5 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border-2 border-secondary text-secondary font-semibold rounded-xl transition-colors flex items-center justify-center space-x-2">
               <span>✏️</span>
               <span>Editar perfil</span>
             </button>
@@ -231,6 +231,31 @@
             </button>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- Sección de edición de perfil -->
+    <section id="edit-section" style="display: none;" class="mb-10">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm">
+        <h3 class="text-xl font-bold mb-4">Editar Perfil</h3>
+        <form>
+          <div class="mb-4">
+            <label for="user-name" class="block text-sm font-medium mb-2">Nombre</label>
+            <input type="text" id="user-name" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700">
+          </div>
+          <div class="mb-4">
+            <label for="user-birthdate" class="block text-sm font-medium mb-2">Fecha de nacimiento</label>
+            <input type="date" id="user-birthdate" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700">
+          </div>
+          <div class="mb-4">
+            <label for="user-church" class="block text-sm font-medium mb-2">Iglesia</label>
+            <input type="text" id="user-church" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700">
+          </div>
+          <div class="flex gap-4">
+            <button type="button" onclick="saveProfile()" class="px-4 py-2 bg-secondary text-white rounded-lg">Guardar</button>
+            <button type="button" id="cancel-edit-btn" class="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded-lg">Cancelar</button>
+          </div>
+        </form>
       </div>
     </section>
 
@@ -691,159 +716,60 @@
       if (typeof lucide !== 'undefined') {
         lucide.createIcons();
       }
-      
-      // Cargar datos del usuario
-      loadUserData();
-      
+
       // Menú móvil
       setupMobileMenu();
-      
+
       // Configuración de tema
       setupThemeToggle();
-      
-      // Actualizar progresos
-      updateProgressBars();
-      
+
       // Configurar eventos
       setupEventListeners();
+
+      // Event listener for edit profile button
+      const editProfileBtn = document.getElementById('edit-profile-btn');
+      if (editProfileBtn) {
+        editProfileBtn.addEventListener('click', toggleEditSection);
+      }
     });
-    
-    function loadUserData() {
-      const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {
-        name: 'Usuario',
-        email: 'usuario@ejemplo.com',
-        joinDate: new Date().toISOString()
-      };
-      
-      const userStats = JSON.parse(localStorage.getItem('userStats')) || {
-        level: 5,
-        xp: 125,
-        streak: 12,
-        totalVerses: 87,
-        prayerDays: 45,
-        goalsAchieved: 6,
-        bibleStreak: 7,
-        prayerStreak: 5,
-        reflectionStreak: 3
-      };
-      
-      // Actualizar información del usuario
-      document.getElementById('user-name').textContent = currentUser.name;
-      document.getElementById('user-email').textContent = currentUser.email || 'Usuario de Jóvenes con Cristo';
-      document.getElementById('user-avatar').textContent = getAvatarEmoji(currentUser.name);
-      document.getElementById('user-level').textContent = userStats.level;
-      
-      // Formatear fecha de ingreso
-      const joinDate = new Date(currentUser.joinDate || Date.now());
-      const options = { year: 'numeric', month: 'long' };
-      document.getElementById('member-since').textContent = `Miembro desde ${joinDate.toLocaleDateString('es-ES', options)}`;
-      
-      // Actualizar estadísticas
-      document.getElementById('streak-days').textContent = userStats.streak;
-      document.getElementById('user-xp').textContent = userStats.xp;
-      document.getElementById('total-verses').textContent = userStats.totalVerses;
-      document.getElementById('prayer-days').textContent = userStats.prayerDays;
-      document.getElementById('goals-achieved').textContent = userStats.goalsAchieved;
-      document.getElementById('total-xp').textContent = userStats.xp;
-      document.getElementById('bible-streak').textContent = `${userStats.bibleStreak} días`;
-      document.getElementById('prayer-streak').textContent = `${userStats.prayerStreak} días`;
-      document.getElementById('reflection-streak').textContent = `${userStats.reflectionStreak} días`;
-      
-      // Calcular logros obtenidos
-      const achievements = calculateAchievements(userStats);
-      document.getElementById('achievements-count').textContent = achievements.obtained;
-    }
-    
-    function getAvatarEmoji(name) {
-      const emojis = ['🙏', '✝️', '⭐', '🔥', '💫', '✨', '🌿', '🕊️'];
-      const hash = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-      return emojis[hash % emojis.length];
-    }
-    
-    function calculateAchievements(stats) {
-      let obtained = 0;
-      const total = 12;
-      
-      if (stats.streak >= 7) obtained++;
-      if (stats.totalVerses >= 100) obtained++;
-      if (stats.prayerDays >= 30) obtained++;
-      if (stats.goalsAchieved >= 5) obtained++;
-      if (stats.level >= 5) obtained++;
-      
-      return { obtained, total };
-    }
-    
-    function updateProgressBars() {
-      const stats = JSON.parse(localStorage.getItem('userStats')) || {};
-      
-      // Versículos (meta: 100)
-      const versesProgress = Math.min((stats.totalVerses || 0) / 100 * 100, 100);
-      document.getElementById('verses-progress').style.width = `${versesProgress}%`;
-      document.getElementById('verses-goal').textContent = 100;
-      
-      // Oración (récord: 30 días)
-      const prayerProgress = Math.min((stats.prayerDays || 0) / 30 * 100, 100);
-      document.getElementById('prayer-progress').style.width = `${prayerProgress}%`;
-      document.getElementById('prayer-record').textContent = 30;
-      
-      // Metas (en progreso: 3)
-      const goalsProgress = Math.min((stats.goalsAchieved || 0) / 10 * 100, 100);
-      document.getElementById('goals-progress').style.width = `${goalsProgress}%`;
-      document.getElementById('goals-active').textContent = 3;
-      
-      // XP (siguiente nivel: 250)
-      const xpProgress = Math.min((stats.xp || 0) / 250 * 100, 100);
-      document.getElementById('xp-progress').style.width = `${xpProgress}%`;
-      document.getElementById('xp-next').textContent = 250;
-      
-      // Hábitos semanales
-      document.getElementById('bible-week').textContent = Math.min(stats.bibleStreak || 0, 7);
-      document.getElementById('bible-week-progress').style.width = `${Math.min((stats.bibleStreak || 0) / 7 * 100, 100)}%`;
-      
-      document.getElementById('prayer-week').textContent = Math.min(stats.prayerStreak || 0, 7);
-      document.getElementById('prayer-week-progress').style.width = `${Math.min((stats.prayerStreak || 0) / 7 * 100, 100)}%`;
-      
-      document.getElementById('reflection-week').textContent = Math.min(stats.reflectionStreak || 0, 7);
-      document.getElementById('reflection-week-progress').style.width = `${Math.min((stats.reflectionStreak || 0) / 7 * 100, 100)}%`;
-    }
-    
+
     function setupMobileMenu() {
       const mobileMenuBtn = document.getElementById('mobile-menu-btn');
       const mobileMenuClose = document.getElementById('mobile-menu-close');
       const mobileMenu = document.getElementById('mobile-menu');
       const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
-      
+
       function openMobileMenu() {
         mobileMenu.classList.remove('hidden');
         setTimeout(() => {
           mobileMenu.querySelector('.absolute.right-0').classList.remove('translate-x-full');
         }, 50);
       }
-      
+
       function closeMobileMenu() {
         mobileMenu.querySelector('.absolute.right-0').classList.add('translate-x-full');
         setTimeout(() => {
           mobileMenu.classList.add('hidden');
         }, 300);
       }
-      
+
       mobileMenuBtn.addEventListener('click', openMobileMenu);
       mobileMenuClose.addEventListener('click', closeMobileMenu);
       if (mobileMenuBackdrop) {
         mobileMenuBackdrop.addEventListener('click', closeMobileMenu);
       }
     }
-    
+
     function setupThemeToggle() {
       const themeToggle = document.getElementById('theme-toggle');
       const darkModeToggle = document.getElementById('dark-mode-toggle');
-      
-      if (localStorage.getItem('theme') === 'dark' || 
+
+      if (localStorage.getItem('theme') === 'dark' ||
           (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark');
         if (darkModeToggle) darkModeToggle.checked = true;
       }
-      
+
       if (themeToggle) {
         themeToggle.addEventListener('click', () => {
           document.documentElement.classList.toggle('dark');
@@ -851,7 +777,7 @@
           if (darkModeToggle) darkModeToggle.checked = document.documentElement.classList.contains('dark');
         });
       }
-      
+
       if (darkModeToggle) {
         darkModeToggle.addEventListener('change', function() {
           document.documentElement.classList.toggle('dark', this.checked);
@@ -859,74 +785,40 @@
         });
       }
     }
-    
+
     function setupEventListeners() {
       // Evento para compartir perfil
       const shareBtn = document.querySelector('button[onclick="shareProfile()"]');
       if (shareBtn) {
         shareBtn.addEventListener('click', shareProfile);
       }
-      
+
       // Evento para editar perfil
       const editBtn = document.querySelector('button[onclick="editProfile()"]');
       if (editBtn) {
         editBtn.addEventListener('click', editProfile);
       }
     }
-    
-    function shareProfile() {
-      const stats = JSON.parse(localStorage.getItem('userStats')) || {};
-      const message = `¡Mira mi progreso espiritual en Jóvenes con Cristo! 🎉\n\n` +
-                     `📖 ${stats.totalVerses || 0} versículos leídos\n` +
-                     `🙏 ${stats.prayerDays || 0} días orando\n` +
-                     `🔥 ${stats.streak || 0} días de racha\n` +
-                     `⭐ Nivel ${stats.level || 1}\n\n` +
-                     `¡Únete a mí en este camino de fe!`;
-      
-      if (navigator.share) {
-        navigator.share({
-          title: 'Mi Progreso Espiritual',
-          text: message,
-          url: window.location.href
-        });
-      } else {
-        navigator.clipboard.writeText(message).then(() => {
-          alert('✅ ¡Perfil copiado al portapapeles! Compártelo con tus amigos.');
-        });
-      }
-    }
-    
-    function editProfile() {
-      const name = prompt('Ingresa tu nombre:', document.getElementById('user-name').textContent);
-      if (name && name.trim()) {
-        const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
-        currentUser.name = name.trim();
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-        document.getElementById('user-name').textContent = name.trim();
-        document.getElementById('user-avatar').textContent = getAvatarEmoji(name.trim());
-        alert('✅ Nombre actualizado correctamente.');
-      }
-    }
-    
+
     // Funciones adicionales
     function viewHabitsDetails() {
       alert('📊 Aquí verías un detalle completo de tus hábitos y estadísticas semanales.');
     }
-    
+
     function viewAllAchievements() {
       alert('🏆 Aquí verías todos los logros disponibles y tus progresos.');
     }
-    
+
     function clearActivity() {
       if (confirm('¿Estás seguro de que quieres limpiar tu historial de actividad?')) {
         alert('✅ Historial de actividad limpiado.');
       }
     }
-    
+
     function loadMoreActivity() {
       alert('📝 Cargando más actividad...');
     }
-    
+
     function exportData() {
       const userData = {
         user: JSON.parse(localStorage.getItem('currentUser')),
@@ -934,20 +826,20 @@
         favorites: JSON.parse(localStorage.getItem('favorites') || '[]'),
         history: JSON.parse(localStorage.getItem('readingHistory') || '[]')
       };
-      
+
       const dataStr = JSON.stringify(userData, null, 2);
       const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-      
+
       const exportFileDefaultName = `jovenes-con-cristo-datos-${new Date().toISOString().split('T')[0]}.json`;
-      
+
       const linkElement = document.createElement('a');
       linkElement.setAttribute('href', dataUri);
       linkElement.setAttribute('download', exportFileDefaultName);
       linkElement.click();
-      
+
       alert('✅ Tus datos se han exportado correctamente.');
     }
-    
+
     function resetProgress() {
       if (confirm('⚠️ ¿ESTÁS SEGURO?\n\nEsta acción reiniciará TODO tu progreso:\n• Puntos de experiencia\n• Estadísticas\n• Logros\n• Racha actual\n\nEsta acción NO se puede deshacer.')) {
         localStorage.removeItem('userStats');
@@ -957,6 +849,65 @@
         location.reload();
       }
     }
+
+    function toggleEditSection() {
+      const editSection = document.getElementById('edit-section');
+      if (editSection.style.display === 'none' || editSection.style.display === '') {
+        editSection.style.display = 'block';
+      } else {
+        editSection.style.display = 'none';
+      }
+    }
+
+    // Event listener for cancel edit button
+    const cancelEditBtn = document.getElementById('cancel-edit-btn');
+    if (cancelEditBtn) {
+      cancelEditBtn.addEventListener('click', toggleEditSection);
+    }
+
+    function saveProfile() {
+      const name = document.getElementById('user-name').value.trim();
+      const birthdate = document.getElementById('user-birthdate').value;
+      const church = document.getElementById('user-church').value.trim();
+
+      if (!name) {
+        alert('Por favor, ingresa tu nombre.');
+        return;
+      }
+
+      // Get current user data
+      let currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+
+      // Update user data
+      currentUser.name = name;
+      currentUser.birthdate = birthdate;
+      currentUser.church = church;
+
+      // Save to localStorage
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+      // Update display
+      document.getElementById('user-name-display').textContent = name;
+      document.getElementById('user-details').textContent = church ? `Miembro de ${church}` : 'Usuario de Jóvenes con Cristo';
+
+      // Hide edit section
+      toggleEditSection();
+
+      alert('✅ Perfil actualizado correctamente.');
+    }
+
+    // Load profile data on page load
+    function loadProfileData() {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+      document.getElementById('user-name').value = currentUser.name || '';
+      document.getElementById('user-birthdate').value = currentUser.birthdate || '';
+      document.getElementById('user-church').value = currentUser.church || '';
+      document.getElementById('user-name-display').textContent = currentUser.name || 'Cargando...';
+      document.getElementById('user-details').textContent = currentUser.church ? `Miembro de ${currentUser.church}` : 'Usuario de Jóvenes con Cristo';
+    }
+
+    // Call loadProfileData on DOMContentLoaded
+    loadProfileData();
   </script>
   <script type="module">
   import { protectPage } from './js/app.js';
